@@ -11,14 +11,22 @@
  * @copyright Copyright (c) 2025
  * 
  */
+#include <Arduino.h>
+#include "EDUBOX_uvodDoPlatformIO.hpp"
 
-#include "edubox_01.hpp"
+// Definice pinů
+#define RED_LED_PIN 27
+#define YELLOW_LED_PIN 26
+#define GREEN_LED_PIN 25
+#define BUTTON_PIN 4
 
-/**
- * @brief inicializuje semafor s tlačítkem
- * 
- */
+// Deklarace funkcí
+void initSemaphoreWithButton();
 bool isButtonPressed();
+void setSemaphoreLights(bool red, bool yellow, bool green);
+unsigned long getCurrentTime();
+void stopProgram(unsigned long time);
+
 
 
 
@@ -61,7 +69,7 @@ void practice_blinkingSemaphore()
  * @brief napište kód tak aby po stisku tlačítka začali blikat diody jako na semaforu tak aby zůstali blikat i po uvolnění tlačítka
  * 
  */
-void practice_()
+void practice_completeCode()
 {
 
 }
@@ -73,7 +81,7 @@ void practice_()
  * program není dokonalý protože čeká na dokončení ciklu, než zareaguje na zmáčknutí tlačítka
  * aby byl kód jednoduchý
  */
-void example01()
+void exampleSemaphore()
 {
     initSemaphoreWithButton();
 
@@ -104,7 +112,10 @@ void example01()
  */
 void initSemaphoreWithButton()
 {
-    
+    pinMode(RED_LED_PIN, OUTPUT);
+    pinMode(YELLOW_LED_PIN, OUTPUT);
+    pinMode(GREEN_LED_PIN, OUTPUT);
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
 }
 
 /**
@@ -114,7 +125,7 @@ void initSemaphoreWithButton()
  */
 bool isButtonPressed()
 {
-    
+    return digitalRead(BUTTON_PIN);
 }
 
 
@@ -127,12 +138,14 @@ bool isButtonPressed()
  */
 void setSemaphoreLights(bool red, bool yellow, bool green)
 {
-
+    digitalWrite(RED_LED_PIN, red);
+    digitalWrite(YELLOW_LED_PIN, yellow);
+    digitalWrite(GREEN_LED_PIN, green);
 }
 
 unsigned long getCurrentTime()
 {
-    return 0;
+    return millis();
 }
 
 /**
@@ -142,5 +155,5 @@ unsigned long getCurrentTime()
  */
 void stopProgram(unsigned long time)
 {
-
+    delay(time);
 }
