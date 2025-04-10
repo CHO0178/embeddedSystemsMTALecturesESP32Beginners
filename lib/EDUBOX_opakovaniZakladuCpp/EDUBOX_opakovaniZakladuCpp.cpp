@@ -36,3 +36,19 @@ void initTwotelegraphs()
     pinMode(BUTTON2_PIN, INPUT_PULLUP);
 }
 
+/**
+ * @brief funkce bliká LED diodou pocetBleku x a poté zhasne na 2s
+ * 
+ * @param pocetBlesku  počet zableksu
+ * @param interval 
+ */
+void blikejNekolikrat(int pocetBlesku, int interval)
+{
+    for (int i = 0; i < pocetBlesku; i++)
+    {
+        digitalWrite(LED1_PIN, HIGH);
+        delay(interval);
+        digitalWrite(LED1_PIN, LOW);
+        delay(interval);
+    }
+}
