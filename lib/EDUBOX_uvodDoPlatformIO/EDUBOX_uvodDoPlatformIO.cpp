@@ -29,7 +29,6 @@ void stopProgram(unsigned long time);
 
 
 
-
 /**
  * @brief pokud spustíte svůj kód poprvé uvidíte blikání první diodou změňte kód tak aby blikala druhá dioda
  *

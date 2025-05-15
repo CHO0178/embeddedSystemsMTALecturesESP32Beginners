@@ -37,7 +37,6 @@
  * 
  * @details Syntaxe: void <název_funkce>() { ... }
  * 
- * @example
  * @code
  * void pozdrav() {
  *   Serial.println("Ahoj, světe!");
@@ -57,7 +56,6 @@
  * 
  * @details Syntaxe: void <název_funkce>(<parametr>) { ... }
  * 
- * @example
  * @param cislo Parametr typu int – vstupní celé číslo
  * @code
  * void vypisCeleCislo(int cislo) {
@@ -104,7 +102,7 @@
  * 
  * @details Syntaxe: <návratový_typ> <název>() { ... return <hodnota>; }
  * 
- * @example
+ * 
  * @return Vrací číslo 42
  * @code
  * int vratCislo42() {
@@ -127,7 +125,6 @@
  * 
  * @details Syntaxe: <návratový_typ> <název>(<parametr_1>, <parametr_2>, ...) { ... return <hodnota>; }
  * 
- * @example
  * @param a První celé číslo
  * @param b Druhé celé číslo
  * @return Výsledek typu int
@@ -188,5 +185,3 @@
  * @endcode
  */
 
- #include "Arduino.h"
- #include "EDUBOX_opakovaniFunkce.hpp"
