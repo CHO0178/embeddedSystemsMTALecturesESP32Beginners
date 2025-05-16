@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 void setup() {
-    deleteMe;
+    deleteMe;;
 }
 
 void loop() {
