@@ -34,7 +34,7 @@ void stopProgram(unsigned long time);
  * @brief pokud spustíte svůj kód poprvé uvidíte blikání první diodou změňte kód tak aby blikala druhá dioda
  *
  */
-void practice_blinkingDiode()
+void blinkingDiode()
 {
     initSemaphoreWithButton();
 
@@ -52,7 +52,7 @@ void practice_blinkingDiode()
  * rozsvítily všechny diody semaforu a po uvolnění tlačítka se všechny diody zhasly
  * 
  */
-void practice_blinkingSemaphore()
+void blinkingSemaphore()
 {
     initSemaphoreWithButton();
 
@@ -69,7 +69,7 @@ void practice_blinkingSemaphore()
  * @brief napište kód tak aby po stisku tlačítka začali blikat diody jako na semaforu tak aby zůstali blikat i po uvolnění tlačítka
  * 
  */
-void practice_completeCode()
+void completeCode()
 {
 
 }
@@ -81,7 +81,7 @@ void practice_completeCode()
  * program není dokonalý protože čeká na dokončení ciklu, než zareaguje na zmáčknutí tlačítka
  * aby byl kód jednoduchý
  */
-void exampleSemaphore()
+void semaphore_example()
 {
     initSemaphoreWithButton();
 
