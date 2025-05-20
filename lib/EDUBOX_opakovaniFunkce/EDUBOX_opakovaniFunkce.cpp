@@ -126,97 +126,66 @@
 #include <Arduino.h>
 #include "EDUBOX_opakovaniFunkce.hpp"
 
-// Deklarace funkcí
-void sayHello_example();                // Funkce bez návratové hodnoty a bez parametru
-void sayHello_exercise();               // Funkce bez návratové hodnoty a bez parametru
 
-void printNumber_example(int number);   // Funkce bez návratové hodnoty s parametrem
-void printNumber_exercise(int number);   // Funkce bez návratové hodnoty s parametrem
-
-void printSum_example(int a, int b);    // Funkce bez návratové hodnoty s více parametry
-void printSum_exercise(int a, int b);    // Funkce bez návratové hodnoty s více parametry
-
-int getNumber_example();                // Funkce s návratovou hodnotou a bez parametru
-int getNumber_exercise();                // Funkce s návratovou hodnotou a bez parametru
-
-int sumNumbers_example(int a, int b);   // Funkce s návratovou hodnotu a více parametry
-int sumNumbers_exercise(int a, int b);   // Funkce s návratovou hodnotu a více parametry
-
-
-void setup()
-{    
-    // Inicializace sériové komunikace
-    Serial.begin(115200);
-
-    // Volání příkladových funkcí
-    sayHello_example();
-    printNumber_example(7);
-    printSum_example(3, 5);
-
-    int cislo = getNumber_example();
-    Serial.print("Magické číslo: ");
-    Serial.println(cislo);
-
-    float vysledek = sumNumbers_example(10.0, 2.0);
-    Serial.print("Výsledek dělení: ");
-    Serial.println(vysledek);
-}
-
-void loop()
-{
-// FUNKCE VE FUNKCE
-}
+/**
+ * TO DO :
+ * 
+ * - FUNKCE VE FUNKCI
+ * - Více ukolu v bool, int atd.
+ * - Ukoly jiné než example
+ * - Využít HW (domluvit se s hanzem)
+ * 
+ */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad 1: Funkce bez návratové hodnoty a bez parametru.
+ * @brief Příklad unkce bez návratové hodnoty a bez parametru.
  * V případech, že nám funkce nic nevrací tak její datový typ je void.
  * 
  * Příklad užití: Funkce co po její zavolaní vypíše do seriového monitoru "Ahoj světe!".
  */
-void sayHello_example()
+void sayHello()
 {
     Serial.println("Ahoj světe!");
 }
 
 /**
- * @brief Cvičení 1: Funkce bez návratové hodnoty a bez parametru
+ * @brief Cvičení funkce bez návratové hodnoty a bez parametru
  * - Vytvoř funkci co po její zavolaní vypíše do seriového monitoru "Ahoj světe!".
  */
-void sayHello_exercise()
-{
 
-}
+ // HERE WHITE YOUR CODE
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad 2: Funkce bez návratové hodnoty s parametrem.
+ * @brief Příklad funkce bez návratové hodnoty s parametrem.
  * V případě funkce se vstupním parametrem musíme při tvorbě funkce zvolit požadovaný datový typ vstupního parametru.
  *   
  * @param number Celé číslo, které vstupuje do funkce jako parametr a vypíše se.
  * 
  * Příklad užití: Funkce vypisující do seriového monitoru vstupní celé číslo.
  */
-void printNumber_example(int number)
+void printNumber(int number)
 {
     Serial.print("Zadané číslo: ");
     Serial.println(number);
 }
 
 /**
- * @brief Cvičení 2: Funkce bez návratové hodnoty s parametrem.
+ * @brief Cvičení funkce bez návratové hodnoty s parametrem.
  * Vytvoř funkci co po zavolání vypíše do seriového monitoru vstupní celé číslo.
  */
-void printNumber_exercise(int number)
-{
 
-}
+ // HERE WHITE YOUR CODE
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad 3: Funkce bez návratové hodnoty s více parametry.
+ * @brief Příklad funkce bez návratové hodnoty s více parametry.
  * Obdobně jako u funkce s jedním parametrem je třeba při tvorbě funkce se dvěma parametry definovat jakého datového typu budou.
  * 
  * @param a První celé číslo pro součet.
@@ -224,7 +193,7 @@ void printNumber_exercise(int number)
  * 
  * Příklad užití: Funkce pro výpis součtu dvou celých čísel.
  */
-void printSum_example(int a, int b)
+void printSum(int a, int b)
 {
     int sum = a + b;
     Serial.print("Součet: ");
@@ -232,42 +201,42 @@ void printSum_example(int a, int b)
 }
 
 /**
- * @brief Cvičení 3: Funkce bez návratové hodnoty s více parametry.
+ * @brief Cvičení funkce bez návratové hodnoty s více parametry.
  * Vytvoř funkci co po zavolání vypíše do seriového monitoru součet dvou vstupních celých čísel.
  */
-void printSum_exercise(int a, int b)
-{
-  
-}
+
+ // HERE WHITE YOUR CODE
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad 4: Funkce s návratovou hodnotou a bez parametru.
+ * @brief Příklad funkce s návratovou hodnotou a bez parametru.
  * V případě funkce s návratovou hodnotou již není její datový typ void, ale datový typ funkce je stejný jako datový typ navratové hodnoty.
  * 
  * @return celé číslo 42.
  * 
  * Příklad užití: Po zavolání funkce vrací celé číslo 42.
  */
-int getNumber_example()
+int getNumber()
 {
     return 42;
 }
 
 /**
- * @brief Cvičení 4: Funkce s návratovou hodnotou a bez parametru.
+ * @brief Cvičení funkce s návratovou hodnotou a bez parametru.
  * Vytvoř funkci co po zavolání vrátí celé číslo 42.
  */
-int getNumber_exercise()
-{
-    return 42;
-}
+
+
+ // HERE WHITE YOUR CODE
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad 5: Funkce s návratovou hodnotu a více parametry.
+ * @brief Příklad funkce s návratovou hodnotu a více parametry.
  * Obdobně jako u funkce s navratovou hodnotou bez parametru, je třeba zvolit datový typ funkce, tak aby byl stejný jako datový typ navratové hodnoty.
  * 
  * @param a První celé číslo pro součet.
@@ -276,19 +245,19 @@ int getNumber_exercise()
  * 
  * Příklad užití: Funkce co vrací výsledek součtu dvou vstupních celých čísel.
  */
-int sumNumbers_example(int a, int b)
+int sumNumbers(int a, int b)
 {
   int sum = a + b;
   return sum;
 }
 
 /**
- * @brief Cvičení 5: Funkce s návratovou hodnotu a více parametry.
+ * @brief Cvičení funkce s návratovou hodnotu a více parametry.
  * Vytvoř funkci co po zavolání vrátí celočíselný výsledek součtu dvou vstupních celých čísel.
  */
-int sumNumbers_example(int a, int b)
-{
-  int sum = a + b;
-  return sum;
-}
+
+
+ // HERE WHITE YOUR CODE
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

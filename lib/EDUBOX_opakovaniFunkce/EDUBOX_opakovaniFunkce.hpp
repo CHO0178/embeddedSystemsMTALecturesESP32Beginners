@@ -1,18 +1,18 @@
 #include <Arduino.h>
 
-// Deklarace funkcí
-void sayHello_example();                // Funkce bez návratové hodnoty a bez parametru
-void sayHello_exercise();               // Funkce bez návratové hodnoty a bez parametru
+// Cvičení 1: Funkce bez návratové hodnoty a bez parametru
+void sayHello();
 
-void printNumber_example(int number);   // Funkce bez návratové hodnoty s parametrem
-void printNumber_exercise(int number);   // Funkce bez návratové hodnoty s parametrem
+// Cvičení 2: Funkce bez návratové hodnoty s parametrem
+void printNumber(int number);
 
-void printSum_example(int a, int b);    // Funkce bez návratové hodnoty s více parametry
-void printSum_exercise(int a, int b);    // Funkce bez návratové hodnoty s více parametry
+// Cvičení 3: Funkce bez návratové hodnoty s více parametry
+void printSum(int a, int b);
 
-int getNumber_example();                // Funkce s návratovou hodnotou a bez parametru
-int getNumber_exercise();                // Funkce s návratovou hodnotou a bez parametru
+// Cvičení 4: Funkce s návratovou hodnotou a bez parametru
+int getNumber();
 
-int sumNumbers_example(int a, int b);   // Funkce s návratovou hodnotu a více parametry
-int sumNumbers_exercise(int a, int b);   // Funkce s návratovou hodnotu a více parametry
+
+// Cvičení 5: Funkce s návratovou hodnotou a více parametry
+int sumNumbers(int a, int b);
 
