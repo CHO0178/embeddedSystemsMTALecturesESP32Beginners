@@ -17,18 +17,18 @@
  * - Parametry ("vstupy") – Parametrů může být více a mohou mít různé datové typy. Funkce může být také bez parametrů. 
  *                        - Datový typ parametru musí být stejný jako datový typ hodnoty, kterou do funkce předáváme.
  *                        - Např. pokud funkce očekává int, musíme jí předat int hodnotu při její volání.
- * - Tělo funkce – blok KÓDu, který se vykoná při zavolání.
+ * - Tělo funkce – blok kódu, který se vykoná při zavolání.
  * 
  * @details Syntaxe: <Návratový_typ> <název_funkce>(<parametr>,...) { ... }
  * 
  * @note Rozlišujeme deklaraci a definici funkce, kde:
- * - Deklarace funkce říká programu, že funkce existuje (většinou na začátku KÓDu nebo v hlavičkovém souboru)
- * - Definice funkce obsahuje samotné tělo – vykonávaný KÓD po zavolání funkce
+ * - Deklarace funkce říká programu, že funkce existuje (většinou na začátku kódu nebo v hlavičkovém souboru)
+ * - Definice funkce obsahuje samotné tělo – vykonávaný kód po zavolání funkce
  * 
  * @note Funkce se volá zápisem jejího názvu a předáním parametrů v případě, že jsou. 
  * - např. vypisPozdrav(); nebo secti(2, 3);
  * 
- * @warning Funkce musí být vždy definována (nebo alespoň deklarována) před jejím voláním v KÓDu!
+ * @warning Funkce musí být vždy definována (nebo alespoň deklarována) před jejím voláním v kódu!
  * 
  * Druhy funkcí:
  * funkce bez návratové hodnoty a bez parametru
@@ -41,7 +41,7 @@
 
 /**
  * @brief Funkce bez návratové hodnoty a bez parametru
- * @details Slouží pro vykonání nějakého KÓDu bez potřeby vstupního parametru ani návratové hodnoty. Nese tedy datový typ void. 
+ * @details Slouží pro vykonání nějakého kódu bez potřeby vstupního parametru ani návratové hodnoty. Nese tedy datový typ void. 
  * 
  * @details Syntaxe: void <název_funkce>() { ... }
  * 
