@@ -126,6 +126,15 @@
 #include <Arduino.h>
 #include "EDUBOX_opakovaniFunkce.hpp"
 
+// Definice pinů
+#define LED_PIN 25
+#define POTENTIOMETER_PIN 35
+
+// Definice pinů     // DELETE
+#define RED_LED_PIN 27     // DELETE
+#define YELLOW_LED_PIN 26     // DELETE
+#define GREEN_LED_PIN 25     // DELETE
+#define BUTTON_PIN 4     // DELETE
 
 /**
  * TO DO :
@@ -137,63 +146,105 @@
  * 
  */
 
+void initPeripherals()
+{
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(POTENTIOMETER_PIN, INPUT);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad unkce bez návratové hodnoty a bez parametru.
+ * @brief Příklad funkce bez návratové hodnoty a bez parametru.
  * V případech, že nám funkce nic nevrací tak její datový typ je void.
  * 
- * Příklad užití: Funkce co po její zavolaní vypíše do seriového monitoru "Ahoj světe!".
+ * Příklad užití: Funkce co po její zavolaní naství LED diodu na HIGH.
  */
-void sayHello()
+
+void turnOnLED()
 {
-    Serial.println("Ahoj světe!");
+    digitalWrite(LED_PIN, HIGH);
 }
 
 /**
  * @brief Cvičení funkce bez návratové hodnoty a bez parametru
- * - Vytvoř funkci co po její zavolaní vypíše do seriového monitoru "Ahoj světe!".
+ * - Vytvoř fuknci co po její zavolaní naství LED diodu na LOW.
  */
 
- // HERE WHITE YOUR CODE
+// ZDE NAPIŠ SVŮJ KÓD
+
+
+
+/**
+ * @brief Cvičení funkce bez návratové hodnoty a bez parametru
+ * - Vytvoř funkci co po jeji zavolání rozsvítí LED diodu na 1 sekundu a poté ji zhasne. Pro rozsvícení a zhasnutí použij fukce vytvořené výše.
+ */
+
+// ZDE NAPIŠ SVŮJ KÓD 
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @brief Příklad funkce bez návratové hodnoty s parametrem.
  * V případě funkce se vstupním parametrem musíme při tvorbě funkce zvolit požadovaný datový typ vstupního parametru.
  *   
- * @param number Celé číslo, které vstupuje do funkce jako parametr a vypíše se.
+ * @param ledPin Pin, na kterém je připojena LED dioda.
  * 
- * Příklad užití: Funkce vypisující do seriového monitoru vstupní celé číslo.
+ * Příklad užití: Funkce, která po zavolání přepíná LED mezi stavem HIGH a LOW.
  */
-void printNumber(int number)
+void toggleLED(int ledPin)
 {
-    Serial.print("Zadané číslo: ");
-    Serial.println(number);
+    digitalWrite(ledPin, !digitalRead(ledPin)); // Přepne stav LED diody v závislosti na jejím aktuálním stavu
 }
+
 
 /**
  * @brief Cvičení funkce bez návratové hodnoty s parametrem.
- * Vytvoř funkci co po zavolání vypíše do seriového monitoru vstupní celé číslo.
+ * Vytvoř funkci, která bude mít jako vstupní parametr desetinné číslo a to vypíše do seriového monitoru.
  */
 
- // HERE WHITE YOUR CODE
+// ZDE NAPIŠ SVŮJ KÓD
+void printNumber(float number)
+{
+    Serial.print("Vstupní číslo: ");
+    Serial.println(number);
+}
+
+
+ /**
+ * @brief Cvičení funkce bez návratové hodnoty s parametrem.
+ * Vytvoř funkci, která bude mít jako stupní parametr 
+ */
+
+// ZDE NAPIŠ SVŮJ KÓD
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @brief Příklad funkce bez návratové hodnoty s více parametry.
  * Obdobně jako u funkce s jedním parametrem je třeba při tvorbě funkce se dvěma parametry definovat jakého datového typu budou.
  * 
- * @param a První celé číslo pro součet.
- * @param b Druhé celé číslo pro součet.
+ * @param pin Pin, na kterém je připojena LED dioda.
+ * @param state Stav LED diody (HIGH nebo LOW).
  * 
- * Příklad užití: Funkce pro výpis součtu dvou celých čísel.
+ * Příklad užití: Fukce, která má jako dva vstupní parametry LED pin a stav LED (HIGH nebo LOW) a nastaví LED diodu na daný stav.
  */
-void printSum(int a, int b)
+void setLEDState(int pin, bool state)
+{
+    digitalWrite(pin, state);
+}
+
+/**
+ * @brief Cvičení funkce bez návratové hodnoty s více parametry.
+ * Vytvoř funkci co po zavolání vypíše do seriového monitoru součet dvou vstupních celých čísel.
+ */
+
+ // ZDE NAPIŠ SVŮJ KÓD
+ void printSum(int a, int b)
 {
     int sum = a + b;
     Serial.print("Součet: ");
@@ -205,10 +256,46 @@ void printSum(int a, int b)
  * Vytvoř funkci co po zavolání vypíše do seriového monitoru součet dvou vstupních celých čísel.
  */
 
- // HERE WHITE YOUR CODE
+ // ZDE NAPIŠ SVŮJ KÓD
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief Příklad funkce s návratovou hodnotou s parametrem.
+ * V případě funkce s návratovou hodnotou již není její datový typ void, ale datový typ funkce je stejný jako datový typ navratové hodnoty.
+ * 
+ * @return celé číslo 42.
+ * 
+ * Příklad užití: Po zavolání funkce vrací celé číslo 42.
+ */
+int getNumber()
+{
+    return 42;
+}
 
+/**
+ * @brief Cvičení funkce s návratovou hodnotou s parametrem.
+ * Vytvoř funkci co po zavolání vrátí celé číslo 42.
+ */
+
+ // ZDE NAPIŠ SVŮJ KÓD
+
+ /**
+ * @brief Cvičení funkce s návratovou hodnotou s parametrem.
+ * Vytvoř funkci co po zavolání vrátí celé číslo 42.
+ */
+
+int getSensorValue()
+{
+    return analogRead(POTENTIOMETER_PIN); // Nebo jiný pin senzoru
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @brief Příklad funkce s návratovou hodnotou a bez parametru.
@@ -228,12 +315,19 @@ int getNumber()
  * Vytvoř funkci co po zavolání vrátí celé číslo 42.
  */
 
+ // ZDE NAPIŠ SVŮJ KÓD
+ int readSensor(int sensorPin)
+{
+    int value = analogRead(sensorPin);
+    Serial.print("Hodnota senzoru: ");
+    Serial.println(value);
+    return value;
+}
 
- // HERE WHITE YOUR CODE
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @brief Příklad funkce s návratovou hodnotu a více parametry.
@@ -253,11 +347,29 @@ int sumNumbers(int a, int b)
 
 /**
  * @brief Cvičení funkce s návratovou hodnotu a více parametry.
- * Vytvoř funkci co po zavolání vrátí celočíselný výsledek součtu dvou vstupních celých čísel.
+ * Vytvoř funkci co má dva celočíslené vstupní parametry a vrátí jejich součet.
  */
 
 
- // HERE WHITE YOUR CODE
+ // ZDE NAPIŠ SVŮJ KÓD
+
+
+ /**
+ * @brief Cvičení funkce s návratovou hodnotu a více parametry.
+ * Vytvoř funkci co má tři vstupní parametry, a to maximální hodnotu, aktuální hodnotu a minimální hodnotu.
+ * Funkce vrátí procentuální hodnotu aktuální hodnoty vzhledem k maximální a minimální hodnotě.
+ * Bonus: Ošetření dělení nulou, pokud by maximální a minimální hodnota byly stejné.
+ */
+
+ // ZDE NAPIŠ SVŮJ KÓD
+int getPercentage(int max, int current, int min)
+{
+  if (max == min) {
+    Serial.println("Chyba: Maximální a minimální hodnota jsou stejné, nelze vypočítat procento.");
+    return 0;
+  }
+  return ((current - min) * 100) / (max - min);
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
