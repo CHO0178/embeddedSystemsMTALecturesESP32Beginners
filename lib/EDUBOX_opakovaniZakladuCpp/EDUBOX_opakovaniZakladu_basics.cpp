@@ -20,16 +20,17 @@
  * @note Nejdůležitější datové typy:
  * - bool (logická hodnota, 1 bajt, true nebo false)
  * - int (celé číslo, 4 bajty, -2 147 483 648 až 2 147 483 647)
- * - short (celé číslo, 1 bajt, -128 až 127)   +    byte (celé kladné číslo, 1 bajt, 0 až 255)
- * - float (reálné číslo, 4 bajty, -3.40282347E+38 až 3.40282347E+38)
+ * - short (celé číslo, 2 bajty, -32 768 až 32 767)
+ * - byte (kladné celé číslo, 1 bajt, 0 až 255) [alias pro uint8_t]
+ * - float (reálné číslo, 4 bajty, -3.4E+38 až +3.4E+38)
  * - char (znak, 1 bajt, -128 až 127)
  * - string (řetězec znaků, dynamická velikost, závisí na obsahu)
- * 
- * @note existují také datové modifikátory, které mění velikost a rozsah proměnné, abychom mohli šetřit paměť:
- * - short (zmenší velikost int na 2 bajty, rozsah -32 768 až 32 767 - lze použít identicky jako byte - stejná velůtost 1 bajt)
- * - long (zvětší velikost int na 8 bajtů, rozsah -9 223 372 036 854 775 808 až 9 223 372 036 854 775 807)
- * - unsigned (změní interval záporných a kladných hodnot na pouze kladné hodnoty, např. unsigned int 0 až 4 294 967 295 místo -2 147 483 648 až 2 147 483 647)
- * - signed (výchozí / implicitní modifikátor, umožňuje záporné hodnoty)
+ *
+ * @note Existují také modifikátory typů, které mění rozsah a chování proměnných:
+ * - short (zmenší velikost int na 2 bajty, rozsah -32 768 až 32 767)
+ * - long (většinou 4 bajty, rozsah -2 147 483 648 až 2 147 483 647 – pro 8 bajtů použij long long)
+ * - unsigned (omezí proměnnou jen na kladné hodnoty, např. unsigned int 0 až 4 294 967 295)
+ * - signed (výchozí chování – povoluje i záporné hodnoty)
  * 
  * @note NE každá proměnná musí být inicializována! ALE je dobré tak učinit, pokud je to možné (univerzálně např.: hodnotou 0),
  * protože pokud je použita pro vyhodnocení podmínky a není inicializována, bude mít náhodnou hodnotu, což povede k nedefinovaným / náhodným stavům v programu.
@@ -145,8 +146,8 @@
  * 
  * @note Existují různé typy cyklů, které se liší způsobem, jakým se podmínka testuje a jak se provádí iterace:
  * - for (pro pevně daný počet iterací, např. pro procházení pole nebo seznamu)
- * - while (pokud není předem známý počet iterací)
- * - do-while (pokud chceme, aby se tělo cyklu provedlo alespoň jednou)
+ * - while (pokud není předem známý počet iterací, podmínka se vyhodnocuje na začátku cyklu)
+ * - do-while (pokud chceme, aby se tělo cyklu provedlo alespoň jednou => podmínka se vyhodnocuje až na konci cyklu)
  * 
  * @note Existují tzv. nekonečné cykly, které nikdy neskončí, protože jejich podmínka je vždy splněna (true)
  * Např. while (true) { ... } nebo for{;;} { ... }
@@ -274,3 +275,278 @@
  *    continue;              // Přeskočí každý krok, kdy je i liché číslo
  * }
  */
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////// PRIKLADY A CVICENI /////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// EDUBOX_opakovaniZakladu_basics.cpp
+// Ukázkové příklady základních jazykových konstrukcí v C/C++ pro Arduino/ESP32
+
+#define LED_PIN 2 // Pin pro LED
+#define BTN_PIN 4 // Pin pro tlačítko
+
+void setup()
+{
+  Serial.begin(115200); // Nastavení rychlosti (baudu) sériového portu
+  pinMode(LED_PIN, OUTPUT); // LED na pinu 2
+  pinMode(BTN_PIN, INPUT_PULLUP); // Tlačítko na pinu 4
+}
+
+
+
+
+// OTAZKY:
+// 1.  POUZIVAT HW?
+// 2. - s, nebo bez uzivatelovy interakce - pokud ano přes manuální dosazení hodnoty do vstupního parametru, nebo přes sériový monitor?
+
+
+
+
+// ===== IF-ELSE PRIKLAD =====
+void example_if_else(int teplota)
+{
+  Serial.print("Zadaná teplota: ");
+  Serial.println(teplota);
+
+  if (teplota < 15) {
+    Serial.println("Je zima.");
+    digitalWrite(2, HIGH);
+  } else {
+    Serial.println("Je teplo.");
+    digitalWrite(2, LOW);
+  }
+}
+
+// ===== IF-ELSE CVICENI =====
+//
+//
+void exercise_if_else()
+{
+
+}
+
+
+
+// ===== SWITCH PRIKLAD =====
+// udelat kalkulacku pres vstupni parametry? Nebo pres interakci uzivatele - seriovy monitor?
+// nebo udelat semfaor pomoci delaye aby se prepinal?
+void example_switch(int teplota)
+{
+  Serial.print("Zadanej teplotu: ");
+  Serial.println(teplota);
+
+  int stav;
+  if (teplota < 0) stav = 0;
+  else if (teplota < 15) stav = 1;
+  else if (teplota < 25) stav = 2;
+  else stav = 3;
+
+  switch (stav)
+  {
+    case 0:
+      Serial.println("Mrzne.");
+      break;
+    case 1:
+      Serial.println("Je zima.");
+      break;
+    case 2:
+      Serial.println("Je teplo.");
+      break;
+    case 3:
+      Serial.println("Je horko.");
+      break;
+    default:
+      Serial.println("Neznámý stav.");
+  }
+}
+
+
+// ===== SWITCH PRIKLAD =====
+void exercise_switch()
+{
+
+}
+
+
+// ===== WHILE PRIKLAD=====
+void example_while()
+{
+  Serial.println("LED bliká dokud držíš tlačítko (pin 4)");
+  while (digitalRead(4) == LOW)
+  {
+    digitalWrite(2, HIGH);
+    delay(200);
+    digitalWrite(2, LOW);
+    delay(200);
+  }
+  Serial.println("Tlačítko puštěno, konec blikání.");
+}
+
+
+
+
+
+
+
+
+
+// ===== FOR =====
+void example_for(int pocet)
+{
+  Serial.print("Budu blikat ");
+  Serial.print(pocet);
+  Serial.println("x");
+
+  for (int i = 0; i < pocet; i++) {
+    digitalWrite(2, HIGH);
+    delay(300);
+    digitalWrite(2, LOW);
+    delay(300);
+  }
+  Serial.println("Hotovo.");
+}
+
+
+
+
+
+
+
+
+// ===== DO-WHILE =====
+void example_do_while(int pokusy)
+{
+  for (int i = 0; i < pokusy; i++) {
+    int hod = random(1, 7); // čísla 1-6
+    Serial.print("Hodil jsi: ");
+    Serial.println(hod);
+  }
+  Serial.println("Konec házení.");
+}
+
+
+
+
+ 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// PRIKLADY S UZIVATELSKOU INTERAKCI /////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////// DEFINICE PINU APOD. BYLY PROVEDENA U PRIKLADU ///////////////////////////////////
+
+// #define LED_PIN 2 // Pin pro LED
+// #define BTN_PIN 4 // Pin pro tlačítko
+
+// void setup()
+// {
+//   Serial.begin(115200); // Nastavení rychlosti (baudu) sériového portu
+//   pinMode(LED_PIN, OUTPUT); // LED na pinu 2
+//   pinMode(BTN_PIN, INPUT_PULLUP); // Tlačítko na pinu 4
+// }
+
+// void loop()
+// {
+
+//   // ZDE SI ODKOMENTUJTE JEDNU FUNKCI, KTEROU CHCETE SPUSTIT:
+
+//   // uzivatel_interakce_prikladIfElse();
+//   // uzivatel_interakce_prikladSwitch();
+//   // uzivatel_interakce_prikladWhile();
+//   // uzivatel_interakce_prikladFor();
+//   // uzivatel_interakce_prikladDoWhile();
+// }
+
+// // ===== IF-ELSE =====
+// void uzivatel_interakce_prikladIfElse() {
+//   Serial.println("Zadej teplotu (např. 15):");
+//   while (!Serial.available()) {}
+//   int teplota = Serial.parseInt();
+//   Serial.print("Zadal jsi teplotu: ");
+//   Serial.println(teplota);
+
+//   if (teplota < 15) {
+//     Serial.println("Je zima.");
+//     digitalWrite(2, HIGH);
+//   } else {
+//     Serial.println("Je teplo.");
+//     digitalWrite(2, LOW);
+//   }
+// }
+
+// // ===== SWITCH =====
+// void uzivatel_interakce_prikladSwitch() {
+//   Serial.println("Zadej teplotu (např. 15):");
+//   while (!Serial.available()) {}
+//   int teplota = Serial.parseInt();
+//   Serial.print("Zadal jsi teplotu: ");
+//   Serial.println(teplota);
+
+//   int stav;
+//   if (teplota < 0) stav = 0;
+//   else if (teplota < 15) stav = 1;
+//   else if (teplota < 25) stav = 2;
+//   else stav = 3;
+
+//   switch (stav) {
+//     case 0:
+//       Serial.println("Mrzne.");
+//       break;
+//     case 1:
+//       Serial.println("Je zima.");
+//       break;
+//     case 2:
+//       Serial.println("Je teplo.");
+//       break;
+//     case 3:
+//       Serial.println("Je horko.");
+//       break;
+//     default:
+//       Serial.println("Neznámý stav.");
+//   }
+// }
+
+// // ===== WHILE =====
+// void uzivatel_interakce_prikladWhile() {
+//   Serial.println("Drž tlačítko (pin 4), LED bliká, dokud držíš...");
+//   while (digitalRead(4) == LOW) {
+//     digitalWrite(2, HIGH);
+//     delay(200);
+//     digitalWrite(2, LOW);
+//     delay(200);
+//   }
+//   Serial.println("Tlačítko puštěno, konec blikání.");
+// }
+
+// // ===== FOR =====
+// void uzivatel_interakce_prikladFor() {
+//   Serial.println("Kolikrát chceš zablikat LED? Zadej číslo:");
+//   while (!Serial.available()) {}
+//   int pocet = Serial.parseInt();
+//   Serial.print("Budu blikat " + String(pocet) + "x\n");
+
+//   for (int i = 0; i < pocet; i++) {
+//     digitalWrite(2, HIGH);
+//     delay(300);
+//     digitalWrite(2, LOW);
+//     delay(300);
+//   }
+//   Serial.println("Hotovo.");
+// }
+
+// // ===== DO-WHILE =====
+// void uzivatel_interakce_prikladDoWhile() {
+//   char odpoved;
+//   do {
+//     int hod = random(1, 7); // čísla 1-6
+//     Serial.print("Hodil jsi: ");
+//     Serial.println(hod);
+//     Serial.println("Chceš házet znovu? (zadej y/n):");
+
+//     while (!Serial.available()) {}
+//     odpoved = Serial.read();
+//     Serial.read(); // Čteme Enter (\n)
+
+//   } while (odpoved == 'y' || odpoved == 'Y');
+//   Serial.println("Konec házení.");
+// }
