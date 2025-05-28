@@ -1,1 +1,0 @@
-extern "C" void cpp_main();

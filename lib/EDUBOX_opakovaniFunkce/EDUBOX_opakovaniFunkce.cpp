@@ -127,14 +127,10 @@
 #include "EDUBOX_opakovaniFunkce.hpp"
 
 // Definice pinů
-#define LED_PIN 25
+#define RED_LED_PIN 27
+#define YELLOW_LED_PIN 26
+#define GREEN_LED_PIN 25
 #define POTENTIOMETER_PIN 35
-
-// Definice pinů     // DELETE
-#define RED_LED_PIN 27     // DELETE
-#define YELLOW_LED_PIN 26     // DELETE
-#define GREEN_LED_PIN 25     // DELETE
-#define BUTTON_PIN 4     // DELETE
 
 /**
  * TO DO :
@@ -148,51 +144,59 @@
 
 void initPeripherals()
 {
-  pinMode(LED_PIN, OUTPUT);
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(YELLOW_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(POTENTIOMETER_PIN, INPUT);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////// Funkce bez návratové hodnoty a bez parametru. //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad funkce bez návratové hodnoty a bez parametru.
- * V případech, že nám funkce nic nevrací tak její datový typ je void.
+ * @note V případech, že nám funkce nic nevrací tak její datový typ je void
  * 
- * Příklad užití: Funkce co po její zavolaní naství LED diodu na HIGH.
+ * @brief Funkce co po její zavolaní nastaví LED diodu na HIGH.
+ * 
  */
-
 void turnOnLED()
 {
-    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(RED_LED_PIN, HIGH);
 }
 
 /**
  * @brief Cvičení funkce bez návratové hodnoty a bez parametru
  * - Vytvoř fuknci co po její zavolaní naství LED diodu na LOW.
  */
-
-// ZDE NAPIŠ SVŮJ KÓD
-
+void turnOffLED()
+{
+    digitalWrite(RED_LED_PIN, LOW);
+}
 
 
 /**
  * @brief Cvičení funkce bez návratové hodnoty a bez parametru
  * - Vytvoř funkci co po jeji zavolání rozsvítí LED diodu na 1 sekundu a poté ji zhasne. Pro rozsvícení a zhasnutí použij fukce vytvořené výše.
  */
-
-// ZDE NAPIŠ SVŮJ KÓD 
-
+void blinkLED()
+{
+    turnOnLED(); // Zapne LED diodu
+    delay(1000); // Počká 1 sekundu
+    turnOffLED(); // Vypne LED diodu
+    delay(1000); // Počká 1 sekundu
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////// Funkce bez návratové hodnoty s parametrem. ///////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad funkce bez návratové hodnoty s parametrem.
- * V případě funkce se vstupním parametrem musíme při tvorbě funkce zvolit požadovaný datový typ vstupního parametru.
- *   
+ * @details V případě funkce se vstupním parametrem musíme při tvorbě funkce zvolit požadovaný datový typ vstupního parametru.
+ * 
+ * @brief Funkce, která po zavolání přepíná LED mezi stavem HIGH a LOW.
+ * 
  * @param ledPin Pin, na kterém je připojena LED dioda.
  * 
- * Příklad užití: Funkce, která po zavolání přepíná LED mezi stavem HIGH a LOW.
  */
 void toggleLED(int ledPin)
 {
@@ -201,11 +205,10 @@ void toggleLED(int ledPin)
 
 
 /**
- * @brief Cvičení funkce bez návratové hodnoty s parametrem.
- * Vytvoř funkci, která bude mít jako vstupní parametr desetinné číslo a to vypíše do seriového monitoru.
+ * @brief Vytvoř funkci, která bude mít jako vstupní parametr desetinné číslo a to vypíše do seriového monitoru.
+ * 
+ * @param number Desetinné číslo, které bude vypsáno do seriového monitoru.
  */
-
-// ZDE NAPIŠ SVŮJ KÓD
 void printNumber(float number)
 {
     Serial.print("Vstupní číslo: ");
@@ -222,10 +225,10 @@ void printNumber(float number)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////// Funkce bez návratové hodnoty s více parametry. //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad funkce bez návratové hodnoty s více parametry.
+ * @brief 
  * Obdobně jako u funkce s jedním parametrem je třeba při tvorbě funkce se dvěma parametry definovat jakého datového typu budou.
  * 
  * @param pin Pin, na kterém je připojena LED dioda.
@@ -233,17 +236,17 @@ void printNumber(float number)
  * 
  * Příklad užití: Fukce, která má jako dva vstupní parametry LED pin a stav LED (HIGH nebo LOW) a nastaví LED diodu na daný stav.
  */
-void setLEDState(int pin, bool state)
+void setSemaphoreLights(bool red, bool yellow, bool green)
 {
-    digitalWrite(pin, state);
+    digitalWrite(RED_LED_PIN, red);
+    digitalWrite(YELLOW_LED_PIN, yellow);
+    digitalWrite(GREEN_LED_PIN, green);
 }
 
 /**
  * @brief Cvičení funkce bez návratové hodnoty s více parametry.
  * Vytvoř funkci co po zavolání vypíše do seriového monitoru součet dvou vstupních celých čísel.
  */
-
- // ZDE NAPIŠ SVŮJ KÓD
  void printSum(int a, int b)
 {
     int sum = a + b;
@@ -261,10 +264,10 @@ void setLEDState(int pin, bool state)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////// Funkce s návratovou hodnotou a bez parametru. ////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad funkce s návratovou hodnotou s parametrem.
+ * @brief 
  * V případě funkce s návratovou hodnotou již není její datový typ void, ale datový typ funkce je stejný jako datový typ navratové hodnoty.
  * 
  * @return celé číslo 42.
@@ -285,25 +288,22 @@ int getNumber()
 
  /**
  * @brief Cvičení funkce s návratovou hodnotou s parametrem.
- * Vytvoř funkci co po zavolání vrátí celé číslo 42.
- */
+ * Vytvoř funkci co po zavolání vrátí hodnotu z potenciometru.
+ * 
+ * @return Hodnota z potenciometru (0-4095 pro ESP32).
 
-int getSensorValue()
-{
-    return analogRead(POTENTIOMETER_PIN); // Nebo jiný pin senzoru
-}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Funkce s návratovou hodnotou s parametrem. /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad funkce s návratovou hodnotou a bez parametru.
- * V případě funkce s návratovou hodnotou již není její datový typ void, ale datový typ funkce je stejný jako datový typ navratové hodnoty.
- * 
- * @return celé číslo 42.
+ * @brief V případě funkce s návratovou hodnotou již není její datový typ void, ale datový typ funkce je stejný jako datový typ navratové hodnoty.
  * 
  * Příklad užití: Po zavolání funkce vrací celé číslo 42.
+ * 
+ * @
+ * @return celé číslo 42.
  */
 int getNumber()
 {
@@ -313,9 +313,11 @@ int getNumber()
 /**
  * @brief Cvičení funkce s návratovou hodnotou a bez parametru.
  * Vytvoř funkci co po zavolání vrátí celé číslo 42.
+ * 
+ * @param sensorPin Pin, na kterém je připojen senzor.
+ * @return Celé číslo 42.
+ * 
  */
-
- // ZDE NAPIŠ SVŮJ KÓD
  int readSensor(int sensorPin)
 {
     int value = analogRead(sensorPin);
@@ -324,13 +326,24 @@ int getNumber()
     return value;
 }
 
+/**
+ * @brief Převádí délku v centimetrech na metry.
+ * 
+ * @param cm Délka v centimetrech.
+ * @return float Délka v metrech.
+ */
+float cmToMeters(float cm)
+{
+    return cm / 100.0;
+}
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////// Funkce s návratovou hodnotu a více parametry. ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * @brief Příklad funkce s návratovou hodnotu a více parametry.
+ * @brief
  * Obdobně jako u funkce s navratovou hodnotou bez parametru, je třeba zvolit datový typ funkce, tak aby byl stejný jako datový typ navratové hodnoty.
  * 
  * @param a První celé číslo pro součet.
