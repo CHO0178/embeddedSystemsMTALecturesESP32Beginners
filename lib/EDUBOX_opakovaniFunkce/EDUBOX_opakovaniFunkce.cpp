@@ -307,18 +307,15 @@ int getNumber42()
     return 42;
 }
 
-
 /**
- * @brief Cvičení funkce s návratovou hodnotou s parametrem.
- * Vytvoř funkci co po zavolání vrátí hodnotu z potenciometru.
+ * @brief Funkce vrací hodnotu čísla pí (π) zaokrouhlenou na několik desetinných míst.
  * 
- * @return Hodnota z potenciometru (0-4095 pro ESP32).
+ * @return hodnota čísla π (3.14159)
  */
-int getNumber()
+double getPi()
 {
-    return 42;
+    return 3.14159;
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Funkce s návratovou hodnotou s parametrem. /////////////////////////////////////
