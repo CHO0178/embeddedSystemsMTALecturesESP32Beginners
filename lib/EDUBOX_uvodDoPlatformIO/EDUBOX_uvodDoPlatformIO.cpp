@@ -5,7 +5,7 @@
  * cílem těchto cvičení je seznámit studenty s programováním v jazyce C++ a s vývojem pro 
  * mikrokontrolery na úrovni bare metal a poskytnout jednoduchou ukázku pro otetování vývojového prostředí
  * 
- * @version 0.1
+ * @version 1.0
  * @date 2025-01-31
  * 
  * @copyright Copyright (c) 2025
