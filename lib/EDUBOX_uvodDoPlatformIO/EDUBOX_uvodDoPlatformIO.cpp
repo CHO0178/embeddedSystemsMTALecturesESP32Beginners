@@ -56,12 +56,13 @@ void blinkingSemaphore()
 {
     initSemaphoreWithButton();
 
-    while(!isButtonPressed()){} // čeká na stisknutí tlačítka
+    
 
     while(true)
     {
         setSemaphoreLights(1,1,1);
         stopProgram(500);
+        while(!isButtonPressed()){} // čeká na stisknutí tlačítka
     }
 }
 
