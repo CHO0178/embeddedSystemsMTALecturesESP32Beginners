@@ -1,9 +1,9 @@
 /**
- * @file EDUBOX_opakovaniFunkce.cpp       <-- FIX IT HERE
+ * @file EDUBOX_Funkce.cpp
  * @author Bc. Dalibor Slíva
- * @brief tento soubor obsahuje praktické ukázky a cvičení pro EDUBOX_FUNKCE, který je součástí projektu MTA-TP   <-- FIX IT HERE
- * cílem těchto cvičení je seznámit studenty s programováním v jazyce C++ a s vývojem pro                          <-- FIX IT HERE
- * mikrokontrolery na úrovni bare metal a poskytnout jednoduchou ukázku pro otetování vývojového prostředí        <-- FIX IT HERE
+ * @brief Tento soubor obsahuje praktické ukázky a cvičení pro EDUBOX_FUNKCE, který je součástí projektu MTA-TPA  TODO: hfgcgh
+ * cílem těchto cvičení je seznámit studenty s programováním v jazyce C++ a s vývojem pro
+ * mikrokontrolery pro začátečníky a poskytnout jednoduchou ukázku pro otetování vývojového prostředí.
  * 
  * @version 0.1
  * @date 2025-05-29
@@ -134,62 +134,19 @@
  */
 
 #include <Arduino.h>
-#include "EDUBOX_opakovaniFunkce.hpp"
+#include "EDUBOX_Funkce.hpp"
 
 // Definice pinů
 #define RED_LED_PIN 27
 #define YELLOW_LED_PIN 26
 #define GREEN_LED_PIN 25
-#define POTENTIOMETER_PIN 35
 
-/*
-int nazevFunkce(int par1, char par2);
-
-int foo(char a);
-int foo(char a){
-  // Tělo funkce
-}
-foo(3);
-foo;
-*/
-
-/**
- * @note ..text..
- * @brief ..text..
- * @details ..text..
- * @param parName1 ..text..
- * @param parName2 ..text..
- * @return ..text..
- */
-
-/*
-int c; // Globální proměnná
-
-void fooA(){
-int a = 5; // Lokální proměnná
-int d = c;
-}
-
-void fooB()
-{
-int b = a;
-Serial.println(c);
-}
-
-void foo(int a);
-
-void foo(int a)
-{
-    // Kód
-}
-*/
 
 void initPeripherals()
 {
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(YELLOW_LED_PIN, OUTPUT);
   pinMode(GREEN_LED_PIN, OUTPUT);
-  pinMode(POTENTIOMETER_PIN, INPUT);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -382,11 +339,10 @@ int sumNumbers(int a, int b)
 int getPercentage(int max, int current, int min)
 {
   if (max == min) {
-    Serial.println("Chyba: Maximální a minimální hodnota jsou stejné, nelze vypočítat procento."); //Ošetření dělení nulou, pokud by maximální a minimální hodnota byly stejné.
+    Serial.println("Chyba: Maximální a minimální hodnota jsou stejné (nelze dělit nulou), nelze vypočítat procento.");
     return 0;
   }
   return ((current - min) * 100) / (max - min);
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
