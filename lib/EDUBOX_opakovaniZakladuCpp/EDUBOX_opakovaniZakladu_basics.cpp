@@ -26,7 +26,7 @@
  * - char (znak, 1 bajt, -128 až 127)
  * - string (řetězec znaků, dynamická velikost, závisí na obsahu)
  *
- * @note Existují také modifikátory typů, které mění rozsah a chování proměnných:
+ * @note Existují také modifikátory typů (Typové modifikátory), které mění rozsah a chování proměnných:
  * - short (zmenší velikost int na 2 bajty, rozsah -32 768 až 32 767)
  * - long (většinou 4 bajty, rozsah -2 147 483 648 až 2 147 483 647 – pro 8 bajtů použij long long)
  * - unsigned (omezí proměnnou jen na kladné hodnoty, např. unsigned int 0 až 4 294 967 295)
@@ -269,11 +269,12 @@
  * 
  * @note Příkaz continue není tak obvyklý jako break, ale má své uplatnění
  * 
- * @example
+ * @code
  * for (int i = 0; i < 10; i++) {
  *   if (i % 2 != 0) {       // Pokud je i liché číslo
  *    continue;              // Přeskočí každý krok, kdy je i liché číslo
  * }
+ * @endcode
  */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -281,24 +282,32 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // EDUBOX_opakovaniZakladu_basics.cpp
-// Ukázkové příklady základních jazykových konstrukcí v C/C++ pro Arduino/ESP32
+// Ukázkové příklady a cvičení základních jazykových konstrukcí pro Arduino/ESP32
+#include <Arduino.h>
+#include "EDUBOX_opakovaniZakladu_basics.hpp"
 
-#define LED_PIN 2 // Pin pro LED
-#define BTN_PIN 4 // Pin pro tlačítko
+// Definice pinů
+#define RED_LED_PIN 27         // Pin pro červenou LED
+#define YELLOW_LED_PIN 26      // Pin pro žlutou LED
+#define GREEN_LED_PIN 25       // Pin pro zelenou LED
 
-void setup()
+
+void initPeripherals()
 {
-  Serial.begin(115200); // Nastavení rychlosti (baudu) sériového portu
-  pinMode(LED_PIN, OUTPUT); // LED na pinu 2
-  pinMode(BTN_PIN, INPUT_PULLUP); // Tlačítko na pinu 4
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(YELLOW_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
 }
 
 
 
+// POUZIVAT HW!
 
-// OTAZKY:
-// 1.  POUZIVAT HW?
 // 2. - s, nebo bez uzivatelovy interakce - pokud ano přes manuální dosazení hodnoty do vstupního parametru, nebo přes sériový monitor?
+
+// Herni kostkaw 1-6 example => cviceni 1-10?
+
+// 
 
 
 
