@@ -163,7 +163,7 @@
  * @details Syntaxe: while (podmínka) { ... }
  * @param podmínka Podmínka pro pokračování cyklu (např. i < 5)
  * 
- * 
+ *
  * @note Princip: Dokud (podmínka) { ... }
  * 
  * Podmínka se testuje před každým průchodem cyklem
@@ -196,11 +196,12 @@
  * 
  * Např. for (int i = 0; i < 5; i++) provede tělo cyklu 5x, protože se po každém provedení těla cyklu proměnná i navýší o 1 (i = 0, 1, 2, 3, 4)
  * @note proměnnou i lze použít i v samotné logice - ideální pro procházení pole nebo seznamu
+ * @note možnost zjednodušení nastavení pinMode v případě většího počtu pinů (např.: od 3 do 12 - INPUT ; od 12-23 - OUTPUT)
  * 
- * @warning Nezapomeňte dobře nastavit podmínku, aby cyklus neskončil příliš brzo nebo naopak nikdy neskončil - je) rozdíl mezi i < 5 a i <= 5!
+ * @warning Nezapomeňte dobře nastavit podmínku, aby cyklus neskončil příliš brzo nebo naopak nikdy neskončil - je) rozdíl mezi i < 5 a i <= 5  !
  * @warning Po skončení a opuštění cyklu proměnná i zaniká a je možné ji deklarovat znovu v jiném cyklu
- * 
- * 
+ *
+ *
  * @code
     for (int i = 0; i < 5; i++) {
         // Tělo cyklu - provede se 5x (postupně pro každou hodnotu i = 0 až 4)
@@ -233,7 +234,6 @@
 /**
  * @brief Ovládací příkazy break a continue
  * @note Ovládací příkazy slouží k řízení toku programu
-
  */
 
 /**
@@ -302,13 +302,88 @@ void initPeripherals()
 
 
 // POUZIVAT HW!
+// Funkce se budou jmenovat podle toho co dělají!
 
-// 2. - s, nebo bez uzivatelovy interakce - pokud ano přes manuální dosazení hodnoty do vstupního parametru, nebo přes sériový monitor?
 
-// Herni kostkaw 1-6 example => cviceni 1-10?
+// Prezentace - nakreslit vlastní schéma HW, který bude použit (max 2 schémata / jiný HW)
 
-// 
 
+// 2. - s, nebo bez uzivatelovy interakce - pokud ano přes manuální dosazení hodnoty do vstupního parametru, nebo přes sériový monitor? - bez uživatelovy interkace
+// mým úkolem je vysvětlit jak fungujou ty eduboxy! - pamatovat že za sebou mají Arduino kurz - znají millis() atd..
+
+
+// Switch? - Herni kostka 1-6 example => cviceni 1-10?
+
+// For - světelný had na gpio piny za sebou?
+
+// while - buď set blikání led, nebo držení blikání LED, nebo rgb LED dokola duha
+
+// vše popisovat doxygenenm co ta funkce dělá...
+
+
+// potenciometr RGB
+// potenciometr manual LED VU meter
+// mozne pouziti senzorů - fotorezistor, otřes (vibracee), IR (plamene), zvuk - analog i digital, PIR 
+
+
+
+
+/*
+If - else:
+Příklad: LED + tlačítko - pokud je tlačítko drženo tak LED svítí
+Cvičení: LED + tlačítko - set/reset LED - když je tlačítko stisknuto stav LED se invertuje - pokud svítí zhasne, pokud nesvítí - rozsvítí se
+
+Switch:
+Příklad: Herní kostka 1-6 
+Cvičení: Herní kostka 1-10
+
+For:
+Příklad1: potenciometr + jednoduchý manuální  LED VU meter - pomocí funkce map, a pak for digitalwrite , byly by to 3 zelené, 2 žluté a 1 červená.
+Příklad2: nastavení bliknutí LED - nastavte počet blikání pomocí proměnné a použijte cyklus for
+Cvičení: Blikání LED - tlačítkem nastavte počet bliknutí a potenciometrem počet blikajících LED
+
+While:
+Příklad: tlačítko + RGB single LED - pouze při držení tlačítka se začne provádět kód pro jednoduché přepínání barev po časový úsek bude svítit jedna barva / jejich míchání (musí být řešeno bez knihoven), při puštění tlačítka zůstane poslední barva
+Cvičení: potenciometr + RGB single LED - běží dokola duhový efekt a potenciometr nastavuje rychlost přechodu mezi barvami (rychleji pomaleji) 
+
+Do-while:
+Příklad: na začátku se změří hodnota potenciometru, např modrá LED blikne na inicializaci a pak bude modrá led svítit dokud se hodnota potenciometru nezmění (z důvodů zapojení do nepájivého pole a rušení tam je potřeba nastavit, aby byla změna považována až  když se změní v intervalu 3 - +-3)...
+a až když se změní tak zase začne blikat modrá dioda - tím se zaručí, že se opravdu počká na to 1. vykonání a bude se program vykonávat dokud se bude měnit hodnota potenciometru...
+Cvičení: 
+Po zapnutí zařízení musí dojít k inicializaci, která se projeví jedním krátkým bliknutím LED. Následně LED trvale svítí, dokud nenastavíte potenciometr do určitého rozsahu (např. 500 až 600). Jakmile je potenciometr v tomto rozsahu, LED přestane trvale svítit a místo toho začne blikat – tím dává najevo, že je vše nastaveno správně.
+
+
+Break:
+Příklad: 2x while(1) tam bude digitalwrite high na led a  if digitalread tlacitko tak break mezi nimidigitalwrite low te led která svitila a ve druhem bude totoéž co pro první - přepínání mezi 2 led
+Cvičení: Procházejte pole LED připojených na různé digitální piny. Každá LED se rozsvítí se zpožděním. Jakmile hodnota na potenciometru překročí určitou mezní hodnotu (například 800), přerušte smyčku pomocí příkazu break a rozsviťte modrou LED.
+
+
+void loop()
+{
+  for (int i = 0; i < numLeds; i++) {
+    digitalWrite(ledPins[i], HIGH);
+    delay(300);                                     // fatální nastavení delay - čtení potenciometru bude blokováno
+
+    int potValue = analogRead(potPin);
+    Serial.print("Potenciometr: ");
+    Serial.println(potValue);
+
+    if (potValue > 800) {
+      digitalWrite(ledPins[i], LOW);  // zhasni právě rozsvícenou LED
+      digitalWrite(blueLedPin, HIGH); // rozsvítí modrou LED
+      break;
+    }
+
+    digitalWrite(ledPins[i], LOW);
+  }
+
+  delay(1000);
+  digitalWrite(blueLedPin, LOW);
+}
+
+
+
+*/
 
 
 
