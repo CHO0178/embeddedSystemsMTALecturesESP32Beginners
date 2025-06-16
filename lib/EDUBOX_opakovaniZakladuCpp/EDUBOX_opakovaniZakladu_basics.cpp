@@ -331,30 +331,48 @@ void initPeripherals()
 /*
 If - else:
 Příklad: LED + tlačítko - pokud je tlačítko drženo tak LED svítí
+
 Cvičení: LED + tlačítko - set/reset LED - když je tlačítko stisknuto stav LED se invertuje - pokud svítí zhasne, pokud nesvítí - rozsvítí se
 
+
+
 Switch:
-Příklad: Herní kostka 1-6 
-Cvičení: Herní kostka 1-10
+Příklad: Herní kostka 1-6 + zapojení na nepájivém poli přesně jako reálná kostka
+
+Cvičení: Herní kostka 1-10 (nebo méně, nebo více - tady spíše pro procvičení zapojení a procvičení se orientace co je kde zapojeno)
+
+
 
 For:
-Příklad1: potenciometr + jednoduchý manuální  LED VU meter - pomocí funkce map, a pak for digitalwrite , byly by to 3 zelené, 2 žluté a 1 červená.
+Příklad1: potenciometr + jednoduchý manuální  LED VU meter - pomocí funkce map, a pak for digitalwrite , byly by to 3 zelené, 2 žluté a 1 červená jakoby vizualizér hudby
+
 Příklad2: nastavení bliknutí LED - nastavte počet blikání pomocí proměnné a použijte cyklus for
-Cvičení: Blikání LED - tlačítkem nastavte počet bliknutí a potenciometrem počet blikajících LED
+
+Cvičení: Blikání LED - tlačítkem nastavte počet bliknutí a potenciometrem počet blikajících LED (vnořené for)
+
+
 
 While:
-Příklad: tlačítko + RGB single LED - pouze při držení tlačítka se začne provádět kód pro jednoduché přepínání barev po časový úsek bude svítit jedna barva / jejich míchání (musí být řešeno bez knihoven), při puštění tlačítka zůstane poslední barva
-Cvičení: potenciometr + RGB single LED - běží dokola duhový efekt a potenciometr nastavuje rychlost přechodu mezi barvami (rychleji pomaleji) 
+Příklad: tlačítko + RGB single LED - pouze při držení tlačítka se začne provádět kód pro jednoduché přepínání barev po časový úsek bude svítit jedna barva / jejich míchání,
+při puštění tlačítka zůstane poslední barva
+
+Cvičení: potenciometr + RGB single LED - běží dokola duhový efekt a potenciometr nastavuje rychlost přechodu mezi barvami (rychleji/pomaleji) 
+
+
 
 Do-while:
-Příklad: na začátku se změří hodnota potenciometru, např modrá LED blikne na inicializaci a pak bude modrá led svítit dokud se hodnota potenciometru nezmění (z důvodů zapojení do nepájivého pole a rušení tam je potřeba nastavit, aby byla změna považována až  když se změní v intervalu 3 - +-3)...
+Příklad: na začátku se změří hodnota potenciometru, např modrá LED blikne na inicializaci a pak bude modrá led svítit dokud se hodnota potenciometru nezmění
+(z důvodů zapojení do nepájivého pole a rušení potřeba nastavit, aby změna pouze když se hodnota změní v intervalu 3 - +-3 - pouze funkce abs...)
 a až když se změní tak zase začne blikat modrá dioda - tím se zaručí, že se opravdu počká na to 1. vykonání a bude se program vykonávat dokud se bude měnit hodnota potenciometru...
-Cvičení: 
-Po zapnutí zařízení musí dojít k inicializaci, která se projeví jedním krátkým bliknutím LED. Následně LED trvale svítí, dokud nenastavíte potenciometr do určitého rozsahu (např. 500 až 600). Jakmile je potenciometr v tomto rozsahu, LED přestane trvale svítit a místo toho začne blikat – tím dává najevo, že je vše nastaveno správně.
+
+Cvičení:
+Po zapnutí zařízení musí dojít k inicializaci, která se projeví jedním krátkým bliknutím LED. Následně LED trvale svítí, dokud nenastavíte potenciometr do určitého rozsahu
+(např. 500 až 600). Jakmile je potenciometr v tomto rozsahu, LED přestane trvale svítit a místo toho začne blikat – tím dává najevo, že je vše nastaveno správně.
 
 
 Break:
-Příklad: 2x while(1) tam bude digitalwrite high na led a  if digitalread tlacitko tak break mezi nimidigitalwrite low te led která svitila a ve druhem bude totoéž co pro první - přepínání mezi 2 led
+Příklad: 2x while(1) tam bude digitalwrite high na led a if digitalread tlacitko tak break mezi nimi digitalwrite low te led která svitila a ve druhem bude totoéž co pro první- přepínání mezi 2 led
+
 Cvičení: Procházejte pole LED připojených na různé digitální piny. Každá LED se rozsvítí se zpožděním. Jakmile hodnota na potenciometru překročí určitou mezní hodnotu (například 800), přerušte smyčku pomocí příkazu break a rozsviťte modrou LED.
 
 
