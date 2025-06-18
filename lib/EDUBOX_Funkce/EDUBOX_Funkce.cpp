@@ -141,7 +141,9 @@
 #define YELLOW_LED_PIN 26
 #define GREEN_LED_PIN 25
 
-
+/**
+ * @brief Inicializace periferií
+ */
 void initPeripherals()
 {
   pinMode(RED_LED_PIN, OUTPUT);
@@ -149,9 +151,6 @@ void initPeripherals()
   pinMode(GREEN_LED_PIN, OUTPUT);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////// Funkce bez návratové hodnoty a bez parametru. //////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @note V případech, že nám funkce nic nevrací tak její datový typ je void
  * @brief Rozsvícení LED diody
@@ -171,7 +170,6 @@ void turnOffLED()
     digitalWrite(RED_LED_PIN, LOW); // Vypne LED diodu
 }
 
-
 /**
  * @brief Funkce, která bliká LED diodou.
  * @details Tato funkce se používá pro blikání LED diody za pomoci funkcí turnOnLED() a turnOffLED().
@@ -185,9 +183,6 @@ void blinkLED()
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////// Funkce bez návratové hodnoty s parametrem. ///////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @note V případě funkce se vstupním parametrem musíme při tvorbě funkce zvolit požadovaný datový typ vstupního parametru.
  * @brief Funkce, která má jako vstupní parametr LED pin a přepne stav LED diody na tomto pinu.
@@ -213,9 +208,6 @@ void printNumber(float number)
     Serial.println(number);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////// Funkce bez návratové hodnoty s více parametry. //////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @note Obdobně jako u funkce s jedním parametrem je třeba při tvorbě funkce se dvěma parametry definovat jakého datového typu budou.
  * 
@@ -225,7 +217,6 @@ void printNumber(float number)
  * @param red Stav červené LED diody.
  * @param yellow Stav žluté LED diody.
  * @param green Stav zelené LED diody.
- * 
  */
 void setSemaphoreLights(bool red, bool yellow, bool green)
 {
@@ -248,10 +239,6 @@ void setSemaphoreLights(bool red, bool yellow, bool green)
     Serial.println(sum);
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////// Funkce s návratovou hodnotou a bez parametru. ////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @note Funkce s návratovou hodnotou již není její datový typ void, ale datový typ funkce je stejný jako datový typ navratové hodnoty.
  * @brief Po zavolání funkce vrací celé číslo 42.
@@ -274,9 +261,6 @@ double getPi()
     return 3.14159;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// Funkce s návratovou hodnotou s parametrem. /////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @note Funkce s návratovou hodnotou již není její datový typ void, ale datový typ funkce je stejný jako datový typ navratové hodnoty.
  * @brief Funkce, která převede délku v centimetrech na metry.
@@ -289,7 +273,6 @@ float cmToMeters(float cm)
 {
     return cm / 100.0;
 }
-
 
 /**
  * @brief Funkce, která čte hodnotu z potenciometru připojeného na zadaný pin.
@@ -306,11 +289,6 @@ float cmToMeters(float cm)
     return value;
 }
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////// Funkce s návratovou hodnotu a více parametry. ///////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * @note Funkce s návratovou hodnotou již není její datový typ void, ale datový typ funkce je stejný jako datový typ navratové hodnoty.
  * @brief Funkce, která vypočítá součet dvou vstupních celých čísel.
@@ -344,5 +322,3 @@ int getPercentage(int max, int current, int min)
   }
   return ((current - min) * 100) / (max - min);
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
