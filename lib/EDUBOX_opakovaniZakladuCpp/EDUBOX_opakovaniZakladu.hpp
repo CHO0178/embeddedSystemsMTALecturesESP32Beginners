@@ -72,19 +72,4 @@ void example_dual_loop_with_break();
 void exercise_led_sequence_with_break();
 
 
-#endif // EXAMPLES_H
-
-
-
-
-
-
-
-
-
-
-// void uzivatel_interakce_prikladIfElse();
-// void uzivatel_interakce_prikladSwitch();
-// void uzivatel_interakce_prikladWhile();
-// void uzivatel_interakce_prikladFor();
-// void uzivatel_interakce_prikladDoWhile();
+#endif

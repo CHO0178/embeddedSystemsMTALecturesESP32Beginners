@@ -287,7 +287,7 @@
 
 
 #include <Arduino.h>
-#include "EDUBOX_opakovaniZakladu_basics.hpp"
+#include "EDUBOX_opakovaniZakladu.hpp"
 
 
 // ====== DEFINICE PINŮ ======
@@ -340,20 +340,16 @@ int prevValue = -1;
 
 
 
-// ====== INICIALIZACE PINŮ ======
 
 /**
- * @brief Inicializuje / přiřazuje režím všem použitým pinům v příkladech i cvičeních
+ * @brief Inicializuje výstupní piny pro LED diody použité v příkladech s kostkou.
+ *
+ * Funkce nastaví šest GPIO pinů jako výstupní. Tyto LED představují jednotlivé body kostky (dice)
+ * a využívají se v příkladech se strukturou `switch`.
+ *
+ * @note Piny odpovídají DICE_LED_PIN_1 až DICE_LED_PIN_6.
  */
-void initPeripherals() {
-    // --- INPUTS ---
-    pinMode(BTN_PIN, INPUT_PULLUP);
-    pinMode(POT_PIN, INPUT);
-
-
-    // --- OUTPUTS ---
-    pinMode(LED_BLUE, OUTPUT);
-
+void initPeripheralsRollingDice() {
     pinMode(DICE_LED_PIN_1, OUTPUT);
     pinMode(DICE_LED_PIN_2, OUTPUT);
     pinMode(DICE_LED_PIN_3, OUTPUT);
@@ -365,25 +361,43 @@ void initPeripherals() {
     // pinMode(DICE_LED_PIN_8, OUTPUT);
     // pinMode(DICE_LED_PIN_9, OUTPUT);
 
-    /* V ZÁSADĚ NENÍ POTŘEBA?
+}
+
+/**
+ * @brief Inicializuje vstupní i výstupní piny potřebné pro základní cvičení a příklady.
+ *
+ * Funkce nastaví:
+ * - Tlačítko jako vstup s interním pull-up rezistorem
+ * - Potenciometr jako analogový vstup
+ * - Jednotlivé LED diody (včetně RGB a modré) jako výstupy
+ *
+ * Pro zjednodušení se výstupní piny pro LED VU metr nastavují pomocí cyklu `for`.
+ */
+
+void initPeripheralsBase() {
+    // --- INPUTS ---
+    pinMode(BTN_PIN, INPUT_PULLUP);
+    pinMode(POT_PIN, INPUT);
+
+    // --- OUTPUTS ---
+    pinMode(LED_BLUE, OUTPUT);
 
     // Nastavení pinMode LED pro VU meter pomocí smyčky for
     for (int i = 0; i < 6; i++) {
-        pinMode(leds[i], OUTPUT);                                           // Postupné procházení každého indexu pole leds a nastavení každého pinu na daném indexu jako OUTPUT
+        pinMode(leds[i], OUTPUT);                                // Postupné procházení každého indexu pole leds a nastavení každého pinu na daném indexu jako OUTPUT
     }
 
     pinMode(RGB_RED, OUTPUT);
     pinMode(RGB_GREEN, OUTPUT);
     pinMode(RGB_BLUE, OUTPUT);
-
-    */
 }
 
 
 
-/**
+ /**
  * @brief Příklad pro if-else - Svícení LED
- * @details svítí, pokud je tlačítko drženo
+ * @details Tento příklad slouží jako ukázka konstrukce `if-else`. V případě, že je tlačítko drženo, LED_BLUE svítí, jinak je zhasnuta.
+ * 
  */
 void example_btn_hold_light_led()
 {
@@ -397,10 +411,10 @@ void example_btn_hold_light_led()
 
 /**
  * @brief Cvičení pro if-else - SET/RESET LED pomocí tlačítka
- * @details Tlačítko ovládá přepínání stavu LED. Pokaždé, když je tlačítko stisknuto, se stav LED změní z rozsvíceného na zhasnutý a naopak.
+ * @details Tlačítko ovládá přepínání stavu LED. Pokaždé, když je tlačítko stisknuto, se stav LED změní z rozsvíceného na zhasnutý a případně naopak.
  */
 void exercise_toggle_led_by_button() {
-
+    
 }
 
 
