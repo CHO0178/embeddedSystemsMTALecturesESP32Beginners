@@ -1,6 +1,7 @@
 /**
  * @file EDUBOX_opakovaniZakladu_basics.cpp
- * @brief Opakování základních logických prvků C a C++ a jejich použití v příkladech včetně procvičení v úkolech pro EDUBOX 1 - Opakování základů
+ * @brief Zdrojový soubor pro praktické příklady a cvičení
+ * @details Opakování základních logických prvků C a C++ a jejich použití v příkladech včetně procvičení v úkolech pro EDUBOX 1 - Opakování základů
  * 
  */
 
@@ -339,9 +340,6 @@ int prevValue = -1;
 
 
 
-
-
-
 /**
  * @brief Inicializuje výstupní piny pro LED diody použité v příkladech s kostkou.
  *
@@ -370,7 +368,7 @@ void initPeripheralsRollingDice() {
  * Funkce nastaví:
  * - Tlačítko jako vstup s interním pull-up rezistorem
  * - Potenciometr jako analogový vstup
- * - Jednotlivé LED diody (včetně RGB a modré) jako výstupy
+ * - Jednotlivé LED (včetně RGB a modré) jako výstupy
  *
  * Pro zjednodušení se výstupní piny pro LED VU metr nastavují pomocí cyklu `for`.
  */
@@ -400,7 +398,7 @@ void initPeripheralsBase() {
  * @details Tento příklad slouží jako ukázka konstrukce `if-else`. V případě, že je tlačítko drženo, LED_BLUE svítí, jinak je zhasnuta.
  * 
  */
-void example_btn_hold_light_led()
+void HoldBtnLightLed()
 {
     if (digitalRead(LED_BLUE) == LOW) {
         digitalWrite(LED_BLUE, HIGH);
@@ -414,8 +412,8 @@ void example_btn_hold_light_led()
  * @brief Cvičení pro if-else - SET/RESET LED pomocí tlačítka
  * @details Tlačítko ovládá přepínání stavu LED. Pokaždé, když je tlačítko stisknuto, se stav LED změní z rozsvíceného na zhasnutý a případně naopak.
  */
-void exercise_toggle_led_by_button() {
-    
+void ToggleLedByButton() {
+
 }
 
 
@@ -425,7 +423,7 @@ void exercise_toggle_led_by_button() {
  * na správných místech jako na reálné hrací kostce pouze s vícero stranami. Výsledek zůstane zobrazen, dokud se tlačítko znovu nestiskne.
  * 
  */
-void example_btn_random_dice_display() {
+void GameDice() {
     bool btnNow = digitalRead(BTN_PIN);
 
     if (btnPrev == HIGH && btnNow == LOW) {
@@ -488,7 +486,7 @@ void example_btn_random_dice_display() {
  * @details Stisknutím tlačítka se vygeneruje náhodné číslo od 1 do 9. Pro zobrazení vygenerovaného výsledku se rozsvítí daný počet LED
  * na správných místech jako na reálné hrací kostce pouze s vícero stranami. Výsledek zůstane zobrazen, dokud se tlačítko znovu nestiskne.
  */
-void exercise_extended_dice_display() {
+void ExtendedDiceDisplay() {
 
 }
 
@@ -497,7 +495,7 @@ void exercise_extended_dice_display() {
  * @details Pomocí potenciometru řídíš rozsvícení LED podle úrovně (jako VU meter) - Počet bliknutí LED je nastaven pomocí přiřazením čísla do proměnné.
  * LED blikne tolikrát, kolik je v proměnné nastaveno.
  */
-void example_vu_meter_with_pot()
+void VUMeterWithPotentiometer()
 {
     int value = analogRead(POT_PIN);
     int level = map(value, 0, 1023, 0, 7);
@@ -517,7 +515,7 @@ void example_vu_meter_with_pot()
  */
 
 
-void example_led_blink_x_times()
+void LEDBlinkXTimes()
 {
     const int BLINK_COUNT = 5;
 
@@ -537,7 +535,7 @@ void example_led_blink_x_times()
  * @details Pomocí tlačítka nastavíš KOLIKRÁT mají LED blikat. Potenciometrem určuješ, KOLIK LED blikne současně. Využívají se vnořené for cykly.
  */
 
-void exercise_configurable_blinking_leds() {
+void ConfigurableBlinkingLEDs() {
 
 }
 
@@ -546,7 +544,7 @@ void exercise_configurable_blinking_leds() {
  * @brief Příklad pro cyklus while - Měnění barev RGB LED
  * @details RGB LED přepíná barvy po dobu držení tlačítka, po uvolnění zůstane poslední barva
  */
-void example_rgb_cycle_on_hold() {
+void RGBCycleOnHold() {
     while(digitalRead(BTN_PIN) == HIGH) { // Dokud je tlačítko stisknuto
         // Cyklus pro přepínání barev RGB LED
         digitalWrite(RGB_RED, HIGH);
@@ -566,7 +564,7 @@ void example_rgb_cycle_on_hold() {
  * @brief Cvičení pro cyklus while - RGB LED, která plynule mění barvy
  * @details RGB LED plynule přechází mezi různými barvami v duhovém efektu - Rychlost změny barev je ovládána potenciometrem.
  */
-void exercise_rgb_rainbow_speed_control() {
+void RGBRainbowSpeedControl() {
 
 }
 
@@ -577,7 +575,7 @@ void exercise_rgb_rainbow_speed_control() {
  * @details Po zapnutí proběhne inicializace ve formě jednoho bliknutí modré LED. Poté LED svítí, dokud není potenciometr nastaven do určitého rozsahu (např. 500–600).
  * Pokud je hodnota v rozsahu, LED začne blikat jako potvrzení správného nastavení.
  */
-void example_pot_target_range_detect() {
+void PotTargetRangeDetect() {
     do {
         digitalWrite(LED_BLUE, HIGH); // Inicializace - bliknutí modré LED
         delay(500);
@@ -592,7 +590,7 @@ void example_pot_target_range_detect() {
  * @brief Cvičení pro cyklus do-while - Detekce změny hodnoty potenciometru
  * @details Po spuštění blikne modrá LED, pak trvale svítí, dokud se potenciometr nezmění o ±3
  */
-void exercise_pot_change_detect() {
+void PotChangeDetect() {
 
 }
 
@@ -601,7 +599,7 @@ void exercise_pot_change_detect() {
  * @details V nekonečné smyčce neustálé svítí zelený segment RGB LED. Kdykoliv je tlačítko stisknuto, je proveden příkaz break, kterým je aktuální nekonečná smyčka ukončena.
  * Tím se přejde do druhého nekonečného cyklu, ve kterém svítí červený segment RGB LED do doby, kdy je tlačítko opět stisknuto a tím vyvolán break, který zapříčiní ukončení cyklu.
  */
-void example_dual_loop_with_break() {
+void DualLoopWithBreak() {
     while(1) { // Simulace nekonečné smyčky
         digitalWrite(RGB_GREEN, HIGH);
         if (digitalRead(BTN_PIN) == HIGH) {
@@ -629,7 +627,7 @@ void example_dual_loop_with_break() {
  * Pokud k překročení nedojde, všechny rozsvícené LED zhasnou a sekvence postupného rozsvěcování se opakuje.
  */
 
-void exercise_led_sequence_with_break() {
+void ExtendedLEDSequenceWithBreak() {
 
 }
 
