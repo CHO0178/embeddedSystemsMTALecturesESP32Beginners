@@ -1,6 +1,10 @@
 /**
  * @file EDUBOX_opakovaniZakladu_basics.cpp
- * @brief Základní příklady pro opakování základů C a C++ pro EDUBOX 1 - úvod do programování Arduina a ESP32
+ * @brief Opakování základních logických prvků C a C++ a jejich použití v příkladech včetně procvičení v úkolech pro EDUBOX 1 - úvod do programování Arduina a ESP32
+ */
+
+/**
+ * @brief Opakování teorie
  */
 
 /**
@@ -230,7 +234,6 @@
 
 
 
-
 /**
  * @brief Ovládací příkazy break a continue
  * @note Ovládací příkazy slouží k řízení toku programu
@@ -277,54 +280,50 @@
  * @endcode
  */
 
+/**
+ * @brief Praktické příklady a cvičení
+ * @details Ukázkové příklady a cvičení základních jazykových logických konstrukcí pro Arduino/ESP32
+ */
 
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////// PRIKLADY A CVICENI /////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// EDUBOX_opakovaniZakladu_basics.cpp
-// Ukázkové příklady a cvičení základních jazykových konstrukcí pro Arduino/ESP32
 #include <Arduino.h>
 #include "EDUBOX_opakovaniZakladu_basics.hpp"
 
 
 // ====== DEFINICE PINŮ ======
+// INPUTS
+#define BTN_PIN                2  // GPIO pin pro tlačítko
+#define POT_PIN                4  // GPIO pin pro potenciometr
 
-// --- Tlačítka a LED pro if-else ---
-#define BUTTON_PIN           2
-#define LED_PIN              13
+// OUTPUTS
+#define DICE_LED_PIN_1            12
+#define DICE_LED_PIN_2            13
+#define DICE_LED_PIN_3            14
+#define DICE_LED_PIN_4            25
+#define DICE_LED_PIN_5            26
+#define DICE_LED_PIN_6            27
+// Místo pro další LED - exercise_extended_dice_display, ideálně:
+// #define DICE_LED_7            32
+// #define DICE_LED_8            33
+// #define DICE_LED_9            34
 
-// --- LED pro herní kostku (switch) ---
-#define DICE_LED_BTN_1            3
-#define DICE_LED_BTN_2            4
-#define DICE_LED_BTN_3            5
-#define DICE_LED_BTN_4            6
-#define DICE_LED_BTN_5            7
-#define DICE_LED_BTN_6            8
+#define LED_GREEN_1               DICE_LED_PIN_1
+#define LED_GREEN_2               DICE_LED_PIN_2
+#define LED_GREEN_3               DICE_LED_PIN_3
+#define LED_YELLOW_1              DICE_LED_PIN_4
+#define LED_YELLOW_2              DICE_LED_PIN_5
+#define LED_RED                   DICE_LED_PIN_6
 
-// --- LED VU meter (for) ---
-#define POT_PIN              A0
-#define LED1                 3
-#define LED2                 4
-#define LED3                 5
-#define LED4                 6
-#define LED5                 7
-#define LED6                 8
+#define LED_BLUE                  36 // GPIO pin pro modrou LED
 
-// --- RGB LED (while) ---
-#define RGB_RED              3
-#define RGB_GREEN            5
-#define RGB_BLUE             6
 
-// --- LED a potenciometr (do-while) ---
-#define LED_BLUE             4
-#define POTENTIOMETER_PIN    A0
+const int leds[] = {LED_GREEN_1, LED_GREEN_2, LED_GREEN_3, LED_YELLOW_1, LED_YELLOW_2, LED_RED};     // pole pro LED VU meter (LED bar / LED bar graph)
 
-// --- LED pro break příklad ---
-#define LED1_PIN             3
-#define LED2_PIN             4
+
+#define RGB_RED              LED_RED         // nebo DICE_LED_PIN_1
+#define RGB_GREEN            LED_GREEN_1     // nebo DICE_LED_PIN_2
+#define RGB_BLUE             LED_BLUE        // nebo DICE_LED_PIN_3
+
 
 
 // ====== DEKLARACE PROMĚNNÝCH ======
@@ -337,97 +336,82 @@ bool btnPrev = HIGH;
 // do-while
 int prevValue = -1;
 
-// for – pole LED
-const int leds[] = {LED1, LED2, LED3, LED4, LED5, LED6};
+
 
 
 
 // ====== INICIALIZACE PINŮ ======
 
 /**
- * @brief Inicializuje všechny použité piny v příkladech
+ * @brief Inicializuje / přiřazuje režím všem použitým pinům v příkladech i cvičeních
  */
 void initPeripherals() {
-    // --- if-else ---
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
-    pinMode(LED_PIN, OUTPUT);
-
-    // --- switch (herní kostka) ---
-    pinMode(DICE_LED_BTN_1, OUTPUT);
-    pinMode(DICE_LED_BTN_2, OUTPUT);
-    pinMode(DICE_LED_BTN_3, OUTPUT);
-    pinMode(DICE_LED_BTN_4, OUTPUT);
-    pinMode(DICE_LED_BTN_5, OUTPUT);
-    pinMode(DICE_LED_BTN_6, OUTPUT);
-
-    // --- for (LED VU meter) ---
+    // --- INPUTS ---
+    pinMode(BTN_PIN, INPUT_PULLUP);
     pinMode(POT_PIN, INPUT);
-    const int leds[] = {LED1, LED2, LED3, LED4, LED5, LED6};
+
+
+    // --- OUTPUTS ---
+    pinMode(LED_BLUE, OUTPUT);
+
+    pinMode(DICE_LED_PIN_1, OUTPUT);
+    pinMode(DICE_LED_PIN_2, OUTPUT);
+    pinMode(DICE_LED_PIN_3, OUTPUT);
+    pinMode(DICE_LED_PIN_4, OUTPUT);
+    pinMode(DICE_LED_PIN_5, OUTPUT);
+    pinMode(DICE_LED_PIN_6, OUTPUT);
+    // Místo pro další LED - exercise_extended_dice_display, ideálně:
+    // pinMode(DICE_LED_PIN_7, OUTPUT);
+    // pinMode(DICE_LED_PIN_8, OUTPUT);
+    // pinMode(DICE_LED_PIN_9, OUTPUT);
+
+    /* V ZÁSADĚ NENÍ POTŘEBA?
+
+    // Nastavení pinMode LED pro VU meter pomocí smyčky for
     for (int i = 0; i < 6; i++) {
-        pinMode(leds[i], OUTPUT);
+        pinMode(leds[i], OUTPUT);                                           // Postupné procházení každého indexu pole leds a nastavení každého pinu na daném indexu jako OUTPUT
     }
 
-    // --- while (RGB LED) ---
     pinMode(RGB_RED, OUTPUT);
     pinMode(RGB_GREEN, OUTPUT);
     pinMode(RGB_BLUE, OUTPUT);
 
-    // --- do-while (modrá LED + potenciometr) ---
-    pinMode(LED_BLUE, OUTPUT);
-    pinMode(POTENTIOMETER_PIN, INPUT);
-
-    // --- break (dvě LED + tlačítko) ---
-    pinMode(LED1_PIN, OUTPUT);
-    pinMode(LED2_PIN, OUTPUT);
-    // BUTTON_PIN už nastaven výše
+    */
 }
 
 
 
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////// IF - ELSE PŘÍKLADY A CVIČENÍ ///////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /**
- * @brief LED svítí, pokud je tlačítko drženo
+ * @brief Příklad pro if-else - Svícení LED
+ * @details svítí, pokud je tlačítko drženo
  */
 void example_btn_hold_light_led()
 {
-    if (digitalRead(BUTTON_PIN) == LOW) {
-        digitalWrite(LED_PIN, HIGH);
+    if (digitalRead(LED_BLUE) == LOW) {
+        digitalWrite(LED_BLUE, HIGH);
     } else {
-        digitalWrite(LED_PIN, LOW);
+        digitalWrite(LED_BLUE, LOW);
     }
 }
 
 
 /**
- * @brief Tlačítko ovládá přepínání stavu LED. Pokaždé, když je tlačítko stisknuto, se stav LED změní z rozsvíceného na zhasnutý a naopak.
+ * @brief Cvičení pro if-else - SET/RESET LED pomocí tlačítka
+ * @details Tlačítko ovládá přepínání stavu LED. Pokaždé, když je tlačítko stisknuto, se stav LED změní z rozsvíceného na zhasnutý a naopak.
  */
 void exercise_toggle_led_by_button() {
-  // static bool ledState = LOW;
-  // if (digitalRead(BUTTON_PIN) == LOW) {
-  //   ledState = !ledState;
-  //   digitalWrite(LED_PIN, ledState);
-  //   delay(200);  // Debounce delay
-  // }
+
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////// SWITCH PŘÍKLADY A CVIČENÍ ///////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 /**
- * @brief Herní kostka – při stisku tlačítka nový náhodný hod (1–6), výsledek se zobrazí a zůstává
+ * @brief Příklad pro switch - Herní kostka pro deskové hry
+ * @details Stisknutím tlačítka se vygeneruje náhodné číslo od 1 do 6. Pro zobrazení vygenerovaného výsledku se rozsvítí daný počet LED
+ * na správných místech jako na reálné hrací kostce pouze s vícero stranami. Výsledek zůstane zobrazen, dokud se tlačítko znovu nestiskne.
+ * 
  */
 void example_btn_random_dice_display() {
-    bool btnNow = digitalRead(BUTTON_PIN);
+    bool btnNow = digitalRead(BTN_PIN);
 
     if (btnPrev == HIGH && btnNow == LOW) {
         currentDiceValue = random(1, 7);  // náhodné číslo 1–6
@@ -436,46 +420,46 @@ void example_btn_random_dice_display() {
 
     if (currentDiceValue != lastDrawnValue) {
         // Zhasnout všechny LED
-        digitalWrite(DICE_LED_BTN_1, LOW);
-        digitalWrite(DICE_LED_BTN_2, LOW);
-        digitalWrite(DICE_LED_BTN_3, LOW);
-        digitalWrite(DICE_LED_BTN_4, LOW);
-        digitalWrite(DICE_LED_BTN_5, LOW);
-        digitalWrite(DICE_LED_BTN_6, LOW);
+        digitalWrite(DICE_LED_PIN_1, LOW);
+        digitalWrite(DICE_LED_PIN_2, LOW);
+        digitalWrite(DICE_LED_PIN_3, LOW);
+        digitalWrite(DICE_LED_PIN_4, LOW);
+        digitalWrite(DICE_LED_PIN_5, LOW);
+        digitalWrite(DICE_LED_PIN_6, LOW);
 
         // Rozsvítit příslušné LED podle hodnoty
         switch (currentDiceValue) {
             case 1:
-                digitalWrite(DICE_LED_BTN_3, HIGH);
+                digitalWrite(DICE_LED_PIN_3, HIGH);
                 break;
             case 2:
-                digitalWrite(DICE_LED_BTN_1, HIGH);
-                digitalWrite(DICE_LED_BTN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_1, HIGH);
+                digitalWrite(DICE_LED_PIN_6, HIGH);
                 break;
             case 3:
-                digitalWrite(DICE_LED_BTN_1, HIGH);
-                digitalWrite(DICE_LED_BTN_3, HIGH);
-                digitalWrite(DICE_LED_BTN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_1, HIGH);
+                digitalWrite(DICE_LED_PIN_3, HIGH);
+                digitalWrite(DICE_LED_PIN_6, HIGH);
                 break;
             case 4:
-                digitalWrite(DICE_LED_BTN_1, HIGH);
-                digitalWrite(DICE_LED_BTN_2, HIGH);
-                digitalWrite(DICE_LED_BTN_5, HIGH);
-                digitalWrite(DICE_LED_BTN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_1, HIGH);
+                digitalWrite(DICE_LED_PIN_2, HIGH);
+                digitalWrite(DICE_LED_PIN_5, HIGH);
+                digitalWrite(DICE_LED_PIN_6, HIGH);
                 break;
             case 5:
-                digitalWrite(DICE_LED_BTN_1, HIGH);
-                digitalWrite(DICE_LED_BTN_2, HIGH);
-                digitalWrite(DICE_LED_BTN_3, HIGH);
-                digitalWrite(DICE_LED_BTN_5, HIGH);
-                digitalWrite(DICE_LED_BTN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_1, HIGH);
+                digitalWrite(DICE_LED_PIN_2, HIGH);
+                digitalWrite(DICE_LED_PIN_3, HIGH);
+                digitalWrite(DICE_LED_PIN_5, HIGH);
+                digitalWrite(DICE_LED_PIN_6, HIGH);
                 break;
             case 6:
-                digitalWrite(DICE_LED_BTN_1, HIGH);
-                digitalWrite(DICE_LED_BTN_2, HIGH);
-                digitalWrite(DICE_LED_BTN_4, HIGH);
-                digitalWrite(DICE_LED_BTN_5, HIGH);
-                digitalWrite(DICE_LED_BTN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_1, HIGH);
+                digitalWrite(DICE_LED_PIN_2, HIGH);
+                digitalWrite(DICE_LED_PIN_4, HIGH);
+                digitalWrite(DICE_LED_PIN_5, HIGH);
+                digitalWrite(DICE_LED_PIN_6, HIGH);
                 break;
         }
 
@@ -485,21 +469,18 @@ void example_btn_random_dice_display() {
 
 
 /**
- * @brief Po stisknutí tlačítka se vygeneruje náhodné číslo od 1 do 10 a podle něj se rozsvítí LED v rozložení jako na reálné hrací kostce.
- * Výsledek zůstane zobrazen, dokud se tlačítko znovu nestiskne.
+ * @brief Cvičení pro switch - Hod kostkou
+ * @details Stisknutím tlačítka se vygeneruje náhodné číslo od 1 do 9. Pro zobrazení vygenerovaného výsledku se rozsvítí daný počet LED
+ * na správných místech jako na reálné hrací kostce pouze s vícero stranami. Výsledek zůstane zobrazen, dokud se tlačítko znovu nestiskne.
  */
 void exercise_extended_dice_display() {
 
 }
 
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////// FOR PŘÍKLADY A CVIČENÍ ////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @brief Potenciometrem řídíme rozsvícení LED podle úrovně (jako VU meter)
+ /**
+ * @brief Příklad 1 pro cyklus for - pole LED - LED VU metrem
+ * @details Pomocí potenciometru řídíš rozsvícení LED podle úrovně (jako VU meter) - Počet bliknutí LED je nastaven pomocí přiřazením čísla do proměnné.
+ * LED blikne tolikrát, kolik je v proměnné nastaveno.
  */
 void example_vu_meter_with_pot()
 {
@@ -515,206 +496,126 @@ void example_vu_meter_with_pot()
     }
 }
 
+/**
+ * @brief Příklad 2 pro cyklus for - LED bliká podle počtu přiřazeného do proměnné
+ * @details Přiřazením hodnoty do proměnné BLINK_COUNT určuješ, kolikrát LED blikne.
+ */
 
-// Počet bliknutí LED je nastaven pomocí proměnné. LED blikne tolikrát, kolik je v proměnné nastaveno.
+
 void example_led_blink_x_times()
 {
     const int BLINK_COUNT = 5;
 
-    pinMode(LED_PIN, OUTPUT);
+    pinMode(LED_BLUE, OUTPUT);
 
     for (int i = 0; i < BLINK_COUNT; i++) {
-        digitalWrite(LED_PIN, HIGH);
+        digitalWrite(LED_BLUE, HIGH);
         delay(300);
-        digitalWrite(LED_PIN, LOW);
+        digitalWrite(LED_BLUE, LOW);
         delay(300);
     }
 }
 
 
 /**
- * @brief Pomocí tlačítka nastavíš kolikrát mají LED blikat. Potenciometrem určuješ, kolik LED blikne současně. Využívají se vnořené for cykly.
+ * @brief Cvičení pro cyklus for - Nastavení počtu bliknutí LED a počtu současně blikajících LED
+ * @details Pomocí tlačítka nastavíš KOLIKRÁT mají LED blikat. Potenciometrem určuješ, KOLIK LED blikne současně. Využívají se vnořené for cykly.
  */
 
 void exercise_configurable_blinking_leds() {
-//     const int LED_COUNT = 6;
-//     int ledPins[LED_COUNT] = {2, 3, 4, 5, 6, 7};
-//     int blinkCount = 0;
-//     int ledToBlink = 0;
 
-//     // Nastavení pinů jako výstupních
-//     for (int i = 0; i < LED_COUNT; i++) {
-//         pinMode(ledPins[i], OUTPUT);
-//     }
-
-//     // Čtení hodnoty z potenciometru
-//     int potValue = analogRead(POT_PIN);
-//     ledToBlink = map(potValue, 0, 1023, 1, LED_COUNT);
-
-//     // Čtení hodnoty z tlačítka
-//     if (digitalRead(BTN_PIN) == LOW) {
-//         blinkCount++;
-//     }
-
-//     // Blikání LED
-//     for (int i = 0; i < blinkCount; i++) {
-//         for (int j = 0; j < ledToBlink; j++) {
-//             digitalWrite(ledPins[j], HIGH);
-//         }
-//         delay(300);
-//         for (int j = 0; j < ledToBlink; j++) {
-//             digitalWrite(ledPins[j], LOW);
-//         }
-//         delay(300);
-//     }
-// }
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////// WHILE PŘÍKLADY A CVIČENÍ //////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /**
- * @brief RGB LED přepíná barvy po dobu držení tlačítka, po uvolnění zůstane poslední barva
+ * @brief Příklad pro cyklus while - Měnění barev RGB LED
+ * @details RGB LED přepíná barvy po dobu držení tlačítka, po uvolnění zůstane poslední barva
  */
 void example_rgb_cycle_on_hold() {
-    static int colorIndex = 0;
-    static bool wasReleased = true;
-
-    if (digitalRead(BUTTON_PIN) == LOW) {
-        if (wasReleased) {
-            wasReleased = false;
-
-            colorIndex++;
-            if (colorIndex > 2) colorIndex = 0;
-
-            // Nastavení barev
-            digitalWrite(RGB_RED,   colorIndex == 0 ? HIGH : LOW);
-            digitalWrite(RGB_GREEN, colorIndex == 1 ? HIGH : LOW);
-            digitalWrite(RGB_BLUE,  colorIndex == 2 ? HIGH : LOW);
-        }
-    } else {
-        wasReleased = true;
+    while(digitalRead(BTN_PIN) == HIGH) { // Dokud je tlačítko stisknuto
+        // Cyklus pro přepínání barev RGB LED
+        digitalWrite(RGB_RED, HIGH);
+        delay(500);
+        digitalWrite(RGB_RED, LOW);
+        digitalWrite(RGB_GREEN, HIGH);
+        delay(500);
+        digitalWrite(RGB_GREEN, LOW);
+        digitalWrite(RGB_BLUE, HIGH);
+        delay(500);
+        digitalWrite(RGB_BLUE, LOW);
     }
 }
 
 
 /**
- * @brief RGB LED plynule přechází mezi různými barvami v duhovém efektu - Rychlost změny barev je ovládána potenciometrem.
+ * @brief Cvičení pro cyklus while - RGB LED, která plynule mění barvy
+ * @details RGB LED plynule přechází mezi různými barvami v duhovém efektu - Rychlost změny barev je ovládána potenciometrem.
  */
 void exercise_rgb_rainbow_speed_control() {
 
 }
 
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////// DO-WHILE PŘÍKLADY A CVIČENÍ /////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 /**
- * @brief Po spuštění blikne modrá LED, pak trvale svítí, dokud se potenciometr nezmění o ±3
- */
-void example_pot_change_detect() {
-    static bool initialized = false;
-    int value;
-
-    if (!initialized) {
-        // Inicializační bliknutí
-        digitalWrite(LED_BLUE, HIGH);
-        delay(200);
-        digitalWrite(LED_BLUE, LOW);
-        delay(200);
-        prevValue = analogRead(POTENTIOMETER_PIN);
-        initialized = true;
-    }
-
-    value = analogRead(POTENTIOMETER_PIN);
-    if (abs(value - prevValue) > 3) {
-        digitalWrite(LED_BLUE, HIGH);
-        delay(150);
-        digitalWrite(LED_BLUE, LOW);
-        delay(150);
-    } else {
-        digitalWrite(LED_BLUE, HIGH);
-    }
-}
-
-
-
-/**
- * @brief Po zapnutí proběhne inicializace a LED jednou blikne. Poté LED svítí, dokud není potenciometr nastaven do určitého rozsahu (např. 500–600).
+ * @brief Příklad pro cyklus do-while - Detekce cílového rozsahu pro potenciometr
+ *
+ * @details Po zapnutí proběhne inicializace ve formě jednoho bliknutí modré LED. Poté LED svítí, dokud není potenciometr nastaven do určitého rozsahu (např. 500–600).
  * Pokud je hodnota v rozsahu, LED začne blikat jako potvrzení správného nastavení.
  */
-void exercise_pot_target_range_detect() {
-    // static bool initialized = false;
-    // int value;
-
-    // if (!initialized) {
-    //     // Inicializační bliknutí
-    //     digitalWrite(LED_BLUE, HIGH);
-    //     delay(200);
-    //     digitalWrite(LED_BLUE, LOW);
-    //     delay(200);
-    //     initialized = true;
-    // }
-
-    // value = analogRead(POTENTIOMETER_PIN);
-    // if (value >= 500 && value <= 600) {
-    //     // Hodnota v cílovém rozsahu, LED bliká
-    //     digitalWrite(LED_BLUE, HIGH);
-    //     delay(150);
-    //     digitalWrite(LED_BLUE, LOW);
-    //     delay(150);
-    // } else {
-    //     // Hodnota mimo rozsah, LED svítí trvale
-    //     digitalWrite(LED_BLUE, HIGH);
-    // }
+void example_pot_target_range_detect() {
+    do {
+        digitalWrite(LED_BLUE, HIGH); // Inicializace - bliknutí modré LED
+        delay(500);
+        digitalWrite(LED_BLUE, LOW);
+        delay(500);
+    } while (analogRead(POT_PIN) < 500 || analogRead(POT_PIN) > 600); // Dokud není potenciometr v rozsahu 500–600
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////// BREAK PŘÍKLADY A CVIČENÍ /////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /**
- * @brief LED1 svítí v první části smyčky, po stisknutí tlačítka se přejde do druhé části a svítí LED2
+ * @brief Cvičení pro cyklus do-while - Detekce změny hodnoty potenciometru
+ * @details Po spuštění blikne modrá LED, pak trvale svítí, dokud se potenciometr nezmění o ±3
+ */
+void exercise_pot_change_detect() {
+
+}
+
+/**
+ * @brief Příklad pro příkaz break - Dvojitá nekonečná smyčka s přepínáním barev
+ * @details V nekonečné smyčce neustálé svítí zelený segment RGB LED. Kdykoliv je tlačítko stisknuto, je proveden příkaz break, kterým je aktuální nekonečná smyčka ukončena.
+ * Tím se přejde do druhého nekonečného cyklu, ve kterém svítí červený segment RGB LED do doby, kdy je tlačítko opět stisknuto a tím vyvolán break, který zapříčiní ukončení cyklu.
  */
 void example_dual_loop_with_break() {
-    static bool inSecondLoop = false;
-
-    if (!inSecondLoop) {
-        digitalWrite(LED1_PIN, HIGH);
-        if (digitalRead(BUTTON_PIN) == LOW) {
-            digitalWrite(LED1_PIN, LOW);
-            inSecondLoop = true; // break simulován stavem
+    while(1) { // Simulace nekonečné smyčky
+        digitalWrite(RGB_GREEN, HIGH);
+        if (digitalRead(BTN_PIN) == HIGH) {
+            digitalWrite(RGB_GREEN, LOW);
+            break; // Opustí smyčku
         }
-    } else {
-        digitalWrite(LED2_PIN, HIGH);
+        delay(50); // Krátké zpoždění pro stabilitu
+    }
+
+    while(1) {
+        digitalWrite(RGB_RED, HIGH);
+        if (digitalRead(BTN_PIN) == HIGH) {
+            digitalWrite(RGB_RED, LOW);
+            break; // Opustí smyčku
+        }
+        delay(50); // Krátké zpoždění pro stabilitu
     }
 }
 
+
 /**
- * @brief LED se rozsvěcují postupně (např. 5 LED) s krátkým zpožděním. Pokud je během sekvence potenciometr otočen nad hodnotu 800,
- * cyklus se přeruší pomocí break a rozsvítí se modrá LED jako varování nebo reakce.
+ * @brief Cvičení pro příkaz break - Sekvence rozsvěcování LED s přerušením
+ * @details Po spuštění začne sekvence, při které se postupně rozsvěcují LED diody – každá s krátkou pauzou. Během této sekvence sleduj potenciometr.
+ * Pokud jeho hodnota kdykoliv překročí 800, sekvence se okamžitě přeruší a rozsvítí se modrá LED jako varovný signál.
+ * Pokud k překročení nedojde, všechny rozsvícené LED zhasnou a sekvence postupného rozsvěcování se opakuje.
  */
 
 void exercise_led_sequence_with_break() {
-    // static int ledIndex = 0;
-    // int potValue = analogRead(POTENTIOMETER_PIN);
 
-    // for (int i = 0; i < 5; i++) {
-    //     digitalWrite(leds[i], HIGH);
-    //     delay(300);
-    //     if (potValue > 800) {
-    //         digitalWrite(LED_BLUE, HIGH); // Rozsvítí modrou LED
-    //         break; // Přeruší cyklus
-    //     }
-    //     digitalWrite(leds[i], LOW);
-    // }
 }
 
 
@@ -723,388 +624,5 @@ void exercise_led_sequence_with_break() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// UKOLY PRO EXTRÉMNĚ SIKOVNE ZAKY:
+// UKOLY PRO EXTRÉMNĚ SIKOVNE ZAKY ?????????
 // SWITCH - animace problikávání LED, kterou kostka dokáže zobrazit - simulace hodu kostkou
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////// POZNÁMKY /////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-// Konvence pojemonvání funkcí?
-
-
-
-
-
-
-
-
-// POUZIVAT HW!
-// Funkce se budou jmenovat podle toho co dělají!
-
-
-// Prezentace - nakreslit vlastní schéma HW, který bude použit (max 2 schémata / jiný HW)
-
-
-// 2. - s, nebo bez uzivatelovy interakce - pokud ano přes manuální dosazení hodnoty do vstupního parametru, nebo přes sériový monitor? - bez uživatelovy interkace
-// mým úkolem je vysvětlit jak fungujou ty eduboxy! - pamatovat že za sebou mají Arduino kurz - znají millis() atd..
-
-
-// Switch? - Herni kostka 1-6 example => cviceni 1-10?
-
-// For - světelný had na gpio piny za sebou?
-
-// while - buď set blikání led, nebo držení blikání LED, nebo rgb LED dokola duha
-
-// vše popisovat doxygenenm co ta funkce dělá...
-
-
-// potenciometr RGB
-// potenciometr manual LED VU meter
-// mozne pouziti senzorů - fotorezistor, otřes (vibracee), IR (plamene), zvuk - analog i digital, PIR 
-
-
-
-/*
-If - else:
-Příklad: LED + tlačítko - pokud je tlačítko drženo tak LED svítí
-
-Cvičení: LED + tlačítko - set/reset LED - když je tlačítko stisknuto stav LED se invertuje - pokud svítí zhasne, pokud nesvítí - rozsvítí se
-
-
-
-Switch:
-Příklad: Herní kostka 1-6 + zapojení na nepájivém poli přesně jako reálná kostka
-
-Cvičení: Herní kostka 1-10 (nebo méně, nebo více - tady spíše pro procvičení zapojení a procvičení se orientace co je kde zapojeno)
-
-
-
-For:
-Příklad1: potenciometr + jednoduchý manuální  LED VU meter - pomocí funkce map, a pak for digitalwrite , byly by to 3 zelené, 2 žluté a 1 červená jakoby vizualizér hudby
-
-Příklad2: nastavení bliknutí LED - nastavte počet blikání pomocí proměnné a použijte cyklus for
-
-Cvičení: Blikání LED - tlačítkem nastavte počet bliknutí a potenciometrem počet blikajících LED (vnořené for)
-
-
-
-While:
-Příklad: tlačítko + RGB single LED - pouze při držení tlačítka se začne provádět kód pro jednoduché přepínání barev po časový úsek bude svítit jedna barva / jejich míchání,
-při puštění tlačítka zůstane poslední barva
-
-Cvičení: potenciometr + RGB single LED - běží dokola duhový efekt a potenciometr nastavuje rychlost přechodu mezi barvami (rychleji/pomaleji) 
-
-
-
-Do-while:
-Příklad: na začátku se změří hodnota potenciometru, např modrá LED blikne na inicializaci a pak bude modrá led svítit dokud se hodnota potenciometru nezmění
-(z důvodů zapojení do nepájivého pole a rušení potřeba nastavit, aby změna pouze když se hodnota změní v intervalu 3 - +-3 - pouze funkce abs...)
-a až když se změní tak zase začne blikat modrá dioda - tím se zaručí, že se opravdu počká na to 1. vykonání a bude se program vykonávat dokud se bude měnit hodnota potenciometru...
-
-Cvičení:
-Po zapnutí zařízení musí dojít k inicializaci, která se projeví jedním krátkým bliknutím LED. Následně LED trvale svítí, dokud nenastavíte potenciometr do určitého rozsahu
-(např. 500 až 600). Jakmile je potenciometr v tomto rozsahu, LED přestane trvale svítit a místo toho začne blikat – tím dává najevo, že je vše nastaveno správně.
-
-
-Break:
-Příklad: 2x while(1) tam bude digitalwrite high na led a if digitalread tlacitko tak break mezi nimi digitalwrite low te led která svitila a ve druhem bude totoéž co pro první- přepínání mezi 2 led
-
-Cvičení: Procházejte jednotlivé LED připojené na různé digitální piny. Každá LED se rozsvítí se zpožděním. Jakmile hodnota na potenciometru překročí určitou mezní hodnotu (například 800),
-přerušte smyčku pomocí příkazu break a rozsviťte modrou LED - problém s delay a čtením potenciometru - řešení pomocí přerušení, nebo bez delay, nebo s millis()?
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ===== IF-ELSE PRIKLAD =====
-void example_if_else(int teplota)
-{
-  Serial.print("Zadaná teplota: ");
-  Serial.println(teplota);
-
-  if (teplota < 15) {
-    Serial.println("Je zima.");
-    digitalWrite(2, HIGH);
-  } else {
-    Serial.println("Je teplo.");
-    digitalWrite(2, LOW);
-  }
-}
-
-// ===== IF-ELSE CVICENI =====
-//
-//
-void exercise_if_else()
-{
-
-}
-
-
-
-// ===== SWITCH PRIKLAD =====
-// udelat kalkulacku pres vstupni parametry? Nebo pres interakci uzivatele - seriovy monitor?
-// nebo udelat semfaor pomoci delaye aby se prepinal?
-void example_switch(int teplota)
-{
-  Serial.print("Zadanej teplotu: ");
-  Serial.println(teplota);
-
-  int stav;
-  if (teplota < 0) stav = 0;
-  else if (teplota < 15) stav = 1;
-  else if (teplota < 25) stav = 2;
-  else stav = 3;
-
-  switch (stav)
-  {
-    case 0:
-      Serial.println("Mrzne.");
-      break;
-    case 1:
-      Serial.println("Je zima.");
-      break;
-    case 2:
-      Serial.println("Je teplo.");
-      break;
-    case 3:
-      Serial.println("Je horko.");
-      break;
-    default:
-      Serial.println("Neznámý stav.");
-  }
-}
-
-
-// ===== SWITCH PRIKLAD =====
-void exercise_switch()
-{
-
-}
-
-
-// ===== WHILE PRIKLAD=====
-void example_while()
-{
-  Serial.println("LED bliká dokud držíš tlačítko (pin 4)");
-  while (digitalRead(4) == LOW)
-  {
-    digitalWrite(2, HIGH);
-    delay(200);
-    digitalWrite(2, LOW);
-    delay(200);
-  }
-  Serial.println("Tlačítko puštěno, konec blikání.");
-}
-
-
-
-
-
-
-
-
-
-// ===== FOR =====
-void example_for(int pocet)
-{
-  Serial.print("Budu blikat ");
-  Serial.print(pocet);
-  Serial.println("x");
-
-  for (int i = 0; i < pocet; i++) {
-    digitalWrite(2, HIGH);
-    delay(300);
-    digitalWrite(2, LOW);
-    delay(300);
-  }
-  Serial.println("Hotovo.");
-}
-
-
-
-
-
-
-
-
-// ===== DO-WHILE =====
-void example_do_while(int pokusy)
-{
-  for (int i = 0; i < pokusy; i++) {
-    int hod = random(1, 7); // čísla 1-6
-    Serial.print("Hodil jsi: ");
-    Serial.println(hod);
-  }
-  Serial.println("Konec házení.");
-}
-
-
-
-
- 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////// PRIKLADY S UZIVATELSKOU INTERAKCI /////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////// DEFINICE PINU APOD. BYLY PROVEDENA U PRIKLADU ///////////////////////////////////
-
-// #define LED_PIN 2 // Pin pro LED
-// #define BTN_PIN 4 // Pin pro tlačítko
-
-// void setup()
-// {
-//   Serial.begin(115200); // Nastavení rychlosti (baudu) sériového portu
-//   pinMode(LED_PIN, OUTPUT); // LED na pinu 2
-//   pinMode(BTN_PIN, INPUT_PULLUP); // Tlačítko na pinu 4
-// }
-
-// void loop()
-// {
-
-//   // ZDE SI ODKOMENTUJTE JEDNU FUNKCI, KTEROU CHCETE SPUSTIT:
-
-//   // uzivatel_interakce_prikladIfElse();
-//   // uzivatel_interakce_prikladSwitch();
-//   // uzivatel_interakce_prikladWhile();
-//   // uzivatel_interakce_prikladFor();
-//   // uzivatel_interakce_prikladDoWhile();
-// }
-
-// // ===== IF-ELSE =====
-// void uzivatel_interakce_prikladIfElse() {
-//   Serial.println("Zadej teplotu (např. 15):");
-//   while (!Serial.available()) {}
-//   int teplota = Serial.parseInt();
-//   Serial.print("Zadal jsi teplotu: ");
-//   Serial.println(teplota);
-
-//   if (teplota < 15) {
-//     Serial.println("Je zima.");
-//     digitalWrite(2, HIGH);
-//   } else {
-//     Serial.println("Je teplo.");
-//     digitalWrite(2, LOW);
-//   }
-// }
-
-// // ===== SWITCH =====
-// void uzivatel_interakce_prikladSwitch() {
-//   Serial.println("Zadej teplotu (např. 15):");
-//   while (!Serial.available()) {}
-//   int teplota = Serial.parseInt();
-//   Serial.print("Zadal jsi teplotu: ");
-//   Serial.println(teplota);
-
-//   int stav;
-//   if (teplota < 0) stav = 0;
-//   else if (teplota < 15) stav = 1;
-//   else if (teplota < 25) stav = 2;
-//   else stav = 3;
-
-//   switch (stav) {
-//     case 0:
-//       Serial.println("Mrzne.");
-//       break;
-//     case 1:
-//       Serial.println("Je zima.");
-//       break;
-//     case 2:
-//       Serial.println("Je teplo.");
-//       break;
-//     case 3:
-//       Serial.println("Je horko.");
-//       break;
-//     default:
-//       Serial.println("Neznámý stav.");
-//   }
-// }
-
-// // ===== WHILE =====
-// void uzivatel_interakce_prikladWhile() {
-//   Serial.println("Drž tlačítko (pin 4), LED bliká, dokud držíš...");
-//   while (digitalRead(4) == LOW) {
-//     digitalWrite(2, HIGH);
-//     delay(200);
-//     digitalWrite(2, LOW);
-//     delay(200);
-//   }
-//   Serial.println("Tlačítko puštěno, konec blikání.");
-// }
-
-// // ===== FOR =====
-// void uzivatel_interakce_prikladFor() {
-//   Serial.println("Kolikrát chceš zablikat LED? Zadej číslo:");
-//   while (!Serial.available()) {}
-//   int pocet = Serial.parseInt();
-//   Serial.print("Budu blikat " + String(pocet) + "x\n");
-
-//   for (int i = 0; i < pocet; i++) {
-//     digitalWrite(2, HIGH);
-//     delay(300);
-//     digitalWrite(2, LOW);
-//     delay(300);
-//   }
-//   Serial.println("Hotovo.");
-// }
-
-// // ===== DO-WHILE =====
-// void uzivatel_interakce_prikladDoWhile() {
-//   char odpoved;
-//   do {
-//     int hod = random(1, 7); // čísla 1-6
-//     Serial.print("Hodil jsi: ");
-//     Serial.println(hod);
-//     Serial.println("Chceš házet znovu? (zadej y/n):");
-
-//     while (!Serial.available()) {}
-//     odpoved = Serial.read();
-//     Serial.read(); // Čteme Enter (\n)
-
-//   } while (odpoved == 'y' || odpoved == 'Y');
-//   Serial.println("Konec házení.");
-// }
