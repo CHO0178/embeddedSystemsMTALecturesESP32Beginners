@@ -1,6 +1,7 @@
 /**
  * @file EDUBOX_opakovaniZakladu_basics.cpp
- * @brief Opakování základních logických prvků C a C++ a jejich použití v příkladech včetně procvičení v úkolech pro EDUBOX 1 - úvod do programování Arduina a ESP32
+ * @brief Opakování základních logických prvků C a C++ a jejich použití v příkladech včetně procvičení v úkolech pro EDUBOX 1 - Opakování základů
+ * 
  */
 
 /**
