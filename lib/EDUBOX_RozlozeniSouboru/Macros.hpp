@@ -12,12 +12,18 @@
 #ifndef MACROS_HPP
 #define MACROS_HPP
 
-// Definice pinů pro LED a senzory
+/**
+ * @brief Definice pinů pro LED diody a tlačítko.
+ * 
+ */
 #define RED_LED_PIN    23
 #define GREEN_LED_PIN  22
 #define BUTTON_PIN     21
 
-// Logické úrovně
+/**
+ * @brief Logické úrovně pro ovládání LED diod.
+ * 
+ */
 #define LED_ON  HIGH
 #define LED_OFF LOW
 

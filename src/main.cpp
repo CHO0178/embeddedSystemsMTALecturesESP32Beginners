@@ -1,16 +1,16 @@
 #include <Arduino.h>
-#include "Macros.hpp"
-#include "TrainMonitor.cpp"
-#include "Initialization.cpp"
+#include "TrainMonitor.hpp"
+#include "Initialization.hpp"
+
 
 void setup() {
-  Serial.begin(115200);
-  initializationPins();
+    Serial.begin(115200);
+    initializationPins();
 }
 
 void loop() {
-  trainDetector();
-  delay(500);
+    trainDetector();
+    delay(500);
 }
 
 

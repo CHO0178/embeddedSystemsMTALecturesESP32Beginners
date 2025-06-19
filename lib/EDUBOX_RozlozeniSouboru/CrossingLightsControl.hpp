@@ -9,13 +9,21 @@
  * 
  */
 
-#ifndef SIGNAL_CONTROL_HPP
-#define SIGNAL_CONTROL_HPP
+#ifndef CROSSING_LIGHT_CONTROL_HPP
+#define CROSSING_LIGHT_CONTROL_HPP
 
 #include "Macros.hpp"  // potřebujeme LED piny
 
-// Deklarace funkcí pro ovládání světel přejezdu
+/**
+ * @brief Zapne červenou LED diodu a vypne zelenou LED diodu.
+ * 
+ */
 void turnOnRed();
+
+/**
+ * @brief Zapne modrou LED diodu a vypne červenou LED diodu.
+ * 
+ */
 void turnOnBlue();
 
 #endif
