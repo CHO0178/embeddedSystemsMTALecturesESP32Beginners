@@ -5,10 +5,15 @@
 volatile bool trainDetected = false;  // definice proměnné, která může být změněna mimo hlavní program
 
 // Funkce má vlastní proměnnou, která si pamatuje stav napříč voláními – static = životnost po celou dobu běhu programu
+
+
+/**
+ * @brief Detekuje vlak pomocí tlačítka a řídí červenou a modrou LED diodu.
+ */
 void trainDetector() {
     static int lastState = LOW;  // viditelná jen v této funkci, ale pamatuje si stav mezi voláními
 
-    int currentState = digitalRead(SENSOR_PIN);
+    int currentState = digitalRead(BUTTON_PIN);
 
     if (currentState == HIGH) {
       trainDetected = true;

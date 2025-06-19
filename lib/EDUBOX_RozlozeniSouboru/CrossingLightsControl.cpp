@@ -8,7 +8,9 @@ bool redLightActive = false;  // definice proměnné, sdílená pomocí extern
 // Je viditelná jen v tomto souboru – static = lokální viditelnost na úrovni překladu
 int redActivationCount = 0;
 
-
+/**
+ * @brief Zapne červenou LED diodu a vypne zelenou LED diodu.
+ */
 void turnOnRed() {
     digitalWrite(RED_LED_PIN, LED_ON);
     digitalWrite(GREEN_LED_PIN, LED_OFF);
@@ -17,6 +19,9 @@ void turnOnRed() {
     redActivationCount++;
 }
 
+/**
+ * @brief Zapne modrou LED diodu a vypne červenou LED diodu.
+ */
 void turnOnBlue() {
     digitalWrite(RED_LED_PIN, LED_OFF);
     digitalWrite(GREEN_LED_PIN, LED_ON);
