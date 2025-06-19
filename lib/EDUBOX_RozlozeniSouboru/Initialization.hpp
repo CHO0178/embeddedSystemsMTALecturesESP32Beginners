@@ -12,7 +12,6 @@
 #ifndef INITIALIZATION_HPP
 #define INITIALIZATION_HPP
 
-#include "Macros.hpp"  // potřebujeme LED piny
 
 /**
  * @brief Inicializuje piny pro LED diody a tlačítko.

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "CrossingLightsControl.hpp"
+#include "Macros.hpp"
 
 /**
  * @brief Stavová proměnná "redLightActive" indikující, zda je červené světlo právě aktivní.

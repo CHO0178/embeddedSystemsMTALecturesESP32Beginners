@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "GlobalState.hpp"
 #include "CrossingLightsControl.hpp"
+#include "TrainMonitor.hpp"
 
 volatile bool trainDetected = false;  // definice proměnné, která může být změněna mimo hlavní program
 
@@ -13,6 +14,7 @@ void trainDetector() {
 
     int currentState = digitalRead(BUTTON_PIN);
 
+    // I přestože by aktualní optimalizace odstranila if a else, tak optimizace nefunguje, protože proměnná currentState je čtena z hardwaru (volatile proměnná)
     if (currentState == HIGH) {
         trainDetected = true;
     } else {

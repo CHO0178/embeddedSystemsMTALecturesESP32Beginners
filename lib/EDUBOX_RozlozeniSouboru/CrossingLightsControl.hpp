@@ -12,8 +12,6 @@
 #ifndef CROSSING_LIGHT_CONTROL_HPP
 #define CROSSING_LIGHT_CONTROL_HPP
 
-#include "Macros.hpp"  // potřebujeme LED piny
-
 /**
  * @brief Zapne červenou LED diodu a vypne zelenou LED diodu.
  * 

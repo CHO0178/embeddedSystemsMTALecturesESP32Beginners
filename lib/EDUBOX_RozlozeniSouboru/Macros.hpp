@@ -12,6 +12,7 @@
 #ifndef MACROS_HPP
 #define MACROS_HPP
 
+
 /**
  * @brief Definice pinů pro LED diody a tlačítko.
  * 
