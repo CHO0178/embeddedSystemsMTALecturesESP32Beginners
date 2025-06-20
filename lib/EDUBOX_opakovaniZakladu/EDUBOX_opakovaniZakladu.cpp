@@ -410,7 +410,8 @@ void HoldBtnLightLed()
 
 /**
  * @brief Cvičení pro if-else - SET/RESET LED pomocí tlačítka
- * @details Tlačítko ovládá přepínání stavu LED. Pokaždé, když je tlačítko stisknuto, se stav LED změní z rozsvíceného na zhasnutý a případně naopak.
+ * @details Cvičení na procvičení konstrukce `if-else`. Stav LED se při každém stisku tlačítka změní
+ * (pokud svítila, zhasne; pokud byla zhasnutá, rozsvítí se).
  */
 void ToggleLedByButton() {
 

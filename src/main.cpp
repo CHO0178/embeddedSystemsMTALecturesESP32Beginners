@@ -4,10 +4,12 @@
 
 void setup()
 {
-
+    initPeripheralsBase();  // Inicializace základních periferií
 }
 
 void loop()
 {
-
+    // Zde můžete volat funkce pro příklady a cvičení
+    // Například:
+    HoldBtnLightLed();
 }
