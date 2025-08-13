@@ -1,14 +1,16 @@
 #include <Arduino.h>
-#include "TrainMonitor.hpp"
-#include "Initialization.hpp"
-
+#include <TempHum_Module.hpp>
+#include <Light_Module.hpp>
+#include <WiFi_Setup.hpp>
 
 void setup() {
     Serial.begin(115200);
-    initializationPins();
+    setupWifi("FKH455", "HGfk25462");
+    setupTempHumModule();
+    //setupLightModule();
 }
 
 void loop() {
-    trainDetector();
-    delay(500);
+    loopTempHumModule();
+    //loopLightModule();
 }
