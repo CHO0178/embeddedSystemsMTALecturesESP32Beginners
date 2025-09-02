@@ -2,7 +2,7 @@
 #include <DHT.h>
 
 // DHT22 konfigurace
-#define DHTPIN 4
+#define DHTPIN 17
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -27,8 +27,8 @@ void handleRoot() {
   if (isnan(humidity) || isnan(temperature)) {
     htmlPage += "<p>Chyba čtení ze senzoru.</p>";
   } else {
-    htmlPage += "<p>Teplota: " + String(temperature,1) + " &deg;C</p>";
-    htmlPage += "<p>Vlhkost: " + String(humidity,1) + " %</p>";
+    htmlPage += "<h2>Teplota: " + String(temperature,1) + " &deg;C</h2>";
+    htmlPage += "<h2>Vlhkost: " + String(humidity,1) + " %</h2>";
   }
 
   htmlPage += "</body></html>";
