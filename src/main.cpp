@@ -9,7 +9,7 @@
 
 void setup() {
     Serial.begin(115200);
-    setupWifi("FKH455", "HGfk25462");
+    setupWifi("WiFi-name", "WiFi-password");
     setupTempHumModule();
     //setupLightModule();
 }

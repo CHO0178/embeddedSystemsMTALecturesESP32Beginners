@@ -21,7 +21,6 @@ void printSum(int a, int b);
 
 // Funkce s návratovou hodnotou bez parametrů
 int getNumber42();
-int getNumber();  // poznámka: ve vaší implementaci zatím vrací 42, ale dle popisu má vracet hodnotu z potenciometru
 
 // Funkce s návratovou hodnotou s jedním parametrem
 float cmToMeters(float cm);
@@ -31,4 +30,4 @@ int readSensor(int potentiometerPin);
 int sumNumbers(int a, int b);
 int getPercentage(int max, int current, int min);
 
-#endif // FUNCTIONS_H
+#endif

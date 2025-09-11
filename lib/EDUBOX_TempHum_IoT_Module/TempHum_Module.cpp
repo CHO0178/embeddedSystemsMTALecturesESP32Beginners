@@ -1,5 +1,16 @@
+/**
+ * @file DHT22_Module.hpp
+ * @author Bc. Dalibor Slíva
+ * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu snímače teploty a vlhkosti v projektu MTA-TP.
+ * @version 0.1
+ * @date 2025-08-13
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include <WebServer.h>
 #include <DHT.h>
+#include "TempHum_Module_page.h"
 
 // DHT22 konfigurace
 #define DHTPIN 17
@@ -7,41 +18,26 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 //Web server běžící na portu 80 - Tedy standardní HTTP port
-WebServer server_TempHum(80);
+WebServer server_TempHum_Module(80);
 
 void handleRoot() {
   float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature(); // °C
+  float temperature = dht.readTemperature();
 
-  String htmlPage = F(
-    "<!DOCTYPE html>"
-    "<html>"
-    "<head>"
-    " <meta charset='utf-8'>"
-    " <meta http-equiv='refresh' content='5'>"  // automatický refresh každých 5 s
-    " <title>Teplota&Vlhkost</title>"
-    "</head>"
-    "<body style=\"text-align:center; font-family:sans-serif;\"><h1>Modul snímače teploty a vlhkosti</h1>"
-  );
+  String page = FPSTR(TEMPHUM_MODULE_HTML);
+  page.replace("{{TEMP}}", isnan(temperature) ? "N/A" : String(temperature, 1));
+  page.replace("{{HUM}}",  isnan(humidity) ? "N/A" : String(humidity, 1));
 
-  if (isnan(humidity) || isnan(temperature)) {
-    htmlPage += "<p>Chyba čtení ze senzoru.</p>";
-  } else {
-    htmlPage += "<h2>Teplota: " + String(temperature,1) + " &deg;C</h2>";
-    htmlPage += "<h2>Vlhkost: " + String(humidity,1) + " %</h2>";
-  }
-
-  htmlPage += "</body></html>";
-  server_TempHum.send(200, "text/html; charset=utf-8", htmlPage);
+  server_TempHum_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void setupTempHumModule() {
   dht.begin();
-  server_TempHum.on("/", handleRoot);
-  server_TempHum.begin();
+  server_TempHum_Module.on("/", handleRoot); // Vložení funkce pro obsluhu kořenové URL
+  server_TempHum_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
 
 void loopTempHumModule() {
-  server_TempHum.handleClient();
+  server_TempHum_Module.handleClient();
 }
