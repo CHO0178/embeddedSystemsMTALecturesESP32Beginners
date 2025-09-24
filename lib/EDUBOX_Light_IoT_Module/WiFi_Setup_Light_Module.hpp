@@ -3,9 +3,8 @@
 
 /**
  * @brief Inicializuje WiFi připojení.
- * * @param ssid Název WiFi sítě.
- * * @param password Heslo k WiFi síti.
- * 
+ * @param ssid Název WiFi sítě.
+ * @param password Heslo k WiFi síti.
  */
 void setupWifi(const char* ssid, const char* password);
 

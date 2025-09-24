@@ -11,6 +11,12 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
+/**
+ * @brief Inicializace WiFi připojení.
+ * 
+ * @param ssid Název WiFi sítě.
+ * @param password Heslo k WiFi síti.
+ */
 void setupWifi(const char* ssid, const char* password) {
     Serial.print("Připojuji se k WiFi: ");
     Serial.println(ssid);
