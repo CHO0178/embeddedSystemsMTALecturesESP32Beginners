@@ -1,5 +1,5 @@
 /**
- * @file LED_Module.hpp
+ * @file Light_Module.cpp
  * @author Bc. Dalibor Slíva
  * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu osvětlení v projektu MTA-TP.
  * @version 0.1
@@ -10,7 +10,7 @@
  */
 
 #include <WebServer.h>
-#include "Light_Module_page.h"
+#include "Light_Module_page.hpp"
 
 const int ledPin = 2;
 
@@ -23,15 +23,6 @@ WebServer server_Light_Module(80);
  */
 void hadleRoot() {
   String page = FPSTR(LIGHT_MODULE_JAVASCRIPT_HTML);
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
-}
-
-/**
- * @brief Obsluha kořenové URL.
- * @details Zobrazí HTML stránku s ovládáním osvětlení.
- */
-void task1() {
-  String page = FPSTR(LIGHT_MODULE_JAVASCRIPT_HTML);  //zde uprav HTML kód
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
@@ -75,15 +66,4 @@ void setupLightModule() {
  */
 void loopLightModule() {
   server_Light_Module.handleClient();
-}
-
-//OLD
-void OLDhandleLightOnOLD() {
-    digitalWrite(ledPin, HIGH);
-    server_Light_Module.send(200, "text/html", LIGHT_MODULE_HTML);
-}
-
-void OLDhandleLightOffOLD() {
-    digitalWrite(ledPin, LOW);
-    server_Light_Module.send(200, "text/html", LIGHT_MODULE_HTML);
 }

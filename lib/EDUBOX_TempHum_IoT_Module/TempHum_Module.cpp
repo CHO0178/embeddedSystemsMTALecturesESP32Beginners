@@ -1,5 +1,5 @@
 /**
- * @file DHT22_Module.hpp
+ * @file TempHum_Module.cpp
  * @author Bc. Dalibor Slíva
  * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu snímače teploty a vlhkosti DHT22 v projektu MTA-TP.
  * @version 0.1
@@ -10,7 +10,7 @@
  */
 #include <WebServer.h>
 #include <DHT.h>
-#include "TempHum_Module_page.h"
+#include "TempHum_Module_page.hpp"
 
 // DHT22 konfigurace
 #define DHTPIN 17
@@ -63,17 +63,4 @@ void setupTempHumModule() {
  */
 void loopTempHumModule() {
   server_TempHum_Module.handleClient();
-}
-
-
-//OLD
-void OLDhandleRootOLD() {
-  float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature();
-
-  String page = FPSTR(TEMPHUM_MODULE_HTML);
-  page.replace("{{TEMP}}", isnan(temperature) ? "N/A" : String(temperature, 1));
-  page.replace("{{HUM}}",  isnan(humidity) ? "N/A" : String(humidity, 1));
-
-  server_TempHum_Module.send(200, "text/html; charset=utf-8", page);
 }
