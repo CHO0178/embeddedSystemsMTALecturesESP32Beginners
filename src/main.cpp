@@ -1,9 +1,9 @@
 #include <Arduino.h>
 
-#include <Light_Module.hpp>
+#include <EDUBOX_Light_Module.hpp>
 //#include <WiFi_Setup_Light_Module.hpp>
 
-#include <TempHum_Module.hpp>
+#include <EDUBOX_TempHum_Module.hpp>
 #include <WiFi_Setup_TempHum_Module.hpp>
 
 
