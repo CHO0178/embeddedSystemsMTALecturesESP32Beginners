@@ -26,7 +26,7 @@ void handleRoot() {
 /**
  * @brief Inicializace web serveru.
  */
-void setupTempHumModule() {
+void setupHTMLBasics() {
     server_HTML.on("/", handleRoot); // Vložení funkce pro obsluhu kořenové URL
     server_HTML.begin();
     Serial.println("HTTP server spuštěn");
@@ -36,6 +36,16 @@ void setupTempHumModule() {
  * @brief Hlavní smyčka modulu snímače teploty a vlhkosti.
  * @details Zpracovává příchozí HTTP požadavky.
  */
-void loopTempHumModule() {
+void loopHTMLBasics() {
     server_HTML.handleClient();
+}
+
+
+/**
+ * @brief ukol1 vytvořte stránku s jedním nadpisem "podařilo se"
+ * @details upravte HTML kód: HTML_1
+ */
+void ukol1()
+{
+HTML_1;
 }

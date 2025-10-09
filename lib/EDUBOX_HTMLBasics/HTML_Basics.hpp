@@ -70,7 +70,7 @@ const char HTML_3[] PROGMEM = R"HTML(
 /**
  * @brief Zakladní HTML stránka "Hello World"
  */
-const char HTML_4[] PROGMEM = R"HTML(
+const char HTML_1_EX[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
