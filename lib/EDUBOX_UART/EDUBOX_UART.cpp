@@ -1,75 +1,73 @@
 /**
- * @file EDUBOX_UART.cpp
- * @brief Simple, well-documented example library for UART (Serial2) on ESP32 (PlatformIO).
+ * @file EDUBOX_uart.cpp
+ * @brief Úvod do UART – sériová komunikace na ESP32
  *
- * This file is written as a compact, educational example showing:
- *  - how to use HardwareSerial (Serial2) on ESP32,
- *  - a small wrapper class for basic UART operations (begin, sendString, available, readString),
- *  - Doxygen-style comments that explain usage and integration with PlatformIO.
+ * UART (Universal Asynchronous Receiver/Transmitter) umožňuje komunikaci mezi dvěma zařízeními přes sériový port.
+ * V Arduino frameworku používáme primárně Serial objekt.
  *
- * NOTES:
- *  - Recommended PlatformIO dependency (add to platformio.ini) if needed:
- *      lib_deps =
- *        ; No additional libraries required — uses built-in HardwareSerial
+ * Praktické příklady z praxe:
+ *  - přenos dat mezi ESP32 a počítačem
+ *  - zasílání stavů senzorů do PC
+ *  - ovládání LED nebo serv přes příkazy ze sériového monitoru
  *
- *  - Include in your sketch (example below) as:
- *      #include "EDUBOX_UART.hpp"
- *    For a real library, split into .h/.cpp and include the header. This single-file example is for learning.
+ * Knihovny a konfigurace PlatformIO:
+ *  - UART je součástí Arduino frameworku, žádná externí knihovna není potřeba
+ *  - platformio.ini:
+ *      [env:esp32dev]
+ *      platform = espressif32
+ *      board = esp32dev
+ *      framework = arduino
  *
- *  - This example uses the Arduino HardwareSerial API:
- *      Serial2.begin(baud, config, rxPin, txPin), println(), available(), readString()
+ * Tento příklad demonstruje:
+ *  - inicializaci sériové linky
+ *  - odesílání a přijímání dat
+ *  - kontrolu dostupnosti dat (Serial.available)
+ *  - jednoduché parsování příkazů
  *
- *  - Keep this file in your project's lib/EDUBOX_UART/ folder for PlatformIO to compile it automatically.
+ * Hlavičkový soubor: EDUBOX_uart.h
+ *  - obsahuje deklarace funkcí pro práci s UART
  *
- * There will be (already is but empty) a .hpp file where the headers of functions and the class declaration are placed.
+ * Vysvětlení principu:
+ *  - Serial.begin(baudrate) inicializuje sériovou komunikaci
+ *  - Serial.print() a Serial.println() posílají data do počítače
+ *  - Serial.readStringUntil('\n') čte řetězec až po znak nového řádku
+ *  - Serial.available() kontroluje, zda jsou k dispozici nová data
+ *
+ * Úkoly pro studenty:
+ *  1. LED ovládaná příkazem: Připojte LED a ovládejte ji přes UART – "ON" rozsvítí, "OFF" zhasne.
+ *  2. Čtení potenciometru: ESP32 posílá hodnotu potenciometru do počítače každých 500ms.
+ *  3. Interaktivní semafor: Odesílejte příkazy "RED", "YELLOW", "GREEN" z PC a ESP32 rozsvítí odpovídající LED.
  */
 
-#include "EDUBOX_UART.hpp"
 #include <Arduino.h>
-#include <HardwareSerial.h>
-// #include <string>
+#include "EDUBOX_uart.h"
 
-/**
- * @brief Constructor - Initializes UART communication
- * @param rxPin RX pin number for UART
- * @param txPin TX pin number for UART
- * @param baudRate Communication speed (default: 115200)
- */
-EDUBOX_UART::EDUBOX_UART(int rxPin, int txPin, int baudRate) {
-    _rxPin = rxPin;
-    _txPin = txPin;
-    _baudRate = baudRate;
+// Nastavení pinu LED
+#define LED_PIN 2
+
+void setup() {
+    Serial.begin(115200); // Inicializace sériové linky
+    pinMode(LED_PIN, OUTPUT);
+    Serial.println("UART example started! Type ON or OFF to control the LED.");
 }
 
-/**
- * @brief Begins UART communication
- * @return true if initialization successful, false otherwise
- */
-bool EDUBOX_UART::begin() {
-    Serial2.begin(_baudRate, SERIAL_8N1, _rxPin, _txPin);
-    return true;
-}
+void loop() {
+    // Kontrola, zda jsou data k dispozici
+    if (Serial.available()) {
+        String command = Serial.readStringUntil('\n'); // Čtení příkazu
+        command.trim(); // Odstranění bílých znaků
 
-/**
- * @brief Sends a string through UART
- * @param message String to be sent
- */
-void EDUBOX_UART::sendString(const String& message) {
-    Serial2.println(message);
-}
-
-/**
- * @brief Checks if data is available to read
- * @return Number of bytes available
- */
-int EDUBOX_UART::available() {
-    return Serial2.available();
-}
-
-/**
- * @brief Reads a string from UART
- * @return Received string
- */
-String EDUBOX_UART::readString() {
-    return Serial2.readString();
+        if (command.equalsIgnoreCase("ON")) {
+            digitalWrite(LED_PIN, HIGH);
+            Serial.println("LED turned ON");
+        }
+        else if (command.equalsIgnoreCase("OFF")) {
+            digitalWrite(LED_PIN, LOW);
+            Serial.println("LED turned OFF");
+        }
+        else {
+            Serial.print("Unknown command: ");
+            Serial.println(command);
+        }
+    }
 }

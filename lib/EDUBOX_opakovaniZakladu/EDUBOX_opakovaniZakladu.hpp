@@ -4,8 +4,8 @@
  * @details Hlavičky funkcí příkladů a cvičení základních jazykových logických konstrukcí pro Arduino/ESP32
  */
 
-#ifndef EXAMPLES_H
-#define EXAMPLES_H
+#ifndef EXAMPLES_HPP
+#define EXAMPLES_HPP
 
 #include <Arduino.h>
 
@@ -99,4 +99,4 @@ void DualLoopWithBreak();
 void ExtendedLEDSequenceWithBreak();
 
 
-#endif
+#endif // EXAMPLES_HPP

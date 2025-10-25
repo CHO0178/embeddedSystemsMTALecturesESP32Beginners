@@ -1,0 +1,113 @@
+/**
+ * @file main.cpp
+ * @brief Educational example for ESP32 using PlatformIO.
+ * 
+ * Generate C++ code written in English, but comment everything in Czech 
+ * using Doxygen style. Be concise, clear and use real ESP32 syntax.
+ * 
+ * Topic: ENGLISH_TITLE (CZECH_TITLE)
+ * 
+ * Requirements (individually changing - tempalte for interrupt):
+ * - Show how to configure and use both hardware and software interrupts on ESP32.
+ * - Demonstrate attaching an interrupt to a GPIO pin with attachInterrupt().
+ * - Include Arduino.h and EDUBOX_preruseni.h.
+ * - If necessary, include other headers relevant to ESP32 interrupt usage.
+ * - Use clear variable names (English) and minimalistic example structure.
+ * - Add Czech Doxygen comments that explain each step and purpose:
+ *      @brief – stručný popis funkce
+ *      @param – vstupní parametr
+ *      @return – návratová hodnota (pokud je)
+ * 
+ * Example structure (individually changing - tempalte for interrupt):
+ *  1. Global variables and definitions
+ *  2. Interrupt Service Routine (ISR)
+ *  3. setup() – konfigurace pinu, serial, attachInterrupt
+ *  4. loop() – základní logika nebo demonstrace
+ * 
+ * Output: full, compilable PlatformIO code for ESP32.
+ */
+
+#include <Arduino.h>
+#include "EDUBOX_name.h"
+
+
+
+🎯 Účel
+Generovat výukové příklady a materiály pro studenty střední školy, kteří se učí programování mikrokontrolérů ESP32 v prostředí PlatformIO (Arduino framework).
+Každé téma má:
+- vysvětlení principu (stručné, srozumitelné, česky),
+- praktickou ukázku s funkčním kódem (anglicky psaný, s českými Doxygen komentáři),
+- popis zapojení / knihoven a 1–3 praktické úkoly s realistickým nebo zajímavým kontextem (ne samoúčelné „blikání“).
+
+
+⚙️ Obecné pokyny pro generovaný kód
+- Jazyk kódu: angličtina
+- Komentáře a popisy: v češtině pomocí Doxygen stylu
+Vždy uveď:
+@file – název souboru (např. EDUBOX_preruseni.cpp)
+@brief – stručný přehled funkce lekce přehled funkcí, co se žák naučí a co příklad demonstruje
+Hlavní kód piš tak, aby byl kompatibilní s PlatformIO, s #include <Arduino.h> a specifickým souborem (např. #include "EDUBOX_preruseni.h").
+
+
+Pokud téma vyžaduje knihovnu, vždy:
+uveď přesný zápis do platformio.ini, např.:
+
+lib_deps =
+  ESP32Servo
+
+
+přidej stručnou poznámku, kde žák knihovnu najde (např. PlatformIO Library Manager).
+Kód musí být komentovaný pro studenty, tzn. ne jen technicky, ale i s krátkými poznámkami „proč“ se něco dělá.
+Nezahrnuj zbytečně pokročilé konstrukce (např. šablony, OOP, makra), drž se úrovně středoškolské výuky.
+
+
+🧩 Struktura výstupu
+Každá lekce se skládá z těchto částí:
+    1. Název a popis tématu
+    - Stručný název, např. „Přerušení (Interrupts) na ESP32“
+    - Krátké vysvětlení co to je, proč se to používá, a 1–2 jednoduché příklady z praxe.
+
+    2. Knihovny a konfigurace PlatformIO
+    - Ukázka sekce lib_deps
+    - Vysvětlení, co knihovna dělá a proč je potřeba #include hlaviček, které mají být v projektu
+
+    3. Zdrojový kód (.cpp)
+    - Funkční, přehledný, připravený k použití
+    - Psán anglicky, komentáře v Doxygenu česky
+
+        Například:
+        /**
+        * @file EDUBOX_servo.cpp
+        * @brief Ukázka práce s knihovnou Servo.h – řízení úhlu serva.
+        *
+        * Tento příklad demonstruje:
+        *  - inicializaci serva (attach)
+        *  - nastavení úhlu (write)
+        *  - vysvětlení principu PWM signálu
+        */
+
+    4. Hlavičkový soubor (.hpp)
+    - Obsahuje pouze deklarace funkcí, které student může volat
+    - Žák se naučí, že hlavička slouží k definici „rozhraní“
+
+    5. Vysvětlení principu (teorie + praxe)
+    - Co funkce dělají
+    - Jak spolupracují
+    - Jak se volají z main.cpp (v setup() nebo loop())
+    - Co se stane při změně parametrů
+
+    6. Úkoly pro studenty (praktické zadání)
+    1–3 realistické úlohy, které navazují na příklad
+    Mají krátké zadání + kontext (např. simulace reálného problému)
+
+Příklady:
+„Simuluj systém chytrých kamen – servo reguluje klapku komínu podle teploty.“
+„Rozsviť LED v rytmu signálu z tlačítka s využitím přerušení.“
+„Doplň kód o funkci, která po 10 sekundách vrátí servo do výchozí pozice.“
+
+📚 Další zásady výuky
+Vysvětlení i komentáře musí být pochopitelné pro úplné začátečníky, kteří nemají zkušenosti s programováním.
+Nepoužívej zkratky, které žák nemusí znát (např. ISR, PWM apod.) bez krátkého vysvětlení.
+Pokud to dává smysl, přidej ilustrativní komentář, např.
+
+// Servo motor se natočí na 90°, tj. přibližně doprostřed rozsahu pohybu
