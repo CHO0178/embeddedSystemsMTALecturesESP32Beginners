@@ -11,6 +11,7 @@
 #include <WebServer.h>
 #include "HTML_Basics.hpp"
 
+
 //Web server běžící na portu 80 - Tedy standardní HTTP port
 WebServer server_HTML(80);
 
@@ -33,7 +34,7 @@ void setupHTMLBasics() {
 }
 
 /**
- * @brief Hlavní smyčka modulu snímače teploty a vlhkosti.
+ * @brief Hlavní smyčka modulu.
  * @details Zpracovává příchozí HTTP požadavky.
  */
 void loopHTMLBasics() {
