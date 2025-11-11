@@ -11,6 +11,7 @@
 #include <WebServer.h>
 #include <DHT.h>
 #include "TempHum_Module_page.hpp"
+#include "WiFi_Setup_TempHum_Module.hpp"
 
 // DHT22 konfigurace
 #define DHTPIN 17
@@ -50,6 +51,8 @@ void handleData() {
  * @details Inicializuje DHT senzor a nastaví webový server s příslušnými obslužnými funkcemi.
  */
 void setupTempHumModule() {
+  Serial.begin(115200);
+  setupWifiTempHumModule("WiFi-name", "WiFi-password");
   dht.begin();
   server_TempHum_Module.on("/", handleRoot); // Vložení funkce pro obsluhu kořenové URL
   server_TempHum_Module.on("/data", handleData);

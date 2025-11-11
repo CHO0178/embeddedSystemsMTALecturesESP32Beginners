@@ -11,6 +11,7 @@
 
 #include <WebServer.h>
 #include "Light_Module_page.hpp"
+#include "WiFi_Setup_Light_Module.hpp"
 
 const int ledPin = 2;
 
@@ -50,6 +51,8 @@ void handleLightOff() {
  * @details Nastaví pin pro LED a inicializuje webový server s příslušnými obslužnými funkcemi.
  */
 void setupLightModule() {
+  Serial.begin(115200);
+  setupWifiLightModule("WiFi-name", "WiFi-password");
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
 

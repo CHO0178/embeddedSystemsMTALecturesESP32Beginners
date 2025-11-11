@@ -18,7 +18,7 @@
  * @param ssid Název WiFi sítě.
  * @param password Heslo k WiFi síti.
  */
-void setupWifi(const char* ssid, const char* password) {
+void setupWifiLightModule(const char* ssid, const char* password) {   //EDITR
     Serial.print("Připojuji se k WiFi: ");
     Serial.println(ssid);
     delay(100);

@@ -11,6 +11,7 @@
 
 #include <WebServer.h>
 #include "WaterLevel_Module_page.hpp"
+#include "WiFi_Setup_WaterLevel_Module.hpp"
 
 const int WaterLevelSensorPin = 2;
 
@@ -46,6 +47,8 @@ void handleData() {
  * @details Nastaví pin pro senzor vodní hladiny a inicializuje webový server s příslušnými obslužnými funkcemi.
  */
 void setupWaterLevelModule() {
+  Serial.begin(115200);
+  setupWifiWaterLevelModule("WiFi-name", "WiFi-password");
   pinMode(WaterLevelSensorPin, INPUT);
 
   server_WaterLevel_Module.on("/", hadleRoot);

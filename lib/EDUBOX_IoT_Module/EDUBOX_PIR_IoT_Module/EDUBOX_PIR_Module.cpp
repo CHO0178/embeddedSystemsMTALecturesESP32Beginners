@@ -11,6 +11,7 @@
 
 #include <WebServer.h>
 #include "PIR_Module_page.hpp"
+#include "WiFi_Setup_PIR_Module.hpp"
 
 const int PIRPin = 2;
 const int ledPin = 3;
@@ -55,6 +56,7 @@ void handleData() {
  */
 void setupPIRModule() {
   Serial.begin(115200);
+  setupWifiPIRModule("WiFi-name", "WiFi-password");
   pinMode(PIRPin, INPUT);
   pinMode(ledPin, OUTPUT);
   
