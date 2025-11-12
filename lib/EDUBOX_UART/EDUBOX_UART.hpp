@@ -1,5 +1,5 @@
 /**
- * @file EDUBOX_uart.hpp
+ * @file EDUBOX_UART.hpp
  * @brief Deklarace funkcí pro práci s UART
  *
  * Tento hlavičkový soubor může být rozšířen o další funkce, např. pro čtení senzorů
@@ -9,7 +9,7 @@
 #ifndef EDUBOX_UART_HPP
 #define EDUBOX_UART_HPP
 
-#include <Arduino.h>
+#pragma once
 
 // V této lekci nejsou další funkce, pouze demonstrace Serial
 // Student si může přidat vlastní funkce, např. sendSensorData() nebo parseCommand(String cmd)

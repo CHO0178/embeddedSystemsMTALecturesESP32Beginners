@@ -298,6 +298,7 @@
 #define POT_PIN                4  // GPIO pin pro potenciometr
 
 // OUTPUTS
+#define DICE_LED_PIN_0            11
 #define DICE_LED_PIN_1            12
 #define DICE_LED_PIN_2            13
 #define DICE_LED_PIN_3            14
@@ -349,6 +350,7 @@ int prevValue = -1;
  * @note Piny odpovídají DICE_LED_PIN_1 až DICE_LED_PIN_6.
  */
 void initPeripheralsRollingDice() {
+    pinMode(DICE_LED_PIN_0, OUTPUT);
     pinMode(DICE_LED_PIN_1, OUTPUT);
     pinMode(DICE_LED_PIN_2, OUTPUT);
     pinMode(DICE_LED_PIN_3, OUTPUT);
@@ -434,6 +436,7 @@ void GameDice() {
 
     if (currentDiceValue != lastDrawnValue) {
         // Zhasnout všechny LED
+        digitalWrite(DICE_LED_PIN_0, LOW);
         digitalWrite(DICE_LED_PIN_1, LOW);
         digitalWrite(DICE_LED_PIN_2, LOW);
         digitalWrite(DICE_LED_PIN_3, LOW);
@@ -444,31 +447,32 @@ void GameDice() {
         // Rozsvítit příslušné LED podle hodnoty
         switch (currentDiceValue) {
             case 1:
-                digitalWrite(DICE_LED_PIN_3, HIGH);
+                digitalWrite(DICE_LED_PIN_4, HIGH);
                 break;
             case 2:
-                digitalWrite(DICE_LED_PIN_1, HIGH);
-                digitalWrite(DICE_LED_PIN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_0, HIGH);
+                digitalWrite(DICE_LED_PIN_5, HIGH);
                 break;
             case 3:
-                digitalWrite(DICE_LED_PIN_1, HIGH);
                 digitalWrite(DICE_LED_PIN_3, HIGH);
-                digitalWrite(DICE_LED_PIN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_4, HIGH);
+                digitalWrite(DICE_LED_PIN_5, HIGH);
                 break;
             case 4:
-                digitalWrite(DICE_LED_PIN_1, HIGH);
-                digitalWrite(DICE_LED_PIN_2, HIGH);
+                digitalWrite(DICE_LED_PIN_0, HIGH);
+                digitalWrite(DICE_LED_PIN_3, HIGH);
                 digitalWrite(DICE_LED_PIN_5, HIGH);
                 digitalWrite(DICE_LED_PIN_6, HIGH);
                 break;
             case 5:
-                digitalWrite(DICE_LED_PIN_1, HIGH);
+                digitalWrite(DICE_LED_PIN_0, HIGH);
                 digitalWrite(DICE_LED_PIN_2, HIGH);
                 digitalWrite(DICE_LED_PIN_3, HIGH);
-                digitalWrite(DICE_LED_PIN_5, HIGH);
+                digitalWrite(DICE_LED_PIN_4, HIGH);
                 digitalWrite(DICE_LED_PIN_6, HIGH);
                 break;
             case 6:
+                digitalWrite(DICE_LED_PIN_0, HIGH);
                 digitalWrite(DICE_LED_PIN_1, HIGH);
                 digitalWrite(DICE_LED_PIN_2, HIGH);
                 digitalWrite(DICE_LED_PIN_4, HIGH);
@@ -484,7 +488,7 @@ void GameDice() {
 
 /**
  * @brief Cvičení pro switch - Hod kostkou
- * @details Stisknutím tlačítka se vygeneruje náhodné číslo od 1 do 9. Pro zobrazení vygenerovaného výsledku se rozsvítí daný počet LED
+ * @details Stisknutím tlačítka se vygeneruje náhodné číslo od 1 do 6. Pro zobrazení vygenerovaného výsledku se rozsvítí daný počet LED
  * na správných místech jako na reálné hrací kostce pouze s vícero stranami. Výsledek zůstane zobrazen, dokud se tlačítko znovu nestiskne.
  */
 void ExtendedDiceDisplay() {

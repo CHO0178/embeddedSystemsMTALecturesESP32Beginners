@@ -36,7 +36,7 @@
  *
  * ---
  *
- * ## Jak to funguje technicky
+ * ## Jak to vlastně funguje
  * Knihovna pro ESP32 používá přesný časovač a generuje PWM signál s periodou cca 20 ms
  * (50 Hz), což odpovídá standardnímu řízení hobby serv. Pulz o délce 500–2500 µs
  * určuje polohu serva od minima po maximum. ESP32 díky hardwarovým časovačům
@@ -52,7 +52,6 @@
  * ---
  *
  * ## Příklad použití:
- * ```cpp
  * #include <Arduino.h>
  * #include "EDUBOX_knihovny-servo.hpp"
  *
@@ -64,8 +63,10 @@
  *   setServoAngle(myServo, 180);
  *   delay(1000);
  * }
- * ```
  */
+
+#include <Arduino.h>
+#include "EDUBOX_knihovny-servo.hpp"
 
 
 /**

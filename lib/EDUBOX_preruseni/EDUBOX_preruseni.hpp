@@ -9,7 +9,7 @@
 #ifndef EDUBOX_PRERUSENI_H
 #define EDUBOX_PRERUSENI_H
 
-#include <Arduino.h>
+#pragma once
 
 void setupInterrupts();
 void triggerSoftwareInterrupt();

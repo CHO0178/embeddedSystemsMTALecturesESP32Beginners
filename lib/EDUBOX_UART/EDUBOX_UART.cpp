@@ -40,7 +40,7 @@
  */
 
 #include <Arduino.h>
-#include "EDUBOX_uart.h"
+#include "EDUBOX_UART.h"
 
 // Nastavení pinu LED
 #define LED_PIN 2

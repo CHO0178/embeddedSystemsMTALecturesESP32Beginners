@@ -9,7 +9,7 @@
 #ifndef EDUBOX_CLASSES_HPP
 #define EDUBOX_CLASSES_HPP
 
-#include <Arduino.h>
+#pragma once
 
 class LED {
 public:

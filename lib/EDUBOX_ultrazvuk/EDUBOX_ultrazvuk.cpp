@@ -1,5 +1,5 @@
 /**
- * @file EDUBOX_ultrasonic.cpp
+ * @file EDUBOX_ultrazvuk.cpp
  * @brief Práce s ultrazvukovým senzorem – měření vzdálenosti na ESP32
  *
  * Ultrazvukový senzor (např. HC-SR04) umožňuje měřit vzdálenost objektů.
