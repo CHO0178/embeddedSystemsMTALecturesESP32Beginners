@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2025
  * 
  */
+
 #include <WebServer.h>
 #include <DHT.h>
 #include "TempHum_Module_page.hpp"
@@ -52,7 +53,7 @@ void handleData() {
  */
 void setupTempHumModule() {
   Serial.begin(115200);
-  setupWifiTempHumModule("WiFi-name", "WiFi-password");
+  setupWifiTempHumModule("DALIBOR-NB1626", "2468135790");
   dht.begin();
   server_TempHum_Module.on("/", handleRoot); // Vložení funkce pro obsluhu kořenové URL
   server_TempHum_Module.on("/data", handleData);

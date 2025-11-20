@@ -1,7 +1,7 @@
 /**
  * @file Button_Module.cpp
  * @author Bc. Dalibor Slíva
- * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu osvětlení v projektu MTA-TP.
+ * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu talačítek v projektu MTA-TP.
  * @version 0.1
  * @date 2025-08-13
  * 
@@ -9,41 +9,32 @@
  * 
  */
 
-#include <WebServer.h>
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
 #include "Button_Module_page.hpp"
 #include "WiFi_Setup_Button_Module.hpp"
 
-const int ledPin = 2;
+constexpr uint8_t BUTTON_PIN = 13;        // uprav podle zapojení
+constexpr uint32_t DEBOUNCE_MS = 30;
 
-// Web server běžící na portu 80 - Tedy standardní HTTP port
-WebServer server_Button_Module(80);
+AsyncWebServer server_Button_Module(80);
+AsyncWebSocket ws("/ws");
 
-/**
- * @brief Obsluha kořenové URL.
- * @details Zobrazí HTML stránku s ovládáním osvětlení.
- */
-void hadleRoot() {
-  String page = FPSTR(BUTTON_MODULE_JAVASCRIPT_HTML);
-  server_Button_Module.send(200, "text/html; charset=utf-8", page);
+volatile bool lastStablePressed = false;  // poslední stabilní stav (true = stisk)
+volatile bool pendingChange = false;      // změna čeká na odeslání
+volatile uint32_t lastChangeMs = 0;
+
+void notifyAll(bool pressed) {
+  ws.textAll(pressed ? "1" : "0");
 }
 
-
-/**
- * @brief Obsluha rozsvícení osvětlení.
- * @details Rozsvítí LED a odešle stav "ON" klientovi.
- */
-void handleButtonOn() {
-    digitalWrite(ledPin, HIGH);
-    server_Button_Module.send(200, "application/text", "ON");
-}
-
-/**
- * @brief Obsluha zhasnutí osvětlení.
- * @details Rozsvítí LED a odešle stav "OFF" klientovi.
- */
-void handleButtonOff() {
-    digitalWrite(ledPin, LOW);
-    server_Button_Module.send(200, "text/plain", "OFF");
+void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
+               void *arg, uint8_t *data, size_t len) {
+  if (type == WS_EVT_CONNECT) {
+    // Po připojení pošleme aktuální stav jen tomuto klientovi
+    client->text(lastStablePressed ? "1" : "0");
+  }
 }
 
 /**
@@ -52,13 +43,21 @@ void handleButtonOff() {
  */
 void setupButtonModule() {
   Serial.begin(115200);
-  setupWifiButtonModule("WiFi-name", "WiFi-password");
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+  setupWifiButtonModule("DALIBOR-NB1626", "2468135790");
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-  server_Button_Module.on("/", hadleRoot);
-  server_Button_Module.on("/on", handleButtonOn);   
-  server_Button_Module.on("/off", handleButtonOff);
+  ws.onEvent(onWsEvent);
+  server_Button_Module.addHandler(&ws);
+
+  server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *req){
+    req->send_P(200, "text/html; charset=utf-8", BUTTON_MODULE_JAVASCRIPT_HTML);
+  });
+
+  server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *req){
+    String json = String("{\"pressed\":") + (lastStablePressed ? "true" : "false") + "}";
+    req->send(200, "application/json", json);
+  });
+
   server_Button_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
@@ -68,5 +67,32 @@ void setupButtonModule() {
  * @details Zpracovává příchozí HTTP požadavky.
  */
 void loopButtonModule() {
-  server_Button_Module.handleClient();
+  static bool lastRaw = HIGH;
+  static bool stable = HIGH;
+  static uint32_t lastDebounceTime = 0;
+
+  bool reading = digitalRead(BUTTON_PIN);
+  uint32_t now = millis();
+
+  if (reading != lastRaw) {
+    lastDebounceTime = now;
+    lastRaw = reading;
+  }
+
+  // po debounce časem změníme stav
+  if ((now - lastDebounceTime) > DEBOUNCE_MS) {
+    if (reading != stable) {
+      stable = reading;
+
+      // HIGH = puštěno, LOW = stisk
+      lastStablePressed = (stable == LOW);
+
+      notifyAll(lastStablePressed);
+
+      Serial.printf("Button: %s\n",
+                    lastStablePressed ? "PRESSED" : "RELEASED");
+    }
+  }
+
+  delay(5);  // preventivně odlehčení CPU
 }

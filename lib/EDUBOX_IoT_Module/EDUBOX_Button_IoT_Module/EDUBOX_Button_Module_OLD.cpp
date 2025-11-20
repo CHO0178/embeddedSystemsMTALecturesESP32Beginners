@@ -1,5 +1,5 @@
 /**
- * @file Light_Module.cpp
+ * @file Button_Module.cpp
  * @author Bc. Dalibor Slíva
  * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu osvětlení v projektu MTA-TP.
  * @version 0.1
@@ -10,21 +10,21 @@
  */
 
 #include <WebServer.h>
-#include "Light_Module_page.hpp"
-#include "WiFi_Setup_Light_Module.hpp"
+#include "Button_Module_page.hpp"
+#include "WiFi_Setup_Button_Module.hpp"
 
-const int ledPin = 14;
+const int ledPin = 2;
 
 // Web server běžící na portu 80 - Tedy standardní HTTP port
-WebServer server_Light_Module(80);
+WebServer server_Button_Module(80);
 
 /**
  * @brief Obsluha kořenové URL.
  * @details Zobrazí HTML stránku s ovládáním osvětlení.
  */
 void hadleRoot() {
-  String page = FPSTR(LIGHT_MODULE_JAVASCRIPT_HTML);
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+  String page = FPSTR(BUTTON_MODULE_JAVASCRIPT_HTML);
+  server_Button_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 
@@ -32,34 +32,34 @@ void hadleRoot() {
  * @brief Obsluha rozsvícení osvětlení.
  * @details Rozsvítí LED a odešle stav "ON" klientovi.
  */
-void handleLightOn() {
+void handleButtonOn() {
     digitalWrite(ledPin, HIGH);
-    server_Light_Module.send(200, "application/text", "ON");
+    server_Button_Module.send(200, "application/text", "ON");
 }
 
 /**
  * @brief Obsluha zhasnutí osvětlení.
  * @details Rozsvítí LED a odešle stav "OFF" klientovi.
  */
-void handleLightOff() {
+void handleButtonOff() {
     digitalWrite(ledPin, LOW);
-    server_Light_Module.send(200, "text/plain", "OFF");
+    server_Button_Module.send(200, "text/plain", "OFF");
 }
 
 /**
  * @brief Inicializace modulu osvětlení.
  * @details Nastaví pin pro LED a inicializuje webový server s příslušnými obslužnými funkcemi.
  */
-void setupLightModule() {
+void setupButtonModule() {
   Serial.begin(115200);
-  setupWifiLightModule("DALIBOR-NB1626", "2468135790");
+  setupWifiButtonModule("WiFi-name", "WiFi-password");
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
 
-  server_Light_Module.on("/", hadleRoot);
-  server_Light_Module.on("/on", handleLightOn);   
-  server_Light_Module.on("/off", handleLightOff);
-  server_Light_Module.begin();
+  server_Button_Module.on("/", hadleRoot);
+  server_Button_Module.on("/on", handleButtonOn);   
+  server_Button_Module.on("/off", handleButtonOff);
+  server_Button_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
 
@@ -67,6 +67,6 @@ void setupLightModule() {
  * @brief Hlavní smyčka modulu osvětlení.
  * @details Zpracovává příchozí HTTP požadavky.
  */
-void loopLightModule() {
-  server_Light_Module.handleClient();
+void loopButtonModule() {
+  server_Button_Module.handleClient();
 }

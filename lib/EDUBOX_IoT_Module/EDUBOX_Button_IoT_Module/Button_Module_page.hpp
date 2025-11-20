@@ -8,179 +8,52 @@
  * 
  */
 const char BUTTON_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <title>Osvětlení</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tlačítko ESP32</title>
+<style>
+  body { font-family: system-ui, Arial; margin: 2rem; }
+  .badge { display:inline-block; padding:.5rem 1rem; border-radius:999px; border:1px solid #ccc; }
+  .ok { border-color: #0a0; }
+  .err { border-color: #a00; color:#a00; }
+  .pressed { background:#0a0; color:#fff; }
+</style>
 </head>
-<body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
-  </button>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
-  </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
+<body>
+  <h1>Stav tlačítka</h1>
+  <p>Web ukáže stav v reálném čase (WebSocket).</p>
+  <p id="status" class="badge">…</p>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    function setStatus(pressed) {
+      statusEl.textContent = pressed ? "ZMÁČKNUTO" : "PUŠTĚNO";
+      statusEl.className = 'badge ' + (pressed ? 'pressed ok' : 'ok');
+    }
+    function setError(msg) {
+      statusEl.textContent = "Chyba: " + msg;
+      statusEl.className = 'badge err';
+    }
+
+    // WebSocket připojení
+    const ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
+    ws.onopen = () => { /* nic */ };
+    ws.onmessage = (e) => {
+      // server posílá "1" (stisk) nebo "0" (puštěno)
+      setStatus(e.data === "1");
+    };
+    ws.onerror = (e) => setError("WebSocket");
+    ws.onclose = () => setError("Odpojeno");
+
+    // Pro jistotu načteme i počáteční stav RESTem (když ws přijde o fous později)
+    fetch('/state').then(r=>r.json()).then(j=>setStatus(!!j.pressed)).catch(()=>{});
+  </script>
 </body>
-
-<script>
-  function sendCommand(command) {
-    fetch('/' + command)
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('status').innerText = data;
-      });
-  }
-</script>
-
 </html>
 )HTML";
 
-
-/**
- * @brief Úkol 1: Uprav HTML kod tak, aby stránka zobrazovala aktuální datum a čas.
- * @note Pro zobrazení aktuálního data a času můžeš využít JavaScriptovou funkci `Date()`.
- */
-const char EX1_BUTTON_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Osvětlení</title>
-</head>
-<body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
-  </button>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
-  </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
-</body>
-
-<script>
-  function sendCommand(command) {
-    fetch('/' + command)
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('status').innerText = data;
-      });
-  }
-</script>
-
-</html>
-)HTML";
-
-
-/**
- * @brief Úkol 2: Uprav HTML kod tak, aby bylo pouze jedno tlačítko, které bude přepínat stav osvětlení (rozsvítit/zhasnout). 
- *        Tlačítko bude měnit svůj text podle aktuálního stavu osvětlení a bude zbarveno zeleně, pokud je osvětlení rozsvícené, a červeně, pokud je zhasnuté.
- * @note Pro přepínaní bude potřeba vytvořit nový endpoint na serveru.
- */
-const char EX2_BUTTON_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Osvětlení</title>
-</head>
-<body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
-  </button>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
-  </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
-</body>
-
-<script>
-  function sendCommand(command) {
-    fetch('/' + command)
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('status').innerText = data;
-      });
-  }
-</script>
-
-</html>
-)HTML";
-
-/**
- * @brief Úkol 3: Uprav HTML kod tak, aby stránka zobrazovala aktualní IP adresy ESP32 v síti.
- * @note Pro zobrazení IP adresy můžeš využít JavaScriptovou funkci `fetch()` a vytvořit nový endpoint na serveru, který vrátí IP adresu.
- */
-const char EX3_BUTTON_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Osvětlení</title>
-</head>
-<body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
-  </button>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
-  </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
-</body>
-
-<script>
-  function sendCommand(command) {
-    fetch('/' + command)
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('status').innerText = data;
-      });
-  }
-</script>
-
-</html>
-)HTML";
-
-
-/**
- * @brief Úkol 4: Uprav HTML kod tak, aby uživatel mohl ovládat jas LED za pomoci hodnoty z webuové stránky.
- * @note Přidej na stránku posuvník (input type="range") pro ovládání jasu LED. Vytvoř nový endpoint na serveru, který přijme hodnotu jasu a nastaví ji na LED.
- *       Je třeba nastavit limit hodnot posuvníku od 0 do 255, kde 0 je zhasnutá LED a 255 je plný jas.
- */
-const char EX4_BUTTON_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Osvětlení</title>
-</head>
-<body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
-  </button>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
-  </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
-</body>
-
-<script>
-  function sendCommand(command) {
-    fetch('/' + command)
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('status').innerText = data;
-      });
-  }
-</script>
-
-</html>
-)HTML";
 
 #endif
