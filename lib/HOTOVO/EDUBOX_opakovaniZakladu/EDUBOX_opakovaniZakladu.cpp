@@ -298,7 +298,7 @@
 #define POT_PIN                4  // GPIO pin pro potenciometr
 
 // OUTPUTS
-#define DICE_LED_PIN_0            11
+#define DICE_LED_PIN_0            5
 #define DICE_LED_PIN_1            12
 #define DICE_LED_PIN_2            13
 #define DICE_LED_PIN_3            14
@@ -444,25 +444,29 @@ void GameDice() {
         digitalWrite(DICE_LED_PIN_5, LOW);
         digitalWrite(DICE_LED_PIN_6, LOW);
 
-        // Rozsvítit příslušné LED podle hodnoty
+        // Rozsvítit příslušné LED podle čísla na kostce
         switch (currentDiceValue) {
             case 1:
-                digitalWrite(DICE_LED_PIN_4, HIGH);
+                digitalWrite(DICE_LED_PIN_3, HIGH);
+                Serial.println("Hodnota kostky: 1");
                 break;
             case 2:
-                digitalWrite(DICE_LED_PIN_0, HIGH);
-                digitalWrite(DICE_LED_PIN_5, HIGH);
+                digitalWrite(DICE_LED_PIN_2, HIGH);
+                digitalWrite(DICE_LED_PIN_4, HIGH);
+                Serial.println("Hodnota kostky: 2");
                 break;
             case 3:
+                digitalWrite(DICE_LED_PIN_2, HIGH);
                 digitalWrite(DICE_LED_PIN_3, HIGH);
                 digitalWrite(DICE_LED_PIN_4, HIGH);
-                digitalWrite(DICE_LED_PIN_5, HIGH);
+                Serial.println("Hodnota kostky: 3");
                 break;
             case 4:
                 digitalWrite(DICE_LED_PIN_0, HIGH);
-                digitalWrite(DICE_LED_PIN_3, HIGH);
-                digitalWrite(DICE_LED_PIN_5, HIGH);
+                digitalWrite(DICE_LED_PIN_2, HIGH);
+                digitalWrite(DICE_LED_PIN_4, HIGH);
                 digitalWrite(DICE_LED_PIN_6, HIGH);
+                Serial.println("Hodnota kostky: 4");
                 break;
             case 5:
                 digitalWrite(DICE_LED_PIN_0, HIGH);
@@ -470,6 +474,7 @@ void GameDice() {
                 digitalWrite(DICE_LED_PIN_3, HIGH);
                 digitalWrite(DICE_LED_PIN_4, HIGH);
                 digitalWrite(DICE_LED_PIN_6, HIGH);
+                Serial.println("Hodnota kostky: 5");
                 break;
             case 6:
                 digitalWrite(DICE_LED_PIN_0, HIGH);
@@ -478,6 +483,7 @@ void GameDice() {
                 digitalWrite(DICE_LED_PIN_4, HIGH);
                 digitalWrite(DICE_LED_PIN_5, HIGH);
                 digitalWrite(DICE_LED_PIN_6, HIGH);
+                Serial.println("Hodnota kostky: 6");
                 break;
         }
 

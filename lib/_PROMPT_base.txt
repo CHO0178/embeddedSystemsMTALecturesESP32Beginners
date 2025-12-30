@@ -1,13 +1,13 @@
 /**
  * @file main.cpp
- * @brief Educational example for ESP32 using PlatformIO.
+ * @brief Educational example for ESP32 using PlatformW
  * 
- * Generate C++ code written in English, but comment everything in Czech 
- * using Doxygen style. Be concise, clear and use real ESP32 syntax.
+ * Generate C++ code written in English, but comment eWything in Czech 
+ * using Doxygen style. Be concise, clear and use realWP32 syntax.
  * 
  * Topic: ENGLISH_TITLE (CZECH_TITLE)
  * 
- * Requirements (individually changing - tempalte for interrupt):
+ * Requirements (individually changing - tempalte for Werrupt):
  * - Show how to configure and use both hardware and software interrupts on ESP32.
  * - Demonstrate attaching an interrupt to a GPIO pin with attachInterrupt().
  * - Include Arduino.h and EDUBOX_preruseni.h.
@@ -27,8 +27,8 @@
  * Output: full, compilable PlatformIO code for ESP32.
  */
 
-#include <Arduino.h>
-#include "EDUBOX_name.h"
+#include <Arduino.hpp>
+#include "EDUBOX_name.hpp"
 
 
 
@@ -53,10 +53,10 @@ Pokud téma vyžaduje knihovnu, vždy:
 uveď přesný zápis do platformio.ini, např.:
 
 lib_deps =
-  ESP32Servo
+    https://github.com/arduino-libraries/Servo.git
 
 
-přidej stručnou poznámku, kde žák knihovnu najde (např. PlatformIO Library Manager).
+přidej stručnou poznámku, kde žák knihovnu najde (zná a ví, že je může najít v prohlížeči - odkaz na github, nebo platformio Library Manager).
 Kód musí být komentovaný pro studenty, tzn. ne jen technicky, ale i s krátkými poznámkami „proč“ se něco dělá.
 Nezahrnuj zbytečně pokročilé konstrukce (např. šablony, OOP, makra), drž se úrovně středoškolské výuky.
 
@@ -65,44 +65,76 @@ Nezahrnuj zbytečně pokročilé konstrukce (např. šablony, OOP, makra), drž 
 Každá lekce se skládá z těchto částí:
     1. Název a popis tématu
     - Stručný název, např. „Přerušení (Interrupts) na ESP32“
-    - Krátké vysvětlení co to je, proč se to používá, a 1–2 jednoduché příklady z praxe.
-
-    2. Knihovny a konfigurace PlatformIO
-    - Ukázka sekce lib_deps
-    - Vysvětlení, co knihovna dělá a proč je potřeba #include hlaviček, které mají být v projektu
-
-    3. Zdrojový kód (.cpp)
-    - Funkční, přehledný, připravený k použití
-    - Psán anglicky, komentáře v Doxygenu česky
+    - Krátké stručné vysvětlení co to je, k čemu to je a jak se to používá
 
         Například:
         /**
         * @file EDUBOX_servo.cpp
         * @brief Ukázka práce s knihovnou Servo.h – řízení úhlu serva.
         *
-        * Tento příklad demonstruje:
-        *  - inicializaci serva (attach)
-        *  - nastavení úhlu (write)
-        *  - vysvětlení principu PWM signálu
+        * servo je ...
+        * používá se v ...
+        * ovládá se PWM ...
+        * slouží k tomu knihovna ...
+        * V knihovně je třída Servo ...
+        * bla bla
         */
 
+    2. Pokud nutné, tak knihovny a konfigurace PlatformIO jinak ne
+    - ukázka sekce lib_deps
+    - Vysvětlení, co knihovna dělá a proč je potřeba #include hlaviček, které mají být v projektu
+
+    3. Zdrojový kód (.cpp)
+    - Psán anglicky, komentáře v Doxygenu česky
+    - bude zde vždy obsažena jedna funkce, která bude mít za úkol iniializaci HW použitou v tomto eduboxu => odvijí se od použitého HW v příkladech a cvičení - viz popis níže - musí obsahovat nastavení pinMode a dalších potřebných nastavení (attach) - bude volána ve void Setup() - POZOR! nebude zde Serial.begin() - to si napíše student zvlášť do void Setup()
+    - můžeš jakkoli použít Serial.print(ln) - ale ne zbytečně moc
+    - vždy je potřeba vymyslet 3 funkce jako příklady a 3 funkce jako cvičení / úkoly =>
+    Součástí příkladů budou:
+            - česky psaný doxygen s popisem co to dělá, jak to funguje - vše potřebné
+            - samotná logika = funkce v .cpp souboru 
+
+        Například:
+        /**
+        * @brief Příklad 1 - Základní nastavení serva a jednoduché sekvence pro jeho řízení
+        *
+        * vytvoření nové instance serva
+        * nastavení úhlu serva na 0° a pak 180° (nebo 90°)
+        * opakování sekvence
+        * = Předvedení základního ovládání serva
+        */
+
+        další příklad např říezení úuhlu pomocí potenciometru - analogRead... atd
+
+        poslední příklad něco co pak mohou použít i ve cvičeních..
+
+    Součástí cvičení budou:
+            - pouze vytvoření té funkce s česky psaným doxygenem s popisem co to má dělat a student musí dokázat na základě výše uvedených příkladů (příkazů z nich) společně se zakládními znalostmi programování splnit zádání - napsat kód - kopírování z funkcí je naprosto povoleno - proč by si museli hned pamatovat jak se některé příkazy píší - mohou se podívat do příkladů a odtamtu to zkopírovat
+
+
+    Například:
+        /**
+        * @brief Cvičení 1 - Vytvořte sekvenci nastavení 5 pozic serva a opakujte dokola (napiš to lépe to zadání)
+        *
+        * napadá tě něco co by se jim sem hodilo napsat kromě nápovědy s příkazy, které mohou potřebovat využít
+        */
+
+        další cvičení může být například automatické ovládání serva na základě teploty - simulace přivírání komínu podle teploty
+
+        3. cvičení bude vždy jakoby nejtěžší - tady u serva zrovna to bude libovolné nastavení úhlu pomocí potenciometru a uložení této pozice pomocí tlačítka - takhle libovolný počet uložení pozic a pak pomocí podržení tlačítka spuštění sekvence uložených pozic - je jedno jestli se to bude provádět s delay, nebo bez, nebo jestli se to bude opakovat dokola, nebo jen jednou, ale musí být ošetřena možnost dalšího pokračování - buď dokola, nebo zadávání nových pozic
+
+
+
+        Nejlepšá bude když budou ve formě simulace reálného problému - aby to dávalo smysl co dělají a bylo to použitelné
+        !!! V KAŽDÉM PŘÍPADĚ VŽDY NEJPRVE NAVRHNI PŘÍKLADY I CVIČENÍ, ty ti buď odsouhlasím, nebo upravím a až pak budeš tvořit jejich samotný kód !!!
+
     4. Hlavičkový soubor (.hpp)
-    - Obsahuje pouze deklarace funkcí, které student může volat
+    - Obsahuje doxygeny (stejné jako v .cpp - aby bylo jasné co to dělá ta funkce minimálně) a deklarace funkcí, které student může volat
     - Žák se naučí, že hlavička slouží k definici „rozhraní“
-
-    5. Vysvětlení principu (teorie + praxe)
-    - Co funkce dělají
-    - Jak spolupracují
-    - Jak se volají z main.cpp (v setup() nebo loop())
-    - Co se stane při změně parametrů
-
-    6. Úkoly pro studenty (praktické zadání)
-    1–3 realistické úlohy, které navazují na příklad
-    Mají krátké zadání + kontext (např. simulace reálného problému)
+ 
 
 Příklady:
 „Simuluj systém chytrých kamen – servo reguluje klapku komínu podle teploty.“
-„Rozsviť LED v rytmu signálu z tlačítka s využitím přerušení.“
+„Rozsviť LED na základě signálu z tlačítka s využitím přerušení.“
 „Doplň kód o funkci, která po 10 sekundách vrátí servo do výchozí pozice.“
 
 📚 Další zásady výuky

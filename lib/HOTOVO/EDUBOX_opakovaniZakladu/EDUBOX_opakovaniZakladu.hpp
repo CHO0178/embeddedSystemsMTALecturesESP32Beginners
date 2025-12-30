@@ -25,7 +25,7 @@ void initPeripheralsBase();
  * @details Nastavení pinů pro LED diody použité v příkladech se strukturou switch.
  * @note Tato funkce by měla být volána v setup() před použitím funkcí pro příklady a cvičení switch.
  */
-void initPeripheralsExtended();
+void initPeripheralsRollingDice();
 
 
 // Příklady a cvičení

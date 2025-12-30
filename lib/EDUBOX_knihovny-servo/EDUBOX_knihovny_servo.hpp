@@ -1,38 +1,39 @@
 /**
- * @file EDUBOX_ultrazvuk.hpp
- * @brief Hlavičkový soubor EDUBOX – ultrazvukový senzor
+ * @file EDUBOX_knihovny_servo.hpp
+ * @brief Hlavičkový soubor EDUBOX – knihovny a servo
  *
  * Obsahuje deklarace funkcí používaných v EDUBOXu
  * a slouží jako rozhraní mezi main.cpp a implementací.
  */
 
-#ifndef EDUBOX_KNIHOVNY_ULTRAZVUK_HPP
-#define EDUBOX_KNIHOVNY_ULTRAZVUK_HPP
+#ifndef EDUBOX_KNIHOVNY_SERVO_HPP
+#define EDUBOX_KNIHOVNY_SERVO_HPP
 
 /* =========================================================
    HARDWAROVÁ INICIALIZACE
    ========================================================= */
 
 /**
- * @brief Inicializace hardwaru pro ultrazvukový EDUBOX
+ * @brief Inicializace hardwaru pro servo EDUBOX
+ *
+ * Nastavuje piny a připojuje servo k odpovídajícímu pinu.
  */
-void EDUBOX_ultrazvuk_hwInit();
+void EDUBOX_servo_hwInit();
 
 /* =========================================================
    PŘÍKLADY
    ========================================================= */
 
-void example_distanceSerialPrint();
-void example_distanceRgbIndicator();
-void example_parkingBuzzer();
+void example_basicServoMovement();
+void example_servoControlledByPotentiometer();
+void example_thresholdBasedServo();
 
 /* =========================================================
    CVIČENÍ
    ========================================================= */
 
-void task_distanceColorScale();
-void task_ledBuzzerLevels();
-void task_ultrasonicAlarm();
+void task_servoSequence();
+void task_temperatureBasedServo();
+void task_servoMemorySequence();
 
-#endif // EDUBOX_ULTRAZVUK_HPP
-
+#endif // EDUBOX_KNIHOVNY_SERVO_HPP
