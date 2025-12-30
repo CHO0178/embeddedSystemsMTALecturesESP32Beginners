@@ -4,9 +4,8 @@
  * 
  * @details Tento příklad demonstruje rozdíl mezi hardwarovým a softwarovým
  * přerušením. Na pin 15 je připojeno tlačítko, které vyvolá hardwarové
- * přerušení, zatímco softwarové přerušení je vyvoláno ručně pomocí funkce.
+ * přerušení, zatímco softwarov é přerušení je vyvoláno ručně pomocí funkce.
  * 
- * Kód je psán v angličtině, komentován v češtině pomocí Doxygen.
  */
 
 #include <Arduino.h>

@@ -29,7 +29,7 @@ void example_servoControlledByPotentiometer();
 void example_thresholdBasedServo();
 
 /* =========================================================
-   CVIČENÍ
+   CVIČENÍ – ÚKOLY
    ========================================================= */
 
 void task_servoSequence();

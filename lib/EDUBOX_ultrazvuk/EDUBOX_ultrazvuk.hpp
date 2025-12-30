@@ -27,7 +27,7 @@ void example_distanceRgbIndicator();
 void example_parkingBuzzer();
 
 /* =========================================================
-   CVIČENÍ
+   CVIČENÍ – ÚKOLY
    ========================================================= */
 
 void task_distanceColorScale();

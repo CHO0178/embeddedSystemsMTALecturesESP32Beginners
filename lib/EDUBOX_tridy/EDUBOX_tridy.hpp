@@ -1,25 +1,32 @@
 /**
- * @file EDUBOX_classes.hpp
- * @brief Deklarace třídy LED
+ * @file EDUBOX_tridy.hpp
+ * @brief Hlavičkový soubor EDUBOX – třídy (classes)
  *
- * Hlavičkový soubor slouží k definici „rozhraní“ třídy LED.
- * Obsahuje pouze deklarace funkcí, které student může volat.
+ * Tento soubor obsahuje:
+ * - deklarace funkcí příkladů
+ * - deklarace funkcí cvičení
+ *
+ * Slouží jako rozhraní mezi main.cpp
+ * a implementací EDUBOX_tridy.cpp.
  */
 
-#ifndef EDUBOX_CLASSES_HPP
-#define EDUBOX_CLASSES_HPP
+#ifndef EDUBOX_TRIDY_HPP
+#define EDUBOX_TRIDY_HPP
 
-#pragma once
+/* =========================================================
+   PŘÍKLADY
+   ========================================================= */
 
-class LED {
-public:
-    LED(uint8_t pin);         // Konstruktor
-    void turnOn();            // Rozsvítí LED
-    void turnOff();           // Zhasne LED
-    void blink(unsigned long delayTime); // Blikne LED
+void example_singleLed();
+void example_twoLeds();
+void example_toggleLed();
 
-private:
-    uint8_t _pin;             // Pin LED
-};
+/* =========================================================
+   CVIČENÍ – ÚKOLY
+   ========================================================= */
 
-#endif // EDUBOX_CLASSES_H
+void task_createSimpleClass();
+void task_extendClass();
+void task_designOwnClass();
+
+#endif // EDUBOX_TRIDY_HPP

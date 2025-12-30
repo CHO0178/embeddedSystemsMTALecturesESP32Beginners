@@ -1,17 +1,33 @@
 /**
  * @file EDUBOX_UART.hpp
- * @brief Deklarace funkcí pro práci s UART
- *
- * Tento hlavičkový soubor může být rozšířen o další funkce, např. pro čtení senzorů
- * nebo parsování složitějších příkazů z počítače.
+ * @brief Hlavičkový soubor EDUBOX – UART komunikace
  */
 
-#ifndef EDUBOX_UART_HPP
-#define EDUBOX_UART_HPP
+#ifndef EDUBOX_KNIHOVNY_UART_HPP
+#define EDUBOX_KNIHOVNY_UART_HPP
 
-#pragma once
+/* =========================================================
+   HARDWAROVÁ INICIALIZACE
+   ========================================================= */
 
-// V této lekci nejsou další funkce, pouze demonstrace Serial
-// Student si může přidat vlastní funkce, např. sendSensorData() nebo parseCommand(String cmd)
+void EDUBOX_uart_hwInit();
 
-#endif  // EDUBOX_UART_HPP
+/* =========================================================
+   PŘÍKLADY
+   ========================================================= */
+
+void example_uartMillisPrint();
+void example_uartPotentiometerRead();
+void example_uartLedOnOff();
+void example_uartRgbWithValue();
+void example_uartStatusResponse();
+
+/* =========================================================
+   CVIČENÍ – ÚKOLY
+   ========================================================= */
+
+void task_uartStartStopPotentiometer();
+void task_uartRgbStatus();
+void task_uartRgbRules();
+
+#endif // EDUBOX_KNIHOVNY_UART_HPP
