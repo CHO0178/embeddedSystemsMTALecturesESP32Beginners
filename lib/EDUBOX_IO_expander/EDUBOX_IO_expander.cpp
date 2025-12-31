@@ -26,7 +26,12 @@
 
 #define PCF8574_ADDRESS   0x20
 
-#define LED_PIN           0
+#define LED_PIN_1         /* doplnit */
+#define LED_PIN_2         /* doplnit */
+#define LED_PIN_3         /* doplnit */
+#define LED_PIN_4         /* doplnit */
+#define LED_PIN_5         /* doplnit */
+
 #define BUTTON_PIN        7   // tlačítko připojené k IO expanderu
 
 /* =========================================================
@@ -131,6 +136,7 @@ void example_IOE_buttonControlsLED()
  * - stav LED musí být uložen v proměnné
  *
  * Cílem je naučit se:
+ * - Vyzkoušet si práci s IO expanderem
  * - detekovat změnu stavu vstupu
  * - pracovat se stavovou proměnnou
  */
@@ -158,6 +164,7 @@ void task_IOE_LEDtoggle()
  * - aktuální režim musí být uložen v proměnné
  *
  * Cílem je:
+ * - Vyzkoušet si práci s IO expanderem
  * - práce se stavovým automatem
  * - oddělení logiky vstupu a chování výstupu
  */
@@ -182,9 +189,9 @@ void task_IOE_LEDmodes()
  * Požadavky:
  * - tlačítko i všechny LED musí být připojeny k IO expanderu
  * - sekvence musí běžet pouze při aktivním stavu
- * - stav sekvence musí být uložen v proměnné
  *
  * Cílem je:
+ * - Vyzkoušet si práci s IO expanderem
  * - řízení programu pomocí stavu
  * - kombinace vstupu a více výstupů
  */

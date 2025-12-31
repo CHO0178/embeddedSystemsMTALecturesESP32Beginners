@@ -31,7 +31,7 @@
  * s ultrazvukovým senzorem a nejsou v tomto EDUBOXu použity.
  *
  * ---
- *
+ * 
  * Tento soubor obsahuje:
  * - inicializaci hardwaru pro ultrazvukový senzor, RGB LED a bzučák
  * - tři hotové příklady použití senzoru
