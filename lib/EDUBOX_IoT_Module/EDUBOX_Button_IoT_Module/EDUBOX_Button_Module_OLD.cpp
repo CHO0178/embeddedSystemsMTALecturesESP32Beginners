@@ -10,8 +10,8 @@
  */
 
 #include <WebServer.h>
-#include "Button_Module_page.hpp"
-#include "WiFi_Setup_Button_Module.hpp"
+#include "EDUBOX_Button_Module_page.hpp"
+#include "EDUBOX_WiFi_Setup_Button_Module.hpp"
 
 const int ledPin = 2;
 

@@ -1,56 +1,81 @@
--WiFi.h
-WiFi.begin(ssid, password);
-WiFi.status() != WL_CONNECTED
-WiFi.localIP()
+Knihovna:
+#include <WebServer.h>
 
--WebServer.h
-WebServer server_TempHum_Module(80);
-server_TempHum_Module.on("/data", hadleData);
-server_TempHum_Module.begin();
-server_TempHum_Module.handleClient();
+Definice třídy:
+WebServer server_HTML(80);
+  WebServer(IPAddress addr, int port = 80);
+  WebServer(int port = 80);
 
--pgmspace.h
-const char LIGHT_MODULE_HTML[] PROGMEM = R"HTML( )HTML";
+Metody:
+server_HTML.send(200, "text/html; charset=utf-8", page);
+  void send(int code, const char* content_type = NULL, const String& content = String(""));
+  void send(int code, char* content_type, const String& content);
+  void send(int code, const String& content_type, const String& content);
+  void send(int code, const char* content_type, const char* content);
 
-# ESP32: `WiFi.h`, `WebServer.h` – stručné vysvětlivky
+server_HTML.on("/", handleRoot);
+  void on(const Uri &uri, THandlerFunction fn);
+  void on(const Uri &uri, HTTPMethod method, THandlerFunction fn); 
+  void on(const Uri &uri, HTTPMethod method, THandlerFunction fn, THandlerFunction ufn);
 
-Níže najdeš praktické poznámky k uvedeným voláním: co dělají, kdy je použít, co vracejí a na co si dát pozor.
 
-## `WiFi.h` (ESP32/ESP8266)
+server_HTML.begin();
+  virtual void begin();
+  virtual void begin(uint16_t port);
 
-### `WiFi.begin(ssid, password);`
-- **Co dělá:** Spustí proces připojení k Wi-Fi síti se zadanými přihlašovacími údaji.
-- **Kdy volat:** Typicky v `setup()`.
-- **Návratová hodnota:** `void` (samotné připojení probíhá asynchronně).
-- **Tip:** SSID/heslo měj jako `const char*` nebo použij `String.c_str()`.
+server_HTML.handleClient();
+  virtual void handleClient();
 
-### `WiFi.status() != WL_CONNECTED`
-- **Co dělá:** Vrací stav Wi-Fi (`wl_status_t`). S `WL_CONNECTED` víš, že jsi připojen.
-- **Běžné stavy:** `WL_IDLE_STATUS`, `WL_NO_SSID_AVAIL`, `WL_CONNECT_FAILED`, `WL_DISCONNECTED`, `WL_CONNECTED`.
-- **Použití:** V `while`/`if` k čekání s timeoutem.
 
-### `WiFi.localIP()`
-- **Co dělá:** Vrací lokální IP adresu zařízení (typ `IPAddress`).
-- **Pozn.:** Dává smysl až po úspěšném připojení.
-- **Výpis:** `Serial.println(WiFi.localIP());` → formát `x.x.x.x`.
+Knihovna:
+#include <DHT.h>
 
----
+Definice třídy:
+DHT dht(DHTPIN, DHTTYPE);
 
-## `WebServer.h` (ESP32/ESP8266 WebServer)
+Metody:
+dht.begin();
+  void DHT::begin(uint8_t usec) 
 
-### `WebServer server_TempHum_Module(80);`
-- **Co dělá:** Vytvoří HTTP server naslouchající na portu 80.
-- **Pozn.:** Můžeš zvolit jiný port (např. 8080), pokud 80 koliduje.
+dht.readHumidity();
+  float DHT::readHumidity(bool force)
+dht.readTemperature();
+  float DHT::readTemperature(bool S, bool force)
 
-### `server_TempHum_Module.on("/data", handleData);`
-- **Co dělá:** Registruje obsluhu (callback) pro GET požadavky na cestě `/data`.
-- **Signatura handleru:** `void handleData()`; odpověď posílej pomocí `server.send(...)`.
-- **Pozn.:** Správný název je `handleData` (ne `hadleData`).
 
-### `server_TempHum_Module.begin();`
-- **Co dělá:** Spustí server (otevře sockety a zaregistruje routy).
-- **Kdy volat:** V `setup()` po připojení k Wi-Fi.
+Knihovna:
+#include <ESPAsyncWebServer.h>
 
-### `server_TempHum_Module.handleClient();`
-- **Co dělá:** Zpracuje příchozí HTTP požadavky.
-- **Důležité:** Musí se volat *často* (každý průchod `loop()`), jinak server nereaguje.
+Definice třídy:
+AsyncWebServer server_Button_Module(80);
+AsyncWebSocket ws("/ws");
+
+Metody:
+ws.textAll(pressed ? "1" : "0");
+  AsyncWebSocket::SendStatus AsyncWebSocket::textAll(const uint8_t *message, size_t len)
+  AsyncWebSocket::SendStatus AsyncWebSocket::textAll(const char *message, size_t len)
+  AsyncWebSocket::SendStatus AsyncWebSocket::textAll(const char *message)
+  AsyncWebSocket::SendStatus AsyncWebSocket::textAll(const String &message)
+
+ws.onEvent(onWsEvent);
+  void onEvent(AwsEventHandler handler)
+
+server_Button_Module.addHandler(&ws);
+  AsyncWebHandler &AsyncWebServer::addHandler(AsyncWebHandler *handler)
+
+server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *req))
+  AsyncCallbackWebHandler &AsyncWebServer::on(
+  AsyncURIMatcher uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody
+  )
+
+server_Button_Module.begin();
+  void AsyncWebServer::begin() 
+
+
+Knihovna:
+#include <AsyncTCP.h>
+??
+Definice třídy:
+??
+Metody:
+??

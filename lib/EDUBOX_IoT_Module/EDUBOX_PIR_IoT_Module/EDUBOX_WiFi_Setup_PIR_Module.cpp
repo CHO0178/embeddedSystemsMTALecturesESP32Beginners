@@ -1,5 +1,5 @@
 /**
- * @file WiFi_Setup_Light_Module.cpp
+ * @file WiFi_Setup_PIR_Module.cpp
  * @author Bc. Dalibor Slíva
  * @brief Tento soubor obsahuje implementaci funkce pro inicializaci WiFi v projektu MTA-TP.
  * @version 0.1
@@ -18,7 +18,7 @@
  * @param ssid Název WiFi sítě.
  * @param password Heslo k WiFi síti.
  */
-void setupWifiWaterLevelModule(const char* ssid, const char* password) {
+void setupWifiPIRModule(const char* ssid, const char* password) {
     Serial.print("Připojuji se k WiFi: ");
     Serial.println(ssid);
     delay(100);

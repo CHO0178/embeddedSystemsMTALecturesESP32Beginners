@@ -10,12 +10,12 @@
  */
 
 #include <WiFi.h>
-#include <AsyncTCP.h>
+//#include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include "Button_Module_page.hpp"
-#include "WiFi_Setup_Button_Module.hpp"
+#include "EDUBOX_Button_Module_page.hpp"
+#include "EDUBOX_Button_Module.hpp"
 
-constexpr uint8_t BUTTON_PIN = 13;        // uprav podle zapojení
+constexpr uint8_t BUTTON_PIN = 15;        // uprav podle zapojení
 constexpr uint32_t DEBOUNCE_MS = 30;
 
 AsyncWebServer server_Button_Module(80);
@@ -25,11 +25,11 @@ volatile bool lastStablePressed = false;  // poslední stabilní stav (true = st
 volatile bool pendingChange = false;      // změna čeká na odeslání
 volatile uint32_t lastChangeMs = 0;
 
-void notifyAll(bool pressed) {
+void notifyAllButtonModule(bool pressed) {
   ws.textAll(pressed ? "1" : "0");
 }
 
-void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
+void onWsEventButtonModule(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
                void *arg, uint8_t *data, size_t len) {
   if (type == WS_EVT_CONNECT) {
     // Po připojení pošleme aktuální stav jen tomuto klientovi
@@ -46,7 +46,7 @@ void setupButtonModule() {
   setupWifiButtonModule("DALIBOR-NB1626", "2468135790");
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-  ws.onEvent(onWsEvent);
+  ws.onEvent(onWsEventButtonModule);
   server_Button_Module.addHandler(&ws);
 
   server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *req){
@@ -87,7 +87,7 @@ void loopButtonModule() {
       // HIGH = puštěno, LOW = stisk
       lastStablePressed = (stable == LOW);
 
-      notifyAll(lastStablePressed);
+      notifyAllButtonModule(lastStablePressed);
 
       Serial.printf("Button: %s\n",
                     lastStablePressed ? "PRESSED" : "RELEASED");
