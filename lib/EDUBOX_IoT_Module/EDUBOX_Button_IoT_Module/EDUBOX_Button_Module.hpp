@@ -19,9 +19,8 @@ void setupButtonModule();
 void loopButtonModule();
 
 /**
- * @brief Ukázka obsluhy událostí WebSocket serveru pro modul tlačítka.
- * @details Tato funkce obsluhuje události WebSocket serveru.
- * 
+ * @brief Ukázka obslužné funkce pro události WebSocket modulu tlačítka.
+ * @details Tato funkce zpracovává události WebSocket, jako je připojení klienta.
  */
 void onWsEventButtonModule(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
                void *arg, uint8_t *data, size_t len);
@@ -36,20 +35,22 @@ void notifyAllButtonModule(bool pressed);
 
 
 /**
- * @brief Ukol 
- * 
+ * @brief Úkol 1: Zobrazení času připojení a počtu zpráv z WebSocketu
  */
-
+void Exercise1_setupButtonModule();
 
 /**
- * @brief Ukol 
- * 
+ * @brief Úkol 2: Strukturované WebSocket zprávy ve formátu JSON
  */
-
+void Exercise2_onWsEventButtonModule(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
+               void *arg, uint8_t *data, size_t len);
+void Exercise2_notifyAllButtonModule(bool pressed);
+void Exercise2_setupButtonModule();
+void Exercise2_loopButtonModule();
 
 /**
- * @brief Ukol 
- * 
+ * @brief Úkol 3: Obousměrná WebSocket komunikace (ovládání LED z webu)
  */
+void Exercise3_setupButtonModule();
 
 #endif
