@@ -11,7 +11,5 @@
 
 #pragma once
 
-// V této lekci nejsou další funkce, pouze demonstrace Serial
-// Student si může přidat vlastní funkce, např. sendSensorData() nebo parseCommand(String cmd)
 
 #endif  // EDUBOX_UART_-2ESP32_HPP

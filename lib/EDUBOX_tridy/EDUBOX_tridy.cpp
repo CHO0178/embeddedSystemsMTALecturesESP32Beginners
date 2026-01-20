@@ -49,8 +49,6 @@
  * - šablony (templates)
  * - dynamická alokace paměti (new / delete)
  *
- * Tyto koncepty jsou záměrně vynechány,
- * aby se student soustředil na samotný princip tříd.
  *
  * ---
  *

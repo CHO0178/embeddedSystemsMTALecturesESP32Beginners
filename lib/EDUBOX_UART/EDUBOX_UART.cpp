@@ -63,7 +63,7 @@
 #include "EDUBOX_UART.hpp"
 
 /* =========================================================
-   DEFINICE PINŮ – student si doplní konkrétní čísla pinů
+   DEFINICE PINŮ
    ========================================================= */
 #define RGB_RED_PIN        /* doplň pin */
 #define RGB_GREEN_PIN      /* doplň pin */
