@@ -180,11 +180,14 @@ void example_thresholdBasedServo()
 
 /**
  * @brief Cvičení 1 – Sekvence více poloh serva
+ * 
  *
+ * @todo
  * Vytvořte funkci, která nastaví servo postupně
  * do alespoň 5 různých poloh (např. 0°, 45°, 90°, 135°, 180°)
  * a tuto sekvenci bude opakovat.
- *
+ * 
+ * @details
  * Nápověda:
  * - použijte funkci write()
  * - použijte opakování (cyklus)
