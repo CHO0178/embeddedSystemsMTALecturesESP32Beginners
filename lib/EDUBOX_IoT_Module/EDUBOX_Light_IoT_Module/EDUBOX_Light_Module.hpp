@@ -54,10 +54,9 @@ void Exercise2_handleRootLightModule();
 void Exercise2_handleStateLightModule();
 void Exercise2_setupLightModule();
 
-/**
- * @brief Ukol 3: Bezpečné ovládání LED pomocí stavového režimu
- * 
- */
+
+// Ukol: Bezpečné ovládání LED pomocí stavového režimu
+
 void Exercise3_handleRootLightModule();
 void Exercise3_handleEnableLightModule();
 void Exercise3_handleDisableLightModule();
