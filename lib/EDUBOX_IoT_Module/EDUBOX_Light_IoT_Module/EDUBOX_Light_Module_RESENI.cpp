@@ -10,7 +10,7 @@
  */
 
 #include <WebServer.h>
-#include "EDUBOX_Light_Module_page.hpp"
+#include "EDUBOX_Light_Module_page_RESENI.hpp"
 #include "EDUBOX_Light_Module.hpp"
 
 #define LEDPIN 15 // ??
@@ -24,7 +24,7 @@ WebServer server_Light_Module(80);
  * @details Zobrazí HTML stránku s ovládáním osvětlení.
  */
 void example_handleRoot_LightModule() {
-  String page = FPSTR(EXAMPLE_LIGHT_MODULE_JAVASCRIPT_HTML);
+  String page = FPSTR(RES_EXAMPLE_LIGHT_MODULE_JAVASCRIPT_HTML);
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
@@ -103,7 +103,7 @@ void example_loop_LightModule() {
 
 
 void exercise_timeDate_handleRoot_LightModule() {
-  String page = FPSTR(EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení stavu LED a aktuálního data a času
+  String page = FPSTR(RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení stavu LED a aktuálního data a času
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
@@ -134,54 +134,88 @@ void exercise_timeDate_setup_LightModule() {
  * 2. Upravte endpointy `/on` a `/off`, aby aktualizovaly tuto proměnnou.
  * 3. Přidejte endpoint `/toggle`, který přepne aktuální stav LED v závislosti na aktualním stavu vytvořené globalní proměnné.
  * 4. Přidejte endpoint `/set?value=0|1`, který nastaví LED podle parametru.
+ * 5. Nakonec přidejte endpoint `/status`, který vrátí aktuální stav LED (ON/OFF) klientovi.
  * 5. Ošetřete neplatné nebo chybějící parametry vhodnou HTTP odpovědí.
  * 
  * @note
+ * 
+ *
+ *
+ * @note
  * Po dokončení úkolu je třeba do funkce Exercise2_setup_LightModule() přidat námi nově vytvořené či upravené obslužné funkce.
  */
-
+bool ledState = false;
 
  void exercise_extendedEndpoints_handleRoot_LightModule() {
-  String page = FPSTR(EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení stavu LED a přidání ovládacích prvků pro nové endpointy
+  String page = FPSTR(RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void exercise_extendedEndpoints_handleLightOn_LightModule() {
-    digitalWrite(LEDPIN, HIGH);
-    server_Light_Module.send(200, "application/text", "ON");
+  ledState = true;
+  digitalWrite(LEDPIN, HIGH);
+  server_Light_Module.send(200, "text/plain", "ON");
 }
 
 void exercise_extendedEndpoints_handleLightOff_LightModule() {
-    digitalWrite(LEDPIN, LOW);
-    server_Light_Module.send(200, "text/plain", "OFF");
+  ledState = false;
+  digitalWrite(LEDPIN, LOW);
+  server_Light_Module.send(200, "text/plain", "OFF");
 }
 
 void exercise_extendedEndpoints_handleToggle_LightModule() {
-    // Doplnit řešení pro přepínání stavu LED
+  ledState = !ledState;
+  digitalWrite(LEDPIN, ledState ? HIGH : LOW);
+  server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
 
 void exercise_extendedEndpoints_handleSetLightModule() {
-    // Doplnit řešení pro nastavení stavu LED podle parametru
+  // /set?value=0|1
+  if (!server_Light_Module.hasArg("value")) {
+    server_Light_Module.send(400, "text/plain", "Missing value");
+    return;
+  }
+
+  String v = server_Light_Module.arg("value");
+  if (v != "0" && v != "1") {
+    server_Light_Module.send(400, "text/plain", "Invalid value (use 0 or 1)");
+    return;
+  }
+
+  ledState = (v == "1");
+  digitalWrite(LEDPIN, ledState ? HIGH : LOW);
+  server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
 
+
 void exercise_extendedEndpoints_handleStatusLightModule() {
-    // Doplnit řešení pro vrácení aktuálního stavu LED klientovi
+  server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
+
+
 
 void exercise_extendedEndpoints_setup_LightModule() {
   Serial.begin(115200);
+
   setupWifi_LightModule("SSID", "PASSWORD");
   pinMode(LEDPIN, OUTPUT);
   digitalWrite(LEDPIN, LOW);
+  ledState = false;
 
   server_Light_Module.on("/", exercise_extendedEndpoints_handleRoot_LightModule);
   server_Light_Module.on("/on", exercise_extendedEndpoints_handleLightOn_LightModule);   
   server_Light_Module.on("/off", exercise_extendedEndpoints_handleLightOff_LightModule);
-
-  // Doplnit nově vytvořené endpointy
+  server_Light_Module.on("/toggle", exercise_extendedEndpoints_handleToggle_LightModule);
+  server_Light_Module.on("/set", exercise_extendedEndpoints_handleSetLightModule);
+  server_Light_Module.on("/status", exercise_extendedEndpoints_handleStatusLightModule);
 
   server_Light_Module.begin();
   Serial.println("HTTP server spuštěn");
+}
+
+
+void exercise_extendedEndpoints_loopLightModule() {
+  server_Light_Module.handleClient();
 }
 
 
@@ -208,22 +242,47 @@ void exercise_extendedEndpoints_setup_LightModule() {
  * Po dokončení úkolu je třeba do funkce Exercise3_setup_LightModule() přidat námi nově vytvořené či upravené obslužné funkce.
  */
 
+bool blinking = false;
+bool ledState = false;
+
+uint32_t periodMs = 500;
+uint32_t lastToggleMs = 0;
 
 void exercise_blinking_handleRoot_LightModule() {
-  String page = FPSTR(EXERCISE_BLINKING_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení ovládacích prvků pro režim blikání a zobrazení aktuálního stavu blikání
+  String page = FPSTR(RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void exercise_blinking_handleStartBlinking_LightModule() {
-// Doplnit řešení pro zapnutí režimu blikání a nastavení periody
+  // /blink/start?period=...
+  if (server_Light_Module.hasArg("period")) {
+    String p = server_Light_Module.arg("period");
+    long val = p.toInt(); // jednoduché, pro cvičení stačí
+
+    if (val < 50 || val > 5000) {
+      server_Light_Module.send(400, "text/plain", "Invalid period (50..5000 ms)");
+      return;
+    }
+    periodMs = (uint32_t)val;
+  }
+
+  blinking = true;
+  lastToggleMs = millis();
+
+  server_Light_Module.send(200, "text/plain", "BLINKING");
 }
 
 void exercise_blinking_handleStopBlinking_LightModule() {
-// Doplnit řešení pro zastavení blikání a vypnutí LED
+  blinking = false;
+  ledState = false;
+  digitalWrite(LEDPIN, LOW);
+
+  server_Light_Module.send(200, "text/plain", "STOPPED");
 }
 
 void exercise_blinking_handleStatusBlinking_LightModule() {
-// Doplnit řešení pro vrácení aktuálního stavu blikání klientovi
+  String status = blinking ? "BLINKING" : "STOPPED";
+  server_Light_Module.send(200, "text/plain", status);
 }
 
 void exercise_blinking_setup_LightModule() {
@@ -232,17 +291,30 @@ void exercise_blinking_setup_LightModule() {
   pinMode(LEDPIN, OUTPUT);
   digitalWrite(LEDPIN, LOW);
 
+  blinking = false;
+  ledState = false;
+  periodMs = 500;
+  lastToggleMs = 0;
+
   server_Light_Module.on("/", exercise_blinking_handleRoot_LightModule);
-  
-  // Doplnit nově vytvořené endpointy
+  server_Light_Module.on("/start", exercise_blinking_handleStartBlinking_LightModule);   
+  server_Light_Module.on("/stop", exercise_blinking_handleStopBlinking_LightModule);
+  server_Light_Module.on("/status", exercise_blinking_handleStatusBlinking_LightModule);
 
   server_Light_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
 
 void exercise_blinking_loop_LightModule() {
-  // Doplnit řešení pro neblokující blikání LED pomocí millis()
-
   server_Light_Module.handleClient();
-}
 
+  // neblokující blikání
+  if (blinking) {
+    uint32_t now = millis();
+    if (now - lastToggleMs >= periodMs) {
+      lastToggleMs = now;
+      ledState = !ledState;
+      digitalWrite(LEDPIN, ledState ? HIGH : LOW);
+    }
+  }
+}

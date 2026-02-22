@@ -8,61 +8,57 @@
  * @details Tato funkce zobrazí HTML stránku s ovládáním osvětlení.
  * 
  */
-void handleRootLightModule();
+void example_handleRootLightModule();
 
 /**
  * @brief Ukázka obsluhy rozsvícení osvětlení pro modul osvětlení.
  * @details Tato funkce rozsvítí LED a odešle stav "ON" klientovi.
  * 
  */
-void handleLightOnLightModule();
+void example_handleLightOnLightModule();
 
 /**
  * @brief Ukázka obsluhy zhasnutí osvětlení pro modul osvětlení.
  * @details Tato funkce zhasne LED a odešle stav "OFF" klientovi.
  * 
  */
-void handleLightOffLightModule();
+void example_handleLightOffLightModule();
 
 /**
  * @brief Ukázka nastavení modulu osvětlení a WiFi připojení.
  * @details Tato funkce nastaví pin pro LED a inicializuje webový server s příslušnými obslužnými funkcemi.
  * 
  */
-void setupLightModule();
+void example_setupLightModule();
 
 /**
  * @brief Ukázka hlavní smyčky pro modul osvětlení.
  * @details Tato funkce zpracovává příchozí HTTP požadavky.
  * 
  */
-void loopLightModule();
+void example_loopLightModule();
 
 
 
-/**
- * @brief Ukol 1: Zobrazení stavu LED a aktuálního data a času
- * 
- */
-void Exercise1_handleRootLightModule();
-void Exercise1_setupLightModule();
-/**
- * @brief Ukol 2: Získání stavu LED přes REST API
- * 
- */
-void Exercise2_handleRootLightModule();
-void Exercise2_handleStateLightModule();
-void Exercise2_setupLightModule();
+
+// Ukol 1: Zobrazení stavu LED a aktuálního data a času
+void exercise_timeDate_handleRootLightModule();
+void exercise_timeDate_setupLightModule();
+
+
+// Ukol 2: Získání stavu LED přes REST API
+void exercise_extendedEndpoints_handleRootLightModule();
+void exercise_extendedEndpoints_handleStateLightModule();
+void exercise_extendedEndpoints_setupLightModule();
 
 
 // Ukol: Bezpečné ovládání LED pomocí stavového režimu
-
-void Exercise3_handleRootLightModule();
-void Exercise3_handleEnableLightModule();
-void Exercise3_handleDisableLightModule();
-void Exercise3_handleLightOnLightModule();
-void Exercise3_handleLightOffLightModule();
-void Exercise3_setupLightModule();
+void exercise_blinking_handleRootLightModule();
+void exercise_blinking_handleEnableLightModule();
+void exercise_blinking_handleDisableLightModule();
+void exercise_blinking_handleLightOnLightModule();
+void exercise_blinking_handleLightOffLightModule();
+void exercise_blinking_setupLightModule();
 
 
 #endif

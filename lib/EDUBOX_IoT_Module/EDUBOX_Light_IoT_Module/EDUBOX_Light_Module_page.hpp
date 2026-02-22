@@ -4,11 +4,11 @@
 #include <pgmspace.h>
 
 /**
- * @brief Ukazka HTML stránky s JavaScriptem pro modul osvětlení.
+ * @brief Příklad HTML stránky s JavaScriptem pro modul osvětlení.
  * @details Tato HTML stránka umožňuje uživateli ovládat LED osvětlení pomocí tlačítek pro zapnutí a vypnutí.
  * 
  */
-const char LIGHT_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
+const char EXAMPLE_LIGHT_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,10 +41,10 @@ const char LIGHT_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
 
 
 /**
- * @brief Úkol 1: Zobraz aktuální stav LED a čas poslední změny stavu na webové stránce.
+ * @brief Cvičení - Zobraz aktuální stav LED a čas poslední změny stavu na webové stránce.
  * @note Vytvoř nový endpoint na serveru, který vrátí stav LED
  */
-const char EXERCISE_1_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,10 +77,10 @@ const char EXERCISE_1_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 
 
 /**
- * @brief Úkol 2: Uprav HTML kod tak, aby stránka zobrazovala aktuální stav LED (zapnuto/vypnuto) při každém načtení stránky.
- * @note Vytvoř nový endpoint na serveru, který vrátí stav LED
+ * @brief Cvičení – Rozšíření API o /toggle a /set s validací vstupu a zobrazení aktuálního stavu LED na webové stránce.
+ * 
  */
-const char EXERCISE_2_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
@@ -112,10 +112,9 @@ const char EXERCISE_2_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 )HTML";
 
 /**
- * @brief Úkol 3: Přidej stavový režim (enable/disable) pro ovládání LED.
- * @note Vytvoř nové endpointy pro povolení a zakázání ovládání LED.
+ * @brief Cvicení - Blikání LED s nastavitelnou periodou (neblokující řešení)
  */
-const char EXERCISE_3_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
