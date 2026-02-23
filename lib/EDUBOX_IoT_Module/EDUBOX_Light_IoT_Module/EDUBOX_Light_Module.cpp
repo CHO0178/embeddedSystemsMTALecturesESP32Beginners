@@ -14,7 +14,7 @@
 #include "EDUBOX_Light_Module.hpp"
 
 #define LEDPIN 15 // ??
-const int LEDPIN = 15; // ??
+//const int LEDPIN = 15; // ??
 
 // Web server běžící na portu 80 - Tedy standardní HTTP port
 WebServer server_Light_Module(80);
@@ -24,7 +24,7 @@ WebServer server_Light_Module(80);
  * @details Zobrazí HTML stránku s ovládáním osvětlení.
  */
 void example_handleRoot_LightModule() {
-  String page = FPSTR(EXAMPLE_LIGHT_MODULE_JAVASCRIPT_HTML);
+  String page = FPSTR(EXAMPLE_LIGHT_MODULE_HTML);
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
@@ -127,19 +127,18 @@ void exercise_timeDate_setup_LightModule() {
  * @details
  * Tyto nové endpointy umožní přepínat stav LED a nastavovat jej pomocí parametru v URL, přičemž je nutné uchovávat aktuální stav LED v globální proměnné.
  * 
- * Endpoint `/toggle` přepne stav LED na opačný, zatímco endpoint `/set?value=0|1` nastaví LED podle hodnoty parametru (0 pro vypnutí, 1 pro zapnutí). 
- * Je důležité ošetřit neplatné nebo chybějící parametry a vrátit vhodnou HTTP odpověď.
  * @todo
  * 1. Vytvořte globální proměnnou pro uchování stavu LED.
  * 2. Upravte endpointy `/on` a `/off`, aby aktualizovaly tuto proměnnou.
  * 3. Přidejte endpoint `/toggle`, který přepne aktuální stav LED v závislosti na aktualním stavu vytvořené globalní proměnné.
  * 4. Přidejte endpoint `/set?value=0|1`, který nastaví LED podle parametru.
- * 5. Ošetřete neplatné nebo chybějící parametry vhodnou HTTP odpovědí.
+ * 5. Nakonec přidejte endpoint `/status`, který vrátí aktuální stav LED (ON/OFF) klientovi.
+ * 6. Ošetřete neplatné nebo chybějící parametry vhodnou HTTP odpovědí.
  * 
  * @note
- * Po dokončení úkolu je třeba do funkce Exercise2_setup_LightModule() přidat námi nově vytvořené či upravené obslužné funkce.
+ * U endpointu `/set` očekávejte parametr `value` s hodnotou `0` nebo `1`. Je třeba ošetřit chybné hodnoty či chybějící parametr. V případě chyby by měla být vrácena HTTP odpověď s kódem 400 a popisem chyby v těle odpovědi.
+ *
  */
-
 
  void exercise_extendedEndpoints_handleRoot_LightModule() {
   String page = FPSTR(EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení stavu LED a přidání ovládacích prvků pro nové endpointy
@@ -190,24 +189,20 @@ void exercise_extendedEndpoints_setup_LightModule() {
  * @brief Cvičení – Blikání LED s nastavitelnou periodou (neblokující řešení)
  *
  * @details
- * Úkolem je rozšířit modul o režim blikání LED s možností nastavení periody,
- * přičemž blikání musí být realizováno neblokujícím způsobem pomocí funkce millis()
- * bez použití delay().
- *
+ * Toto cvičení rozšiřuje funkčnost modulu osvětlení o režim blikání LED s možností nastavení periody.
+ *  
  * @todo
  * 1. Vytvořte globální proměnné pro řízení režimu blikání.
  * 2. Přidejte endpoint `/blink/start`, který zapne blikání a umožní nastavit periodu pomocí parametru.
  * 3. Přidejte endpoint `/blink/stop`, který blikání zastaví.
+ * 4. Přidejte endpoint `/blink/status`, který vrátí aktuální stav blikání klientovi.
  * 4. Upravte funkci loop() tak, aby LED blikala pomocí millis().
  * 5. Rozšiřte webovou stránku o ovládání a zobrazení režimu blikání.
  *
  * @note
  * Použijte neblokující řešení pomocí `millis()`. Vyhýbejte se použití `delay()`, které by blokovalo zpracování HTTP požadavků.
  *
- * @note
- * Po dokončení úkolu je třeba do funkce Exercise3_setup_LightModule() přidat námi nově vytvořené či upravené obslužné funkce.
  */
-
 
 void exercise_blinking_handleRoot_LightModule() {
   String page = FPSTR(EXERCISE_BLINKING_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení ovládacích prvků pro režim blikání a zobrazení aktuálního stavu blikání

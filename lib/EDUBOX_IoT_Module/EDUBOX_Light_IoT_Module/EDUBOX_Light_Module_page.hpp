@@ -8,7 +8,7 @@
  * @details Tato HTML stránka umožňuje uživateli ovládat LED osvětlení pomocí tlačítek pro zapnutí a vypnutí.
  * 
  */
-const char EXAMPLE_LIGHT_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
+const char EXAMPLE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,7 +42,6 @@ const char EXAMPLE_LIGHT_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
 
 /**
  * @brief Cvičení - Zobraz aktuální stav LED a čas poslední změny stavu na webové stránce.
- * @note Vytvoř nový endpoint na serveru, který vrátí stav LED
  */
 const char EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>

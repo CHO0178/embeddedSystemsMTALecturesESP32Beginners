@@ -8,7 +8,7 @@
  * @details Tato HTML stránka umožňuje uživateli ovládat LED osvětlení pomocí tlačítek pro zapnutí a vypnutí.
  * 
  */
-const char RES_EXAMPLE_LIGHT_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
+const char RES_EXAMPLE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,25 +49,37 @@ const char RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení - Úkol 1</title>
+  <title>Osvětlení - Cvičení Zobrazení stavu LED a času</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
   <h1>Modul osvětlení</h1>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
+
+  <button type="button" style="font-size:20px;" onclick="sendCommand('on', 'ON')">
     Rozsvítit osvětlení
   </button>
-  <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
+  <button type="button" style="font-size:20px;" onclick="sendCommand('off', 'OFF')">
     Zhasnout osvětlení
   </button>
+
   <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
+  <h3>Poslední změna: <span id="lastChange">---</span></h3>
 </body>
 
 <script>
-  function sendCommand(command) {
+  function updateTime() {
+    const now = new Date();
+    document.getElementById('lastChange').innerText = now.toLocaleString('cs-CZ');
+  }
+
+  function sendCommand(command, expectedText) {
     fetch('/' + command)
       .then(response => response.text())
       .then(data => {
+        // stav z ESP
         document.getElementById('status').innerText = data;
+
+        // čas změny (klient)
+        updateTime();
       });
   }
 </script>
@@ -80,132 +92,146 @@ const char RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
  * @brief Cvičení – Rozšíření API o /toggle a /set s validací vstupu a zobrazení aktuálního stavu LED na webové stránce.
  * 
  */
-static const char RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R"rawliteral(
-<!doctype html>
-<html lang="cs">
+static const char RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Light Module – Cvičení 2</title>
-  <style>
-    body{font-family:system-ui,Arial;max-width:520px;margin:24px auto;padding:0 12px}
-    button{padding:12px 14px;margin:6px 6px 6px 0;cursor:pointer}
-    .card{border:1px solid #ddd;border-radius:12px;padding:14px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    input{padding:10px 12px;width:120px}
-    code{background:#f4f4f4;padding:2px 6px;border-radius:8px}
-  </style>
+  <meta charset="UTF-8">
+  <title>Osvětlení - Cvičení Rozšíření API</title>
 </head>
-<body>
-  <h2>Light Module – Cvičení 2</h2>
+<body style="text-align:center; font-family:sans-serif;">
+  <h1>Modul osvětlení</h1>
 
-  <div class="card">
-    <p>Stav LED: <b id="state">?</b></p>
+  <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
+    Rozsvítit LED
+  </button>
+  <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
+    Zhasnout LED
+  </button>
 
-    <div class="row">
-      <button onclick="callApi('/on')">ON</button>
-      <button onclick="callApi('/off')">OFF</button>
-      <button onclick="callApi('/toggle')">TOGGLE</button>
-    </div>
+  <button type="button" style="font-size:20px;" onclick="sendCommand('toggle')">
+    TOGGLE
+  </button>
 
-    <div class="row" style="margin-top:10px">
-      <input id="val" type="number" min="0" max="1" value="1">
-      <button onclick="setVal()">SET value</button>
-      <span id="msg"></span>
-    </div>
+  <br><br>
 
-    <p style="margin-top:12px">Příklad: <code>/set?value=1</code> nebo <code>/set?value=0</code></p>
-  </div>
+  <input id="value" type="number" min="0" max="1" value="1" style="font-size:20px; width:90px;">
+  <button type="button" style="font-size:20px;" onclick="setValue()">
+    SET value
+  </button>
+
+  <h2>Stav osvětlení: <span id="status">NAČÍTÁM...</span></h2>
+  <p id="error" style="color:red;"></p>
+</body>
 
 <script>
-async function callApi(path){
-  const res = await fetch(path);
-  const txt = await res.text();
-  document.getElementById('state').textContent = txt.trim();
-  document.getElementById('msg').textContent = res.ok ? '' : ('Chyba: ' + txt);
-}
+  function updateStatusText(text) {
+    document.getElementById('status').innerText = text;
+  }
 
-async function setVal(){
-  const v = document.getElementById('val').value;
-  const res = await fetch('/set?value=' + encodeURIComponent(v));
-  const txt = await res.text();
-  document.getElementById('state').textContent = txt.trim();
-  document.getElementById('msg').textContent = res.ok ? '' : ('Chyba: ' + txt);
-}
+  function setError(text) {
+    document.getElementById('error').innerText = text || '';
+  }
 
-// při načtení stránky si stav vezmeme z ESP (prostý text)
-callApi('/status');
+  function sendCommand(command) {
+    setError('');
+    fetch('/' + command)
+      .then(response => response.text().then(t => ({ ok: response.ok, text: t })))
+      .then(res => {
+        if (!res.ok) { setError(res.text); }
+        updateStatusText(res.text);
+      });
+  }
+
+  function setValue() {
+    setError('');
+    const v = document.getElementById('value').value;
+
+    fetch('/set?value=' + encodeURIComponent(v))
+      .then(response => response.text().then(t => ({ ok: response.ok, text: t })))
+      .then(res => {
+        if (!res.ok) { setError(res.text); }
+        updateStatusText(res.text);
+      });
+  }
+
+  // při načtení stránky si vyžádáme stav z ESP
+  fetch('/status')
+    .then(r => r.text())
+    .then(t => updateStatusText(t));
 </script>
-</body>
+
 </html>
-)rawliteral";
+)HTML";
 
 
 /**
  * @brief Cvicení - Blikání LED s nastavitelnou periodou (neblokující řešení)
  */
-static const char RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"rawliteral(
-<!doctype html>
-<html lang="cs">
+static const char RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Light Module – Cvičení 3</title>
-  <style>
-    body{font-family:system-ui,Arial;max-width:520px;margin:24px auto;padding:0 12px}
-    button{padding:12px 14px;margin:6px 6px 6px 0;cursor:pointer}
-    .card{border:1px solid #ddd;border-radius:12px;padding:14px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    input{padding:10px 12px;width:140px}
-    code{background:#f4f4f4;padding:2px 6px;border-radius:8px}
-  </style>
+  <meta charset="UTF-8">
+  <title>Osvětlení - Cvičení Blikání LED</title>
 </head>
-<body>
-  <h2>Light Module – Cvičení 3</h2>
+<body style="text-align:center; font-family:sans-serif;">
+  <h1>Modul osvětlení</h1>
 
-  <div class="card">
-    <p>Režim: <b id="mode">?</b></p>
-    <p>Stav LED: <b id="state">?</b></p>
+  <p>Perioda blikání (ms):</p>
+  <input id="period" type="number" min="50" max="5000" value="500" style="font-size:20px; width:140px;">
+  <br><br>
 
-    <div class="row">
-      <input id="period" type="number" min="50" max="5000" value="500">
-      <button onclick="startBlink()">START BLINK</button>
-      <button onclick="stopBlink()">STOP BLINK</button>
-    </div>
+  <button type="button" style="font-size:20px;" onclick="startBlink()">
+    Začít blikat
+  </button>
+  <button type="button" style="font-size:20px;" onclick="stopBlink()">
+    Zastavit blikání
+  </button>
 
-    <p style="margin-top:12px">Příklad: <code>/blink/start?period=200</code></p>
-    <p id="msg"></p>
-  </div>
+  <h2>Stav blikání: <span id="status">NAČÍTÁM...</span></h2>
+  <p id="error" style="color:red;"></p>
+</body>
 
 <script>
-async function startBlink(){
-  const p = document.getElementById('period').value;
-  const res = await fetch('/blink/start?period=' + encodeURIComponent(p));
-  const txt = await res.text();
-  document.getElementById('msg').textContent = res.ok ? '' : ('Chyba: ' + txt);
+  function setError(text) {
+    document.getElementById('error').innerText = text || '';
+  }
+
+  function startBlink() {
+    setError('');
+    const p = document.getElementById('period').value;
+
+    fetch('/blink/start?period=' + encodeURIComponent(p))
+      .then(response => response.text().then(t => ({ ok: response.ok, text: t })))
+      .then(res => {
+        if (!res.ok) { setError(res.text); }
+        refresh();
+      });
+  }
+
+  function stopBlink() {
+    setError('');
+    fetch('/blink/stop')
+      .then(response => response.text().then(t => ({ ok: response.ok, text: t })))
+      .then(res => {
+        if (!res.ok) { setError(res.text); }
+        refresh();
+      });
+  }
+
+  function refresh() {
+    fetch('/blink/status')
+      .then(r => r.text())
+      .then(t => {
+        document.getElementById('status').innerText = t;
+      });
+  }
+      
   refresh();
-}
-
-async function stopBlink(){
-  const res = await fetch('/blink/stop');
-  const txt = await res.text();
-  document.getElementById('msg').textContent = res.ok ? '' : ('Chyba: ' + txt);
-  refresh();
-}
-
-async function refresh(){
-  const res = await fetch('/blink/status');
-  const txt = await res.text(); // např. "BLINKING|ON" nebo "STATIC|OFF"
-  const parts = txt.trim().split('|');
-  document.getElementById('mode').textContent  = parts[0] || '?';
-  document.getElementById('state').textContent = parts[1] || '?';
-}
-
-setInterval(refresh, 800);
-refresh();
 </script>
-</body>
+
 </html>
-)rawliteral";
+)HTML";
 
 #endif

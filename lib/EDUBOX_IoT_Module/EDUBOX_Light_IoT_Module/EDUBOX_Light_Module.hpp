@@ -41,24 +41,28 @@ void example_loopLightModule();
 
 
 
-// Ukol 1: Zobrazení stavu LED a aktuálního data a času
+// Cvičeni – Zobrazení stavu LED a aktuálního data a času
 void exercise_timeDate_handleRootLightModule();
-void exercise_timeDate_setupLightModule();
+void exercise_timeDate_setup_LightModule();
 
 
-// Ukol 2: Získání stavu LED přes REST API
+// Cvičeni – Rozšíření API o /toggle a /set s validací vstupu
 void exercise_extendedEndpoints_handleRootLightModule();
-void exercise_extendedEndpoints_handleStateLightModule();
-void exercise_extendedEndpoints_setupLightModule();
+void exercise_extendedEndpoints_handleLightOnLightModule();
+void exercise_extendedEndpoints_handleLightOffLightModule();
+void exercise_extendedEndpoints_handleToggleLightModule();
+void exercise_extendedEndpoints_handleSetLightModule();
+void exercise_extendedEndpoints_handleStatusLightModule();
+void exercise_extendedEndpoints_setup_LightModule();
 
 
-// Ukol: Bezpečné ovládání LED pomocí stavového režimu
-void exercise_blinking_handleRootLightModule();
-void exercise_blinking_handleEnableLightModule();
-void exercise_blinking_handleDisableLightModule();
-void exercise_blinking_handleLightOnLightModule();
-void exercise_blinking_handleLightOffLightModule();
-void exercise_blinking_setupLightModule();
+// Cvičení – Blikání LED s nastavitelnou periodou (neblokující řešení)
+void exercise_blinking_handleRoot_LightModule();
+void exercise_blinking_handleStartBlinking_LightModule();
+void exercise_blinking_handleStopBlinking_LightModule();
+void exercise_blinking_handleStatusBlinking_LightModule();
+void exercise_blinking_setup_LightModule();
+void exercise_blinking_loop_LightModule();
 
 
 #endif

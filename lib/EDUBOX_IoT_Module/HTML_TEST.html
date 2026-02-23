@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hladina vody - Úkol 3</title>
+</head>
+<body style="text-align:center; font-family:sans-serif; margin:20px;">
+  <h1>Modul snímání hladiny vody (ALARM)</h1>
+
+  <div style="max-width:520px; margin:0 auto; text-align:left;">
+    <div style="margin:12px 0;">
+      <b>RAW:</b> <span id="raw">-</span><br>
+      <b>Hladina:</b> <span id="percent">-</span>%<br>
+      <b>lowState:</b> <span id="lowState">-</span><br>
+      <b>alarm:</b> <span id="alarm">-</span><br>
+      <b>Čas poslední změny stavu (web):</b> <span id="changedAt">-</span>
+    </div>
+
+    <div style="width:100%; height:26px; border:2px solid #333; border-radius:8px; overflow:hidden;">
+      <div id="bar" style="height:100%; width:0%; background:#43a047; transition:width 0.3s ease;"></div>
+    </div>
+
+    <div id="alarmBox" style="margin-top:12px; padding:12px; border-radius:10px; font-weight:800;"></div>
+
+    <button id="ackBtn"
+      style="margin-top:12px; width:100%; padding:14px; font-size:16px; font-weight:800; border-radius:12px; border:2px solid #333; cursor:pointer;">
+      Potvrdit alarm (ACK)
+    </button>
+  </div>
+
+<script>
+  let lastCompositeState = null; // složený stav (low+alarm) pro čas změny
+
+  function setBar(p, alarm) {
+    const bar = document.getElementById('bar');
+    bar.style.width = p + '%';
+
+    if (alarm) bar.style.background = '#e53935';
+    else if (p < 20) bar.style.background = '#fb8c00';
+    else bar.style.background = '#43a047';
+  }
+
+  function updateChangedAt(key) {
+    if (lastCompositeState === null) {
+      lastCompositeState = key;
+      document.getElementById('changedAt').innerText = new Date().toLocaleString();
+    } else if (key !== lastCompositeState) {
+      lastCompositeState = key;
+      document.getElementById('changedAt').innerText = new Date().toLocaleString();
+    }
+  }
+
+  function fetchData() {
+    fetch('/data')
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById('raw').innerText = d.raw;
+        document.getElementById('percent').innerText = d.percent;
+        document.getElementById('lowState').innerText = d.lowState;
+        document.getElementById('alarm').innerText = d.alarm;
+
+        setBar(d.percent, d.alarm);
+
+        // klíč pro změnu stavu (low + alarm)
+        updateChangedAt(`${d.lowState}_${d.alarm}`);
+
+        const box = document.getElementById('alarmBox');
+        if (d.alarm) {
+          box.style.background = '#ffebee';
+          box.style.border = '2px solid #e53935';
+          box.innerText = 'ALARM: Nízká hladina – čeká se na potvrzení (ACK)!';
+        } else if (d.lowState) {
+          box.style.background = '#fff3e0';
+          box.style.border = '2px solid #fb8c00';
+          box.innerText = 'Nízká hladina (zatím bez alarmu)'; // v naší logice ale low => alarm, takže se sem běžně nedostane
+        } else {
+          box.style.background = '#e8f5e9';
+          box.style.border = '2px solid #43a047';
+          box.innerText = 'OK';
+        }
+      })
+      .catch(() => {
+        document.getElementById('alarmBox').innerText = 'Chyba načítání /data';
+      });
+  }
+
+  document.getElementById('ackBtn').onclick = () => {
+    fetch('/ack', { method: 'POST' })
+      .then(r => r.json())
+      .then(() => fetchData());
+  };
+
+  setInterval(fetchData, 1000);
+  window.onload = fetchData;
+</script>
+</body>
+</html>
