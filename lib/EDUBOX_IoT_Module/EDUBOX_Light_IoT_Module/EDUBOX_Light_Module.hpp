@@ -8,21 +8,21 @@
  * @details Tato funkce zobrazí HTML stránku s ovládáním osvětlení.
  * 
  */
-void example_handleRootLightModule();
+void example_handlerRootLightModule();
 
 /**
  * @brief Ukázka obsluhy rozsvícení osvětlení pro modul osvětlení.
  * @details Tato funkce rozsvítí LED a odešle stav "ON" klientovi.
  * 
  */
-void example_handleLightOnLightModule();
+void example_handlerLightOnLightModule();
 
 /**
  * @brief Ukázka obsluhy zhasnutí osvětlení pro modul osvětlení.
  * @details Tato funkce zhasne LED a odešle stav "OFF" klientovi.
  * 
  */
-void example_handleLightOffLightModule();
+void example_handlerLightOffLightModule();
 
 /**
  * @brief Ukázka nastavení modulu osvětlení a WiFi připojení.
@@ -42,25 +42,25 @@ void example_loopLightModule();
 
 
 // Cvičeni – Zobrazení stavu LED a aktuálního data a času
-void exercise_timeDate_handleRootLightModule();
+void exercise_timeDate_handlerRootLightModule();
 void exercise_timeDate_setup_LightModule();
 
 
-// Cvičeni – Rozšíření API o /toggle a /set s validací vstupu
-void exercise_extendedEndpoints_handleRootLightModule();
-void exercise_extendedEndpoints_handleLightOnLightModule();
-void exercise_extendedEndpoints_handleLightOffLightModule();
-void exercise_extendedEndpoints_handleToggleLightModule();
-void exercise_extendedEndpoints_handleSetLightModule();
-void exercise_extendedEndpoints_handleStatusLightModule();
+// Cvičeni – Rozšíření API
+void exercise_extendedEndpoints_handlerRootLightModule();
+void exercise_extendedEndpoints_handlerLightOnLightModule();
+void exercise_extendedEndpoints_handlerLightOffLightModule();
+void exercise_extendedEndpoints_handlerToggleLightModule();
+void exercise_extendedEndpoints_handlerSetLightModule();
+void exercise_extendedEndpoints_handlerStatusLightModule();
 void exercise_extendedEndpoints_setup_LightModule();
 
 
 // Cvičení – Blikání LED s nastavitelnou periodou (neblokující řešení)
-void exercise_blinking_handleRoot_LightModule();
-void exercise_blinking_handleStartBlinking_LightModule();
-void exercise_blinking_handleStopBlinking_LightModule();
-void exercise_blinking_handleStatusBlinking_LightModule();
+void exercise_blinking_handlerRoot_LightModule();
+void exercise_blinking_handlerStartBlinking_LightModule();
+void exercise_blinking_handlerStopBlinking_LightModule();
+void exercise_blinking_handlerStatusBlinking_LightModule();
 void exercise_blinking_setup_LightModule();
 void exercise_blinking_loop_LightModule();
 

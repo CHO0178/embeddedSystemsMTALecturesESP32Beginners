@@ -13,8 +13,7 @@
 #include "EDUBOX_Light_Module_page.hpp"
 #include "EDUBOX_Light_Module.hpp"
 
-#define LEDPIN 15 // ??
-//const int LEDPIN = 15; // ??
+#define LEDPIN 15
 
 // Web server běžící na portu 80 - Tedy standardní HTTP port
 WebServer server_Light_Module(80);
@@ -23,7 +22,7 @@ WebServer server_Light_Module(80);
  * @brief Obsluha kořenové URL.
  * @details Zobrazí HTML stránku s ovládáním osvětlení.
  */
-void example_handleRoot_LightModule() {
+void example_handlerRoot_LightModule() {
   String page = FPSTR(EXAMPLE_LIGHT_MODULE_HTML);
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
@@ -32,7 +31,7 @@ void example_handleRoot_LightModule() {
  * @brief Obsluha rozsvícení osvětlení.
  * @details Rozsvítí LED a odešle stav "ON" klientovi.
  */
-void example_handleLightOn_LightModule() {
+void example_handlerLightOn_LightModule() {
     digitalWrite(LEDPIN, HIGH);
     server_Light_Module.send(200, "application/text", "ON");
 }
@@ -41,7 +40,7 @@ void example_handleLightOn_LightModule() {
  * @brief Obsluha zhasnutí osvětlení.
  * @details Rozsvítí LED a odešle stav "OFF" klientovi.
  */
-void example_handleLightOff_LightModule() {
+void example_handlerLightOff_LightModule() {
     digitalWrite(LEDPIN, LOW);
     server_Light_Module.send(200, "text/plain", "OFF");
 }
@@ -56,9 +55,9 @@ void example_setup_LightModule() {
   pinMode(LEDPIN, OUTPUT);
   digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", example_handleRoot_LightModule);
-  server_Light_Module.on("/on", example_handleLightOn_LightModule);   
-  server_Light_Module.on("/off", example_handleLightOff_LightModule);
+  server_Light_Module.on("/", example_handlerRoot_LightModule);
+  server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
+  server_Light_Module.on("/off", example_handlerLightOff_LightModule);
   server_Light_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
@@ -102,8 +101,8 @@ void example_loop_LightModule() {
  */
 
 
-void exercise_timeDate_handleRoot_LightModule() {
-  String page = FPSTR(EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení stavu LED a aktuálního data a času
+void exercise_timeDate_handlerRoot_LightModule() {
+  String page = FPSTR(EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
@@ -113,19 +112,20 @@ void exercise_timeDate_setup_LightModule() {
   pinMode(LEDPIN, OUTPUT);
   digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", exercise_timeDate_handleRoot_LightModule);
-  server_Light_Module.on("/on", example_handleLightOn_LightModule);   
-  server_Light_Module.on("/off", example_handleLightOff_LightModule);
+  server_Light_Module.on("/", exercise_timeDate_handlerRoot_LightModule);
+  server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
+  server_Light_Module.on("/off", example_handlerLightOff_LightModule);
   server_Light_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
 
 
 /**
- * @brief Cvičeni – Rozšíření API o /toggle a /set s validací vstupu
+ * @brief Cvičeni – Rozšíření API
  *
  * @details
- * Tyto nové endpointy umožní přepínat stav LED a nastavovat jej pomocí parametru v URL, přičemž je nutné uchovávat aktuální stav LED v globální proměnné.
+ * Tyto nové endpointy umožní přepínat stav LED a nastavovat jej pomocí parametru
+ * v URL, přičemž je nutné uchovávat aktuální stav LED v globální proměnné.
  * 
  * @todo
  * 1. Vytvořte globální proměnnou pro uchování stavu LED.
@@ -136,34 +136,35 @@ void exercise_timeDate_setup_LightModule() {
  * 6. Ošetřete neplatné nebo chybějící parametry vhodnou HTTP odpovědí.
  * 
  * @note
- * U endpointu `/set` očekávejte parametr `value` s hodnotou `0` nebo `1`. Je třeba ošetřit chybné hodnoty či chybějící parametr. V případě chyby by měla být vrácena HTTP odpověď s kódem 400 a popisem chyby v těle odpovědi.
+ * U endpointu `/set` očekávejte parametr `value` s hodnotou `0` nebo `1`. 
+ * Je třeba ošetřit chybné hodnoty či chybějící parametr. V případě chyby by měla být vrácena HTTP odpověď s kódem 400 a popisem chyby v těle odpovědi.
  *
  */
 
- void exercise_extendedEndpoints_handleRoot_LightModule() {
-  String page = FPSTR(EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení stavu LED a přidání ovládacích prvků pro nové endpointy
+void exercise_extendedEndpoints_handlerRoot_LightModule() {
+  String page = FPSTR(EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
-void exercise_extendedEndpoints_handleLightOn_LightModule() {
+void exercise_extendedEndpoints_handlerLightOn_LightModule() {
     digitalWrite(LEDPIN, HIGH);
     server_Light_Module.send(200, "application/text", "ON");
 }
 
-void exercise_extendedEndpoints_handleLightOff_LightModule() {
+void exercise_extendedEndpoints_handlerLightOff_LightModule() {
     digitalWrite(LEDPIN, LOW);
     server_Light_Module.send(200, "text/plain", "OFF");
 }
 
-void exercise_extendedEndpoints_handleToggle_LightModule() {
+void exercise_extendedEndpoints_handlerToggle_LightModule() {
     // Doplnit řešení pro přepínání stavu LED
 }
 
-void exercise_extendedEndpoints_handleSetLightModule() {
+void exercise_extendedEndpoints_handlerSetLightModule() {
     // Doplnit řešení pro nastavení stavu LED podle parametru
 }
 
-void exercise_extendedEndpoints_handleStatusLightModule() {
+void exercise_extendedEndpoints_handlerStatusLightModule() {
     // Doplnit řešení pro vrácení aktuálního stavu LED klientovi
 }
 
@@ -173,9 +174,9 @@ void exercise_extendedEndpoints_setup_LightModule() {
   pinMode(LEDPIN, OUTPUT);
   digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", exercise_extendedEndpoints_handleRoot_LightModule);
-  server_Light_Module.on("/on", exercise_extendedEndpoints_handleLightOn_LightModule);   
-  server_Light_Module.on("/off", exercise_extendedEndpoints_handleLightOff_LightModule);
+  server_Light_Module.on("/", exercise_extendedEndpoints_handlerRoot_LightModule);
+  server_Light_Module.on("/on", exercise_extendedEndpoints_handlerLightOn_LightModule);   
+  server_Light_Module.on("/off", exercise_extendedEndpoints_handlerLightOff_LightModule);
 
   // Doplnit nově vytvořené endpointy
 
@@ -204,20 +205,20 @@ void exercise_extendedEndpoints_setup_LightModule() {
  *
  */
 
-void exercise_blinking_handleRoot_LightModule() {
-  String page = FPSTR(EXERCISE_BLINKING_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení ovládacích prvků pro režim blikání a zobrazení aktuálního stavu blikání
+void exercise_blinking_handlerRoot_LightModule() {
+  String page = FPSTR(EXERCISE_BLINKING_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
-void exercise_blinking_handleStartBlinking_LightModule() {
+void exercise_blinking_handlerStartBlinking_LightModule() {
 // Doplnit řešení pro zapnutí režimu blikání a nastavení periody
 }
 
-void exercise_blinking_handleStopBlinking_LightModule() {
+void exercise_blinking_handlerStopBlinking_LightModule() {
 // Doplnit řešení pro zastavení blikání a vypnutí LED
 }
 
-void exercise_blinking_handleStatusBlinking_LightModule() {
+void exercise_blinking_handlerStatusBlinking_LightModule() {
 // Doplnit řešení pro vrácení aktuálního stavu blikání klientovi
 }
 
@@ -227,7 +228,7 @@ void exercise_blinking_setup_LightModule() {
   pinMode(LEDPIN, OUTPUT);
   digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", exercise_blinking_handleRoot_LightModule);
+  server_Light_Module.on("/", exercise_blinking_handlerRoot_LightModule);
   
   // Doplnit nově vytvořené endpointy
 
@@ -236,8 +237,8 @@ void exercise_blinking_setup_LightModule() {
 }
 
 void exercise_blinking_loop_LightModule() {
-  // Doplnit řešení pro neblokující blikání LED pomocí millis()
-
+  // Doplnit řešení pro neblokující blikání LED
+  
   server_Light_Module.handleClient();
 }
 

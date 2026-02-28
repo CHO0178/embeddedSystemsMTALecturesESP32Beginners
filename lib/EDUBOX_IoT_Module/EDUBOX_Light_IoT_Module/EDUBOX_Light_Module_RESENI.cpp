@@ -1,5 +1,5 @@
 /**
- * @file Light_Module.cpp
+ * @file Light_Module_RESENI.cpp
  * @author Bc. Dalibor Slíva
  * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu osvětlení v projektu MTA-TP.
  * @version 0.1
@@ -13,8 +13,7 @@
 #include "EDUBOX_Light_Module_page_RESENI.hpp"
 #include "EDUBOX_Light_Module.hpp"
 
-#define LEDPIN 15 // ??
-//const int LEDPIN = 15; // ??
+#define LEDPIN 15
 
 // Web server běžící na portu 80 - Tedy standardní HTTP port
 WebServer server_Light_Module(80);
@@ -23,7 +22,7 @@ WebServer server_Light_Module(80);
  * @brief Obsluha kořenové URL.
  * @details Zobrazí HTML stránku s ovládáním osvětlení.
  */
-void example_handleRoot_LightModule() {
+void example_handlerRoot_LightModule() {
   String page = FPSTR(RES_EXAMPLE_LIGHT_MODULE_HTML);
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
@@ -32,7 +31,7 @@ void example_handleRoot_LightModule() {
  * @brief Obsluha rozsvícení osvětlení.
  * @details Rozsvítí LED a odešle stav "ON" klientovi.
  */
-void example_handleLightOn_LightModule() {
+void example_handlerLightOn_LightModule() {
     digitalWrite(LEDPIN, HIGH);
     server_Light_Module.send(200, "application/text", "ON");
 }
@@ -41,7 +40,7 @@ void example_handleLightOn_LightModule() {
  * @brief Obsluha zhasnutí osvětlení.
  * @details Rozsvítí LED a odešle stav "OFF" klientovi.
  */
-void example_handleLightOff_LightModule() {
+void example_handlerLightOff_LightModule() {
     digitalWrite(LEDPIN, LOW);
     server_Light_Module.send(200, "text/plain", "OFF");
 }
@@ -56,9 +55,9 @@ void example_setup_LightModule() {
   pinMode(LEDPIN, OUTPUT);
   digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", example_handleRoot_LightModule);
-  server_Light_Module.on("/on", example_handleLightOn_LightModule);   
-  server_Light_Module.on("/off", example_handleLightOff_LightModule);
+  server_Light_Module.on("/", example_handlerRoot_LightModule);
+  server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
+  server_Light_Module.on("/off", example_handlerLightOff_LightModule);
   server_Light_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
@@ -101,9 +100,8 @@ void example_loop_LightModule() {
  *
  */
 
-
-void exercise_timeDate_handleRoot_LightModule() {
-  String page = FPSTR(RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku pro zobrazení stavu LED a aktuálního data a času
+void exercise_timeDate_handlerRoot_LightModule() {
+  String page = FPSTR(RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); 
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
@@ -113,16 +111,16 @@ void exercise_timeDate_setup_LightModule() {
   pinMode(LEDPIN, OUTPUT);
   digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", exercise_timeDate_handleRoot_LightModule);
-  server_Light_Module.on("/on", example_handleLightOn_LightModule);   
-  server_Light_Module.on("/off", example_handleLightOff_LightModule);
+  server_Light_Module.on("/", exercise_timeDate_handlerRoot_LightModule);
+  server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
+  server_Light_Module.on("/off", example_handlerLightOff_LightModule);
   server_Light_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
 
 
 /**
- * @brief Cvičeni – Rozšíření API o /toggle a /set s validací vstupu
+ * @brief Cvičeni – Rozšíření API
  *
  * @details
  * Tyto nové endpointy umožní přepínat stav LED a nastavovat jej pomocí parametru v URL, přičemž je nutné uchovávat aktuální stav LED v globální proměnné.
@@ -142,30 +140,30 @@ void exercise_timeDate_setup_LightModule() {
 
 bool ledState = false;
 
- void exercise_extendedEndpoints_handleRoot_LightModule() {
-  String page = FPSTR(RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
+ void exercise_extendedEndpoints_handlerRoot_LightModule() {
+  String page = FPSTR(RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML);
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
-void exercise_extendedEndpoints_handleLightOn_LightModule() {
+void exercise_extendedEndpoints_handlerLightOn_LightModule() {
   ledState = true;
   digitalWrite(LEDPIN, HIGH);
   server_Light_Module.send(200, "text/plain", "ON");
 }
 
-void exercise_extendedEndpoints_handleLightOff_LightModule() {
+void exercise_extendedEndpoints_handlerLightOff_LightModule() {
   ledState = false;
   digitalWrite(LEDPIN, LOW);
   server_Light_Module.send(200, "text/plain", "OFF");
 }
 
-void exercise_extendedEndpoints_handleToggle_LightModule() {
+void exercise_extendedEndpoints_handlerToggle_LightModule() {
   ledState = !ledState;
   digitalWrite(LEDPIN, ledState ? HIGH : LOW);
   server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
 
-void exercise_extendedEndpoints_handleSetLightModule() {
+void exercise_extendedEndpoints_handlerSetLightModule() {
   // /set?value=0|1
   if (!server_Light_Module.hasArg("value")) {
     server_Light_Module.send(400, "text/plain", "Missing value");
@@ -183,7 +181,7 @@ void exercise_extendedEndpoints_handleSetLightModule() {
   server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
 
-void exercise_extendedEndpoints_handleStatusLightModule() {
+void exercise_extendedEndpoints_handlerStatusLightModule() {
   server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
 
@@ -195,12 +193,12 @@ void exercise_extendedEndpoints_setup_LightModule() {
   digitalWrite(LEDPIN, LOW);
   ledState = false;
 
-  server_Light_Module.on("/", exercise_extendedEndpoints_handleRoot_LightModule);
-  server_Light_Module.on("/on", exercise_extendedEndpoints_handleLightOn_LightModule);   
-  server_Light_Module.on("/off", exercise_extendedEndpoints_handleLightOff_LightModule);
-  server_Light_Module.on("/toggle", exercise_extendedEndpoints_handleToggle_LightModule);
-  server_Light_Module.on("/set", exercise_extendedEndpoints_handleSetLightModule);
-  server_Light_Module.on("/status", exercise_extendedEndpoints_handleStatusLightModule);
+  server_Light_Module.on("/", exercise_extendedEndpoints_handlerRoot_LightModule);
+  server_Light_Module.on("/on", exercise_extendedEndpoints_handlerLightOn_LightModule);   
+  server_Light_Module.on("/off", exercise_extendedEndpoints_handlerLightOff_LightModule);
+  server_Light_Module.on("/toggle", exercise_extendedEndpoints_handlerToggle_LightModule);
+  server_Light_Module.on("/set", exercise_extendedEndpoints_handlerSetLightModule);
+  server_Light_Module.on("/status", exercise_extendedEndpoints_handlerStatusLightModule);
 
   server_Light_Module.begin();
   Serial.println("HTTP server spuštěn");
@@ -238,39 +236,35 @@ bool ledState = false;
 uint32_t blinkPeriodMs= 500;
 uint32_t lastToggleMs = 0;
 
-void exercise_blinking_handleRoot_LightModule() {
-  String page = FPSTR(RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
+void exercise_blinking_handlerRoot_LightModule() {
+  String page = FPSTR(RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML);
   server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
-void exercise_blinking_handleStartBlinking_LightModule() {
+void exercise_blinking_handlerStartBlinking_LightModule() {
   // /blink/start?period=...
   if (server_Light_Module.hasArg("period")) {
     String p = server_Light_Module.arg("period");
-    long val = p.toInt(); // jednoduché, pro cvičení stačí
-
-    if (val < 50 || val > 5000) {
+    long val = p.toInt();
+    if (val < 100 || val > 5000) {
       server_Light_Module.send(400, "text/plain", "Invalid period (50..5000 ms)");
       return;
     }
     blinkPeriodMs = (uint32_t)val;
   }
-
   blinking = true;
   lastToggleMs = millis();
-
   server_Light_Module.send(200, "text/plain", "BLINKING");
 }
 
-void exercise_blinking_handleStopBlinking_LightModule() {
+void exercise_blinking_handlerStopBlinking_LightModule() {
   blinking = false;
   ledState = false;
   digitalWrite(LEDPIN, LOW);
-
   server_Light_Module.send(200, "text/plain", "STOPPED");
 }
 
-void exercise_blinking_handleStatusBlinking_LightModule() {
+void exercise_blinking_handlerStatusBlinking_LightModule() {
   String status = blinking ? "BLINKING" : "STOPPED";
   server_Light_Module.send(200, "text/plain", status);
 }
@@ -286,17 +280,16 @@ void exercise_blinking_setup_LightModule() {
   blinkPeriodMs = 500;
   lastToggleMs = 0;
 
-  server_Light_Module.on("/", exercise_blinking_handleRoot_LightModule);
-  server_Light_Module.on("/blink/start", exercise_blinking_handleStartBlinking_LightModule);   
-  server_Light_Module.on("/blink/stop", exercise_blinking_handleStopBlinking_LightModule);
-  server_Light_Module.on("/blink/status", exercise_blinking_handleStatusBlinking_LightModule);
+  server_Light_Module.on("/", exercise_blinking_handlerRoot_LightModule);
+  server_Light_Module.on("/blink/start", exercise_blinking_handlerStartBlinking_LightModule);   
+  server_Light_Module.on("/blink/stop", exercise_blinking_handlerStopBlinking_LightModule);
+  server_Light_Module.on("/blink/status", exercise_blinking_handlerStatusBlinking_LightModule);
 
   server_Light_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
 
 void exercise_blinking_loop_LightModule() {
-  // neblokující blikání
   if (blinking) {
     uint32_t now = millis();
     if (now - lastToggleMs >= blinkPeriodMs) {  
@@ -305,6 +298,5 @@ void exercise_blinking_loop_LightModule() {
       digitalWrite(LEDPIN, ledState ? HIGH : LOW);
     }
   }
-
   server_Light_Module.handleClient();
 }

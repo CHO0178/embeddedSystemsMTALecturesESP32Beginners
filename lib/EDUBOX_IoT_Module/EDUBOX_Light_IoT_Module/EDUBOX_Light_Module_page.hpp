@@ -13,17 +13,18 @@ const char EXAMPLE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení</title>
+  <title>Osvětlení ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
+  <h1>Modul osvětlení - Ukázka</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
+    Rozsvítit LED
   </button>
   <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
+    Zhasnout LED
   </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
+  <h2>Stav LED: <span id="status">ČEKÁNÍ NA STAV...</span></h2>
+  <p>(Proveďte alespoň jednu interakci s tlačítkem)</p>
 </body>
 
 <script>
@@ -35,7 +36,6 @@ const char EXAMPLE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
       });
   }
 </script>
-
 </html>
 )HTML";
 
@@ -48,17 +48,18 @@ const char EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení - Úkol 1</title>
+  <title>Osvětlení ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
+  <h1>Modul osvětlení - Ukázka</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
+    Rozsvítit LED
   </button>
   <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
+    Zhasnout LED
   </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
+  <h2>Stav LED: <span id="status">ČEKÁNÍ NA STAV...</span></h2>
+  <p>(Proveďte alespoň jednu interakci s tlačítkem)</p>
 </body>
 
 <script>
@@ -70,31 +71,30 @@ const char EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
       });
   }
 </script>
-
 </html>
 )HTML";
 
 
 /**
- * @brief Cvičení – Rozšíření API o /toggle a /set s validací vstupu a zobrazení aktuálního stavu LED na webové stránce.
- * 
+ * @brief Cvičení – Rozšíření API
  */
 const char EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení - Úkol 2</title>
+  <title>Osvětlení ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
+  <h1>Modul osvětlení - Ukázka</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
+    Rozsvítit LED
   </button>
   <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
+    Zhasnout LED
   </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
+  <h2>Stav LED: <span id="status">ČEKÁNÍ NA STAV...</span></h2>
+  <p>(Proveďte alespoň jednu interakci s tlačítkem)</p>
 </body>
 
 <script>
@@ -106,7 +106,6 @@ const char EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
       });
   }
 </script>
-
 </html>
 )HTML";
 
@@ -118,17 +117,18 @@ const char EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení - Úkol 3</title>
+  <title>Osvětlení ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
+  <h1>Modul osvětlení - Ukázka</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
+    Rozsvítit LED
   </button>
   <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
+    Zhasnout LED
   </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
+  <h2>Stav LED: <span id="status">ČEKÁNÍ NA STAV...</span></h2>
+  <p>(Proveďte alespoň jednu interakci s tlačítkem)</p>
 </body>
 
 <script>
@@ -140,7 +140,6 @@ const char EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
       });
   }
 </script>
-
 </html>
 )HTML";
 

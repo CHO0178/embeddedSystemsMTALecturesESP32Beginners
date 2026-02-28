@@ -13,17 +13,18 @@ const char RES_EXAMPLE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení</title>
+  <title>Osvětlení ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
+  <h1>Modul osvětlení - Ukázka</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
-    Rozsvítit osvětlení
+    Rozsvítit LED
   </button>
   <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
-    Zhasnout osvětlení
+    Zhasnout LED
   </button>
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
+  <h2>Stav LED: <span id="status">ČEKÁNÍ NA STAV...</span></h2>
+  <p>(Proveďte alespoň jednu interakci s tlačítkem)</p>
 </body>
 
 <script>
@@ -35,7 +36,6 @@ const char RES_EXAMPLE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
       });
   }
 </script>
-
 </html>
 )HTML";
 
@@ -52,17 +52,18 @@ const char RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
   <title>Osvětlení - Cvičení Zobrazení stavu LED a času</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
+  <h1>Modul osvětlení - Cvičení</h1>
 
   <button type="button" style="font-size:20px;" onclick="sendCommand('on', 'ON')">
-    Rozsvítit osvětlení
+    Rozsvítit LED
   </button>
   <button type="button" style="font-size:20px;" onclick="sendCommand('off', 'OFF')">
-    Zhasnout osvětlení
+    Zhasnout LED
   </button>
 
-  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...(Proveďte alespoň jednu interakci s tlačítkem)</span></h2>
-  <h3>Poslední změna: <span id="lastChange">---</span></h3>
+  <h2>Stav osvětlení: <span id="status">ČEKÁNÍ NA STAV...</span></h2>
+  <h3>Čas poslední změny: <span id="lastChange">---</span></h3>
+  <p>(Proveďte alespoň jednu interakci s tlačítkem)</p>
 </body>
 
 <script>
@@ -75,21 +76,17 @@ const char RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/' + command)
       .then(response => response.text())
       .then(data => {
-        // stav z ESP
         document.getElementById('status').innerText = data;
-
-        // čas změny (klient)
         updateTime();
       });
   }
 </script>
-
 </html>
 )HTML";
 
 
 /*
- * @brief Cvičení – Rozšíření API o /toggle a /set s validací vstupu a zobrazení aktuálního stavu LED na webové stránce.
+ * @brief Cvičení – Rozšíření API
  * 
  */
 static const char RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
@@ -100,26 +97,22 @@ static const char RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R
   <title>Osvětlení - Cvičení Rozšíření API</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
-
+  <h1>Modul osvětlení - Cvičení</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
     Rozsvítit LED
   </button>
   <button type="button" style="font-size:20px;" onclick="sendCommand('off')">
     Zhasnout LED
   </button>
-
   <button type="button" style="font-size:20px;" onclick="sendCommand('toggle')">
-    TOGGLE
+    Přepnout LED stav
   </button>
-
   <br><br>
-
+  <h2>Nastavení režimu LED pomocí HTTP parametru (0 nebo 1)</h2>
   <input id="value" type="number" min="0" max="1" value="1" style="font-size:20px; width:90px;">
   <button type="button" style="font-size:20px;" onclick="setValue()">
-    SET value
+    Nastavit
   </button>
-
   <h2>Stav osvětlení: <span id="status">NAČÍTÁM...</span></h2>
   <p id="error" style="color:red;"></p>
 </body>
@@ -155,7 +148,6 @@ static const char RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R
       });
   }
 
-  // při načtení stránky si vyžádáme stav z ESP
   fetch('/status')
     .then(r => r.text())
     .then(t => updateStatusText(t));
@@ -176,12 +168,7 @@ static const char RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
   <title>Osvětlení - Cvičení Blikání LED</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení</h1>
-
-  <p>Perioda blikání (ms):</p>
-  <input id="period" type="number" min="50" max="5000" value="500" style="font-size:20px; width:140px;">
-  <br><br>
-
+  <h1>Modul osvětlení - Cvičení</h1>
   <button type="button" style="font-size:20px;" onclick="startBlink()">
     Začít blikat
   </button>
@@ -189,7 +176,13 @@ static const char RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
     Zastavit blikání
   </button>
 
+  <h2>Perioda blikání (100 - 5000 ms):</h2>
+  <input id="period" type="number" min="100" max="5000" value="500" style="font-size:20px; width:140px;">
+  <br><br>
   <h2>Stav blikání: <span id="status">NAČÍTÁM...</span></h2>
+  <button type="button" style="font-size:20px;" onclick="refresh()">
+    Aktualizovat stav
+  </button>
   <p id="error" style="color:red;"></p>
 </body>
 
@@ -201,8 +194,8 @@ static const char RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
   function startBlink() {
     setError('');
     const p = document.getElementById('period').value;
-
-    fetch('/blink/start?period=' + encodeURIComponent(p))
+    
+    fetch('/blink/start?period=' + p)
       .then(response => response.text().then(t => ({ ok: response.ok, text: t })))
       .then(res => {
         if (!res.ok) { setError(res.text); }
@@ -226,11 +219,10 @@ static const char RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
       .then(t => {
         document.getElementById('status').innerText = t;
       });
-  }
-      
+  } 
+  
   refresh();
 </script>
-
 </html>
 )HTML";
 
