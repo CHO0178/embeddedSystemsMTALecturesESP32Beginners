@@ -5,13 +5,13 @@
 
 /**
  * @brief Ukazka HTML stránky s JavaScriptem pro modul PIR.
- * @details Tato HTML stránka zobrazuje aktuální stav detekce PIR senzoru a aktualizuje jej každou sekundu pomocí JavaScriptu.
+ * @details Tato HTML stránka zobrazuje aktuální stav detekce PIR senzoru a aktualizuje jej každou sekundu.
  */
-const char PIR_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
+const char EXAMPLE_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" http-equiv="refresh" content="2">
   <title>PIR</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
@@ -27,18 +27,15 @@ const char PIR_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
         document.getElementById('data').innerText = data.detection;
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
 </script>
-
 </html>
 )HTML";
 
 /**
- * @brief Úkol 1: Zobrazení PIR detekce + datum a čas poslední změny stavu
+ * @brief Cvičení - 
  * 
  */
-const char EXERCISE_1_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_TEXT_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,10 +63,10 @@ const char EXERCISE_1_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 )HTML";
 
 /**
- * @brief Úkol 2: Rozšíření JSON odpovědi o stav a timestamp
+ * @brief Cvičení 
  * 
  */
-const char EXERCISE_2_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_TEXT_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
@@ -98,10 +95,10 @@ const char EXERCISE_2_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 
 
 /**
- * @brief Úkol 3: Alarm režim PIR (latch) + potvrzení alarmu přes web
+ * @brief Cvičení - 
  * 
  */
-const char EXERCISE_3_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_TEXT_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>

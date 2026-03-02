@@ -23,8 +23,8 @@ WebServer server_Light_Module(80);
  * @details Zobrazí HTML stránku s ovládáním osvětlení.
  */
 void example_handlerRoot_LightModule() {
-  String page = FPSTR(RES_EXAMPLE_LIGHT_MODULE_HTML);
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+    String page = FPSTR(RES_EXAMPLE_LIGHT_MODULE_HTML);
+    server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 /**
@@ -50,16 +50,16 @@ void example_handlerLightOff_LightModule() {
  * @details Nastaví pin pro LED a inicializuje webový server s příslušnými obslužnými funkcemi.
  */
 void example_setup_LightModule() {
-  Serial.begin(115200);
-  setupWifi_LightModule("SSID", "PASSWORD");
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, LOW);
+    Serial.begin(115200);
+    setupWifi_LightModule("SSID", "PASSWORD");
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", example_handlerRoot_LightModule);
-  server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
-  server_Light_Module.on("/off", example_handlerLightOff_LightModule);
-  server_Light_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_Light_Module.on("/", example_handlerRoot_LightModule);
+    server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
+    server_Light_Module.on("/off", example_handlerLightOff_LightModule);
+    server_Light_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 /** 
@@ -67,7 +67,7 @@ void example_setup_LightModule() {
  * @details Zpracovává příchozí HTTP požadavky.
  */
 void example_loop_LightModule() {
-  server_Light_Module.handleClient();
+    server_Light_Module.handleClient();
 }
 
 
@@ -101,21 +101,21 @@ void example_loop_LightModule() {
  */
 
 void exercise_timeDate_handlerRoot_LightModule() {
-  String page = FPSTR(RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); 
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+    String page = FPSTR(RES_EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); 
+    server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void exercise_timeDate_setup_LightModule() {
-  Serial.begin(115200);
-  setupWifi_LightModule("SSID", "PASSWORD");
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, LOW);
+    Serial.begin(115200);
+    setupWifi_LightModule("SSID", "PASSWORD");
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", exercise_timeDate_handlerRoot_LightModule);
-  server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
-  server_Light_Module.on("/off", example_handlerLightOff_LightModule);
-  server_Light_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_Light_Module.on("/", exercise_timeDate_handlerRoot_LightModule);
+    server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
+    server_Light_Module.on("/off", example_handlerLightOff_LightModule);
+    server_Light_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 
@@ -140,73 +140,73 @@ void exercise_timeDate_setup_LightModule() {
 
 bool ledState = false;
 
- void exercise_extendedEndpoints_handlerRoot_LightModule() {
-  String page = FPSTR(RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML);
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+void exercise_extendedEndpoints_handlerRoot_LightModule() {
+    String page = FPSTR(RES_EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML);
+    server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void exercise_extendedEndpoints_handlerLightOn_LightModule() {
-  ledState = true;
-  digitalWrite(LEDPIN, HIGH);
-  server_Light_Module.send(200, "text/plain", "ON");
+    ledState = true;
+    digitalWrite(LEDPIN, HIGH);
+    server_Light_Module.send(200, "text/plain", "ON");
 }
 
 void exercise_extendedEndpoints_handlerLightOff_LightModule() {
-  ledState = false;
-  digitalWrite(LEDPIN, LOW);
-  server_Light_Module.send(200, "text/plain", "OFF");
+    ledState = false;
+    digitalWrite(LEDPIN, LOW);
+    server_Light_Module.send(200, "text/plain", "OFF");
 }
 
 void exercise_extendedEndpoints_handlerToggle_LightModule() {
-  ledState = !ledState;
-  digitalWrite(LEDPIN, ledState ? HIGH : LOW);
-  server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
+    ledState = !ledState;
+    digitalWrite(LEDPIN, ledState ? HIGH : LOW);
+    server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
 
 void exercise_extendedEndpoints_handlerSetLightModule() {
-  // /set?value=0|1
-  if (!server_Light_Module.hasArg("value")) {
-    server_Light_Module.send(400, "text/plain", "Missing value");
-    return;
-  }
+    // /set?value=0|1
+    if (!server_Light_Module.hasArg("value")) {
+      server_Light_Module.send(400, "text/plain", "Missing value");
+      return;
+    }
 
-  String v = server_Light_Module.arg("value");
-  if (v != "0" && v != "1") {
-    server_Light_Module.send(400, "text/plain", "Invalid value (use 0 or 1)");
-    return;
-  }
+    String v = server_Light_Module.arg("value");
+    if (v != "0" && v != "1") {
+      server_Light_Module.send(400, "text/plain", "Invalid value (use 0 or 1)");
+      return;
+    }
 
-  ledState = (v == "1");
-  digitalWrite(LEDPIN, ledState ? HIGH : LOW);
-  server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
+    ledState = (v == "1");
+    digitalWrite(LEDPIN, ledState ? HIGH : LOW);
+    server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
 
 void exercise_extendedEndpoints_handlerStatusLightModule() {
-  server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
+    server_Light_Module.send(200, "text/plain", ledState ? "ON" : "OFF");
 }
 
 void exercise_extendedEndpoints_setup_LightModule() {
-  Serial.begin(115200);
+    Serial.begin(115200);
 
-  setupWifi_LightModule("SSID", "PASSWORD");
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, LOW);
-  ledState = false;
+    setupWifi_LightModule("SSID", "PASSWORD");
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
+    ledState = false;
 
-  server_Light_Module.on("/", exercise_extendedEndpoints_handlerRoot_LightModule);
-  server_Light_Module.on("/on", exercise_extendedEndpoints_handlerLightOn_LightModule);   
-  server_Light_Module.on("/off", exercise_extendedEndpoints_handlerLightOff_LightModule);
-  server_Light_Module.on("/toggle", exercise_extendedEndpoints_handlerToggle_LightModule);
-  server_Light_Module.on("/set", exercise_extendedEndpoints_handlerSetLightModule);
-  server_Light_Module.on("/status", exercise_extendedEndpoints_handlerStatusLightModule);
+    server_Light_Module.on("/", exercise_extendedEndpoints_handlerRoot_LightModule);
+    server_Light_Module.on("/on", exercise_extendedEndpoints_handlerLightOn_LightModule);   
+    server_Light_Module.on("/off", exercise_extendedEndpoints_handlerLightOff_LightModule);
+    server_Light_Module.on("/toggle", exercise_extendedEndpoints_handlerToggle_LightModule);
+    server_Light_Module.on("/set", exercise_extendedEndpoints_handlerSetLightModule);
+    server_Light_Module.on("/status", exercise_extendedEndpoints_handlerStatusLightModule);
 
-  server_Light_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_Light_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 
 void exercise_extendedEndpoints_loopLightModule() {
-  server_Light_Module.handleClient();
+    server_Light_Module.handleClient();
 }
 
 
@@ -237,66 +237,66 @@ uint32_t blinkPeriodMs= 500;
 uint32_t lastToggleMs = 0;
 
 void exercise_blinking_handlerRoot_LightModule() {
-  String page = FPSTR(RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML);
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+    String page = FPSTR(RES_EXERCISE_BLINKING_LIGHT_MODULE_HTML);
+    server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void exercise_blinking_handlerStartBlinking_LightModule() {
-  // /blink/start?period=...
-  if (server_Light_Module.hasArg("period")) {
-    String p = server_Light_Module.arg("period");
-    long val = p.toInt();
-    if (val < 100 || val > 5000) {
-      server_Light_Module.send(400, "text/plain", "Invalid period (50..5000 ms)");
-      return;
+    // /blink/start?period=...
+    if (server_Light_Module.hasArg("period")) {
+      String p = server_Light_Module.arg("period");
+      long val = p.toInt();
+      if (val < 100 || val > 5000) {
+        server_Light_Module.send(400, "text/plain", "Invalid period (50..5000 ms)");
+        return;
+      }
+      blinkPeriodMs = (uint32_t)val;
     }
-    blinkPeriodMs = (uint32_t)val;
-  }
-  blinking = true;
-  lastToggleMs = millis();
-  server_Light_Module.send(200, "text/plain", "BLINKING");
+    blinking = true;
+    lastToggleMs = millis();
+    server_Light_Module.send(200, "text/plain", "BLINKING");
 }
 
 void exercise_blinking_handlerStopBlinking_LightModule() {
-  blinking = false;
-  ledState = false;
-  digitalWrite(LEDPIN, LOW);
-  server_Light_Module.send(200, "text/plain", "STOPPED");
+    blinking = false;
+    ledState = false;
+    digitalWrite(LEDPIN, LOW);
+    server_Light_Module.send(200, "text/plain", "STOPPED");
 }
 
 void exercise_blinking_handlerStatusBlinking_LightModule() {
-  String status = blinking ? "BLINKING" : "STOPPED";
-  server_Light_Module.send(200, "text/plain", status);
+    String status = blinking ? "BLINKING" : "STOPPED";
+    server_Light_Module.send(200, "text/plain", status);
 }
 
 void exercise_blinking_setup_LightModule() {
-  Serial.begin(115200);
-  setupWifi_LightModule("SSID", "PASSWORD");
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, LOW);
+    Serial.begin(115200);
+    setupWifi_LightModule("SSID", "PASSWORD");
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  blinking = false;
-  ledState = false;
-  blinkPeriodMs = 500;
-  lastToggleMs = 0;
+    blinking = false;
+    ledState = false;
+    blinkPeriodMs = 500;
+    lastToggleMs = 0;
 
-  server_Light_Module.on("/", exercise_blinking_handlerRoot_LightModule);
-  server_Light_Module.on("/blink/start", exercise_blinking_handlerStartBlinking_LightModule);   
-  server_Light_Module.on("/blink/stop", exercise_blinking_handlerStopBlinking_LightModule);
-  server_Light_Module.on("/blink/status", exercise_blinking_handlerStatusBlinking_LightModule);
+    server_Light_Module.on("/", exercise_blinking_handlerRoot_LightModule);
+    server_Light_Module.on("/blink/start", exercise_blinking_handlerStartBlinking_LightModule);   
+    server_Light_Module.on("/blink/stop", exercise_blinking_handlerStopBlinking_LightModule);
+    server_Light_Module.on("/blink/status", exercise_blinking_handlerStatusBlinking_LightModule);
 
-  server_Light_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_Light_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 void exercise_blinking_loop_LightModule() {
-  if (blinking) {
-    uint32_t now = millis();
-    if (now - lastToggleMs >= blinkPeriodMs) {  
-      lastToggleMs = now;
-      ledState = !ledState;
-      digitalWrite(LEDPIN, ledState ? HIGH : LOW);
+    if (blinking) {
+      uint32_t now = millis();
+      if (now - lastToggleMs >= blinkPeriodMs) {  
+        lastToggleMs = now;
+        ledState = !ledState;
+        digitalWrite(LEDPIN, ledState ? HIGH : LOW);
+      }
     }
-  }
-  server_Light_Module.handleClient();
+    server_Light_Module.handleClient();
 }

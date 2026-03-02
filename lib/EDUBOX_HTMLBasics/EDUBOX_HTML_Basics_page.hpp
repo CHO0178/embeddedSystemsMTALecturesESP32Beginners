@@ -3,10 +3,11 @@
 
 #include <pgmspace.h>
 
+
 /**
- * @brief Zakladní HTML stránka "Hello World"
+ * @brief 
  */
-const char HTML_1[] PROGMEM = R"HTML(
+const char EXAMPLE_HTML_BASICS_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
   <head>
@@ -23,9 +24,9 @@ const char HTML_1[] PROGMEM = R"HTML(
 
 
 /**
- * @brief Zakladní HTML stránka s CSS styly
+ * @brief 
  */
-const char HTML_2[] PROGMEM = R"HTML(
+const char EXAMPLE_HTML_BASICS_CSS[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
   <head>
@@ -45,9 +46,9 @@ const char HTML_2[] PROGMEM = R"HTML(
 )HTML";
 
 /**
- * @brief Zakladní HTML stránka s JavaScriptem
+ * @brief 
  */
-const char HTML_3[] PROGMEM = R"HTML(
+const char EXAMPLE_HTML_BASICS_JAVASCRIPT[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
   <head>
@@ -67,10 +68,12 @@ const char HTML_3[] PROGMEM = R"HTML(
 )HTML";
 
 
+
+
 /**
  * @brief Zakladní HTML stránka "Hello World"
  */
-const char HTML_1_EX[] PROGMEM = R"HTML(
+const char EXERCISE_TEXT_HTML_BASICS[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>

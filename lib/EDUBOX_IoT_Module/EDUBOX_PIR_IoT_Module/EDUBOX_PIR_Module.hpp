@@ -8,52 +8,46 @@
  * @details Tato funkce zobrazí HTML stránku.
  * 
  */
-void hadleRootPIRModule();
+void example_hadleRootPIRModule();
 
 /**
  * @brief Ukázka obsluhy URL pro získání dat ve formátu JSON pro PIR modul.
  * @details Tato funkce načte data z PIR senzoru a odešle je klientovi ve formátu JSON.
  * 
  */
-void handleDataPIRModule();
+void example_handleDataPIRModule();
 
 /**
  * @brief Ukázka nastavení PIR modulu a WiFi připojení.
  * @details Tato funkce nastaví pin pro PIR senzor a inicializuje webový server s příslušnými obslužnými funkcemi.
  * 
  */
-void setupPIRModule();
+void example_setupPIRModule();
 
 /**
  * @brief Ukázka hlavní smyčky pro PIR modul.
- * @details Tato funkce zpracovává příchozí HTTP požadavky a obsluhuje odesílání dat z PIR senzoru ve formátu JSON.
+ * @details Tato funkce zpracovává příchozí HTTP požadavky PIR senzoru.
  * 
  */
-void loopPIRModule();
+void example_loopPIRModule();
 
 
 
-/**
- * @brief Ukol 1: Zobrazení PIR detekce + datum a čas poslední změny stavu
- */
-void Exercise1_handleRootPIRModule();
-void Exercise1_setupPIRModule();
+// Cvičení - 
+void exercise_counter_handleRootPIRModule();
+void exercise_counter_setupPIRModule();
 
-/**
- * @brief Ukol 2: Rozšíření JSON odpovědi o stav a timestamp
- */
-void Exercise2_handleRootPIRModule();
-void Exercise2_handleDataPIRModule();
-void Exercise2_setupPIRModule();
+// Cvičení - 
+void exercise_TEXT_handleRootPIRModule();
+void exercise_TEXT_handleDataPIRModule();
+void exercise_TEXT_setupPIRModule();
 
-/**
- * @brief Ukol 3: Alarm režim (latch) + potvrzení alarmu přes web
- */
-void Exercise3_handleRootPIRModule();
-void Exercise3_handleDataPIRModule();
-void Exercise3_handleAckPIRModule();
-void Exercise3_handleArmPIRModule();
-void Exercise3_handleDisarmPIRModule();
-void Exercise3_setupPIRModule();
+// Cvičení - 
+void exercise_alarm_handleRootPIRModule();
+void exercise_alarm_handleDataPIRModule();
+void exercise_alarm_handleAckPIRModule();
+void exercise_alarm_handleArmPIRModule();
+void exercise_alarm_handleDisarmPIRModule();
+void exercise_alarm_setupPIRModule();
 
 #endif

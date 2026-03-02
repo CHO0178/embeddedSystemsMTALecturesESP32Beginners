@@ -13,8 +13,8 @@
 #include "EDUBOX_PIR_Module_page.hpp"
 #include "EDUBOX_PIR_Module.hpp"
 
-const int PIRPin = 17;
-const int ledPin = 15;
+#define LEDPIN 15
+#define PIRPIN 17
 
 // Web server běžící na portu 80 - Tedy standardní HTTP port
 WebServer server_PIR_Module(80);
@@ -24,9 +24,9 @@ WebServer server_PIR_Module(80);
  * @details Tato funkce zobrazí HTML stránku.
  * 
  */
-void hadleRootPIRModule() {
-  String page = FPSTR(PIR_MODULE_JAVASCRIPT_HTML);
-  server_PIR_Module.send(200, "text/html; charset=utf-8", page);
+void hadlerRootPIRModule() {
+    String page = FPSTR(PIR_MODULE_JAVASCRIPT_HTML);
+    server_PIR_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 /**
@@ -34,21 +34,21 @@ void hadleRootPIRModule() {
  * @details Tato funkce načte data z PIR senzoru a odešle je klientovi ve formátu JSON.
  * 
  */
-void handleDataPIRModule() {
-  bool detected = digitalRead(PIRPin);
-  if(detected) {
-    digitalWrite(ledPin, HIGH); // Zapnout LED při detekci pohybu
-    Serial.println("PIR: Detekován pohyb");
-  } else {
-    digitalWrite(ledPin, LOW); // Vypnout LED, když není detekován pohyb
-    Serial.println("PIR: Žádný pohyb");
-  }
+void handlerDataPIRModule() {
+    bool detected = digitalRead(PIRPIN);
+    if(detected) {
+      digitalWrite(LEDPIN, HIGH); // Zapnout LED při detekci pohybu
+      Serial.println("PIR: Detekován pohyb");
+    } else {
+      digitalWrite(LEDPIN, LOW); // Vypnout LED, když není detekován pohyb
+      Serial.println("PIR: Žádný pohyb");
+    }
 
-  String json = "{";
-  json += "\"detection\": " + String(detected ? "true" : "false");
-  json += "}";
+    String json = "{";
+    json += "\"detection\": " + String(detected ? "true" : "false");
+    json += "}";
 
-  server_PIR_Module.send(200, "application/json", json);
+    server_PIR_Module.send(200, "application/json", json);
 }
 
 
@@ -58,17 +58,17 @@ void handleDataPIRModule() {
  * 
  */
 void setupPIRModule() {
-  Serial.begin(115200);
-  setupWifiPIRModule("WiFi-name", "WiFi-password");
-  pinMode(PIRPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
-  
-  server_PIR_Module.on("/", hadleRootPIRModule);
-  server_PIR_Module.on("/data", handleDataPIRModule);   
+    Serial.begin(115200);
+    setupWifiPIRModule("WiFi-name", "WiFi-password");
+    pinMode(PIRPIN, INPUT);
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
+    
+    server_PIR_Module.on("/", hadlerRootPIRModule);
+    server_PIR_Module.on("/data", handlerDataPIRModule);   
 
-  server_PIR_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_PIR_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 /**
@@ -77,7 +77,7 @@ void setupPIRModule() {
  * 
  */
 void loopPIRModule() {
-  server_PIR_Module.handleClient();
+    server_PIR_Module.handleClient();
 }
 
 
@@ -106,7 +106,7 @@ void loopPIRModule() {
  * @return
  * Stránka zobrazuje PIR detekci a čas poslední změny stavu.
  */
-void Exercise1_handleRootPIRModule() {
+void Exercise1_handlerRootPIRModule() {
   String page = FPSTR(EXERCISE_1_PIR_MODULE_HTML);
   server_PIR_Module.send(200, "text/html; charset=utf-8", page);
 }
@@ -114,12 +114,12 @@ void Exercise1_handleRootPIRModule() {
 void Exercise1_setupPIRModule() {
   Serial.begin(115200);
   setupWifiPIRModule("WiFi-name", "WiFi-password");
-  pinMode(PIRPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+  pinMode(PIRPIN, INPUT);
+  pinMode(LEDPIN, OUTPUT);
+  digitalWrite(LEDPIN, LOW);
 
-  server_PIR_Module.on("/", Exercise1_handleRootPIRModule);
-  server_PIR_Module.on("/data", handleDataPIRModule);
+  server_PIR_Module.on("/", Exercise1_handlerRootPIRModule);
+  server_PIR_Module.on("/data", handlerDataPIRModule);
   server_PIR_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
@@ -143,19 +143,19 @@ void Exercise1_setupPIRModule() {
  * @return
  * Web zobrazuje čitelný stav a čas měření.
  */
-void Exercise2_handleRootPIRModule() {
+void Exercise2_handlerRootPIRModule() {
   String page = FPSTR(EXERCISE_2_PIR_MODULE_HTML);
   server_PIR_Module.send(200, "text/html; charset=utf-8", page);
 }
 
-void Exercise2_handleDataPIRModule() {
-  bool detected = digitalRead(PIRPin);
+void Exercise2_handlerDataPIRModule() {
+  bool detected = digitalRead(PIRPIN);
 
   if(detected) {
-    digitalWrite(ledPin, HIGH);
+    digitalWrite(LEDPIN, HIGH);
     Serial.println("PIR: Detekován pohyb");
   } else {
-    digitalWrite(ledPin, LOW);
+    digitalWrite(LEDPIN, LOW);
     Serial.println("PIR: Žádný pohyb");
   }
 
@@ -169,12 +169,12 @@ void Exercise2_handleDataPIRModule() {
 void Exercise2_setupPIRModule() {
   Serial.begin(115200);
   setupWifiPIRModule("WiFi-name", "WiFi-password");
-  pinMode(PIRPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+  pinMode(PIRPIN, INPUT);
+  pinMode(LEDPIN, OUTPUT);
+  digitalWrite(LEDPIN, LOW);
 
-  server_PIR_Module.on("/", Exercise2_handleRootPIRModule);
-  server_PIR_Module.on("/data", Exercise2_handleDataPIRModule);
+  server_PIR_Module.on("/", Exercise2_handlerRootPIRModule);
+  server_PIR_Module.on("/data", Exercise2_handlerDataPIRModule);
   server_PIR_Module.begin();
   Serial.println("HTTP server spuštěn");
 }
@@ -201,21 +201,21 @@ void Exercise2_setupPIRModule() {
  * @return
  * PIR modul funguje jako jednoduchý alarm s potvrzením události.
  */
-void Exercise3_handleRootPIRModule() {
+void Exercise3_handlerRootPIRModule() {
   String page = FPSTR(EXERCISE_3_PIR_MODULE_HTML);
   server_PIR_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 
-void Exercise3_handleDataPIRModule() {
+void Exercise3_handlerDataPIRModule() {
 
-  bool detected = digitalRead(PIRPin);
+  bool detected = digitalRead(PIRPIN);
 
   if(detected) {
-    digitalWrite(ledPin, HIGH);
+    digitalWrite(LEDPIN, HIGH);
     Serial.println("PIR: Detekován pohyb");
   } else {
-    digitalWrite(ledPin, LOW);
+    digitalWrite(LEDPIN, LOW);
     Serial.println("PIR: Žádný pohyb");
   }
 
@@ -241,12 +241,12 @@ void Exercise3_handleDisarmPIRModule() {
 void Exercise3_setupPIRModule() {
   Serial.begin(115200);
   setupWifiPIRModule("WiFi-name", "WiFi-password");
-  pinMode(PIRPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+  pinMode(PIRPIN, INPUT);
+  pinMode(LEDPIN, OUTPUT);
+  digitalWrite(LEDPIN, LOW);
 
-  server_PIR_Module.on("/", Exercise3_handleRootPIRModule);
-  server_PIR_Module.on("/data", Exercise3_handleDataPIRModule);
+  server_PIR_Module.on("/", Exercise3_handlerRootPIRModule);
+  server_PIR_Module.on("/data", Exercise3_handlerDataPIRModule);
 
   server_PIR_Module.begin();
   Serial.println("HTTP server spuštěn");

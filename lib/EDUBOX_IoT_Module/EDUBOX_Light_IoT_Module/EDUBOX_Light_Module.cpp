@@ -23,8 +23,8 @@ WebServer server_Light_Module(80);
  * @details Zobrazí HTML stránku s ovládáním osvětlení.
  */
 void example_handlerRoot_LightModule() {
-  String page = FPSTR(EXAMPLE_LIGHT_MODULE_HTML);
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+    String page = FPSTR(EXAMPLE_LIGHT_MODULE_HTML);
+    server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 /**
@@ -50,16 +50,16 @@ void example_handlerLightOff_LightModule() {
  * @details Nastaví pin pro LED a inicializuje webový server s příslušnými obslužnými funkcemi.
  */
 void example_setup_LightModule() {
-  Serial.begin(115200);
-  setupWifi_LightModule("SSID", "PASSWORD");
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, LOW);
+    Serial.begin(115200);
+    setupWifi_LightModule("SSID", "PASSWORD");
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", example_handlerRoot_LightModule);
-  server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
-  server_Light_Module.on("/off", example_handlerLightOff_LightModule);
-  server_Light_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_Light_Module.on("/", example_handlerRoot_LightModule);
+    server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
+    server_Light_Module.on("/off", example_handlerLightOff_LightModule);
+    server_Light_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 /** 
@@ -67,7 +67,7 @@ void example_setup_LightModule() {
  * @details Zpracovává příchozí HTTP požadavky.
  */
 void example_loop_LightModule() {
-  server_Light_Module.handleClient();
+    server_Light_Module.handleClient();
 }
 
 
@@ -100,23 +100,23 @@ void example_loop_LightModule() {
  *
  */
 
-
+ 
 void exercise_timeDate_handlerRoot_LightModule() {
-  String page = FPSTR(EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+    String page = FPSTR(EXERCISE_TIMEDATE_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
+    server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void exercise_timeDate_setup_LightModule() {
-  Serial.begin(115200);
-  setupWifi_LightModule("SSID", "PASSWORD");
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, LOW);
+    Serial.begin(115200);
+    setupWifi_LightModule("SSID", "PASSWORD");
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", exercise_timeDate_handlerRoot_LightModule);
-  server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
-  server_Light_Module.on("/off", example_handlerLightOff_LightModule);
-  server_Light_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_Light_Module.on("/", exercise_timeDate_handlerRoot_LightModule);
+    server_Light_Module.on("/on", example_handlerLightOn_LightModule);   
+    server_Light_Module.on("/off", example_handlerLightOff_LightModule);
+    server_Light_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 
@@ -142,8 +142,8 @@ void exercise_timeDate_setup_LightModule() {
  */
 
 void exercise_extendedEndpoints_handlerRoot_LightModule() {
-  String page = FPSTR(EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+    String page = FPSTR(EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
+    server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void exercise_extendedEndpoints_handlerLightOn_LightModule() {
@@ -169,19 +169,19 @@ void exercise_extendedEndpoints_handlerStatusLightModule() {
 }
 
 void exercise_extendedEndpoints_setup_LightModule() {
-  Serial.begin(115200);
-  setupWifi_LightModule("SSID", "PASSWORD");
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, LOW);
+    Serial.begin(115200);
+    setupWifi_LightModule("SSID", "PASSWORD");
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", exercise_extendedEndpoints_handlerRoot_LightModule);
-  server_Light_Module.on("/on", exercise_extendedEndpoints_handlerLightOn_LightModule);   
-  server_Light_Module.on("/off", exercise_extendedEndpoints_handlerLightOff_LightModule);
+    server_Light_Module.on("/", exercise_extendedEndpoints_handlerRoot_LightModule);
+    server_Light_Module.on("/on", exercise_extendedEndpoints_handlerLightOn_LightModule);   
+    server_Light_Module.on("/off", exercise_extendedEndpoints_handlerLightOff_LightModule);
 
-  // Doplnit nově vytvořené endpointy
+    // Doplnit nově vytvořené endpointy
 
-  server_Light_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_Light_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 
@@ -206,39 +206,39 @@ void exercise_extendedEndpoints_setup_LightModule() {
  */
 
 void exercise_blinking_handlerRoot_LightModule() {
-  String page = FPSTR(EXERCISE_BLINKING_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
-  server_Light_Module.send(200, "text/html; charset=utf-8", page);
+      String page = FPSTR(EXERCISE_BLINKING_LIGHT_MODULE_HTML); // <--- Upravte HTML stránku
+      server_Light_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 void exercise_blinking_handlerStartBlinking_LightModule() {
-// Doplnit řešení pro zapnutí režimu blikání a nastavení periody
+    // Doplnit řešení pro zapnutí režimu blikání a nastavení periody
 }
 
 void exercise_blinking_handlerStopBlinking_LightModule() {
-// Doplnit řešení pro zastavení blikání a vypnutí LED
+    // Doplnit řešení pro zastavení blikání a vypnutí LED
 }
 
 void exercise_blinking_handlerStatusBlinking_LightModule() {
-// Doplnit řešení pro vrácení aktuálního stavu blikání klientovi
+    // Doplnit řešení pro vrácení aktuálního stavu blikání klientovi
 }
 
 void exercise_blinking_setup_LightModule() {
-  Serial.begin(115200);
-  setupWifi_LightModule("SSID", "PASSWORD");
-  pinMode(LEDPIN, OUTPUT);
-  digitalWrite(LEDPIN, LOW);
+    Serial.begin(115200);
+    setupWifi_LightModule("SSID", "PASSWORD");
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  server_Light_Module.on("/", exercise_blinking_handlerRoot_LightModule);
-  
-  // Doplnit nově vytvořené endpointy
+    server_Light_Module.on("/", exercise_blinking_handlerRoot_LightModule);
+    
+    // Doplnit nově vytvořené endpointy
 
-  server_Light_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_Light_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 void exercise_blinking_loop_LightModule() {
-  // Doplnit řešení pro neblokující blikání LED
-  
-  server_Light_Module.handleClient();
+    // Doplnit řešení pro neblokující blikání LED
+    
+    server_Light_Module.handleClient();
 }
 

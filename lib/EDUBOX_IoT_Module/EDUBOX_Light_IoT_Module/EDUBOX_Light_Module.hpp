@@ -26,7 +26,7 @@ void example_handlerLightOffLightModule();
 
 /**
  * @brief Ukázka nastavení modulu osvětlení a WiFi připojení.
- * @details Tato funkce nastaví pin pro LED a inicializuje webový server s příslušnými obslužnými funkcemi.
+ * @details Tato funkce nastaví pin pro LED a inicializuje webový server společně s příslušnými obslužnými funkcemi.
  * 
  */
 void example_setupLightModule();
