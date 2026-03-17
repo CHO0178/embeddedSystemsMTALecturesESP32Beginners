@@ -60,6 +60,16 @@
 
 #define BUZZER_PIN    DoplnitPin
 
+/**
+ * @brief Inicializace hardwaru pro EDUBOX třídy
+ *
+ * @details 
+ * Funkce nastaví všechny potřebné piny pro správnou funkci LED a buzzeru.
+ * - LED jako OUTPUT
+ * - bzučák jako OUTPUT
+ * 
+ * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
+ */
 void EDUBOX_tridy_hwInit()
 {
     pinMode(LED_PIN_1, OUTPUT);

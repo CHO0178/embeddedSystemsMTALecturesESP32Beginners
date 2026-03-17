@@ -65,7 +65,6 @@
  * @note Tuto funkci je možné využít libovolně ve všech cvičeních, protože princip měření vzdálenosti je vždy totožný.
  * 
  * @return Vzdálenost v centimetrech typu long
-
  */
 long ultrasonic_measure_cm()
 {
