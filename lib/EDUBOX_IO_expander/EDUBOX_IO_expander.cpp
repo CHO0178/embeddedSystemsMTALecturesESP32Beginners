@@ -1,8 +1,8 @@
 /**
- * @file EDUBOX_I2C_IO_expander.cpp
+ * @file EDUBOX_IO_expander.cpp
  * @brief Výukový EDUBOX – IO expander PCF8574, vstupy a výstupy přes I2C.
  *
- * ## Připomenutí: IO expander
+ * Připomenutí: IO expander
  * IO expander umožňuje rozšířit počet digitálních vstupů a výstupů
  * pomocí externího obvodu připojeného přes sběrnici I2C.
  *
@@ -12,7 +12,38 @@
  *
  * V tomto EDUBOXu:
  * - LED i tlačítko jsou připojeny k IO expanderu
- * - nejsou použity GPIO piny mikrokontroléru
+ * - nejsou použity GPIO piny samotného mikrokontroléru
+ *
+ * IOE = I/O Expander
+ *
+ *
+ * Použité příkazy knihovny PCF8574 (v tomto EDUBOXu)
+ *
+ * - PCF8574 ioExpander(address);
+ *   Vytvoří objekt IO expanderu s danou I2C adresou.
+ *
+ * - ioExpander.begin();
+ *   Inicializuje komunikaci s IO expanderem.
+ *
+ * - ioExpander.pinMode(pin, mode);
+ *   Nastaví směr zvoleného pinu IO expanderu.
+ *
+ * - ioExpander.digitalWrite(pin, value);
+ *   Nastaví logickou úroveň na zvoleném výstupu IO expanderu.
+ *
+ * - ioExpander.digitalRead(pin);
+ *   Přečte logickou úroveň ze zvoleného pinu IO expanderu.
+ *
+ * Tyto příkazy jsou plně dostačující pro základní práci s IO expanderem
+ * a jsou používány v ukázkách i cvičeních tohoto EDUBOXu.
+ *
+ *
+ * Tento soubor obsahuje:
+ * - inicializaci hardwaru pro IO expander
+ * - tři hotové ukázky práce s LED a tlačítkem
+ * - tři cvičení (pouze zadání, bez implementace)
+ *
+ * Cílem je ukázat rozšíření vstupů a výstupů mikrokontroléru pomocí externího IO expanderu přes sběrnici I2C.
  */
 
 #include <Arduino.h>
@@ -20,64 +51,66 @@
 #include <PCF8574.h>
 #include "EDUBOX_IO_expander.hpp"
 
-/* =========================================================
-   DEFINICE ADRESY A PINŮ IO EXPANDERU
-   ========================================================= */
+#define PCF8574_ADDRESS          0x20
 
-#define PCF8574_ADDRESS   0x20
+// Piny IO expanderu pro LED a tlačítko – doplňte podle zapojení
+#define LED_PIN_1                DoplnitPin
+#define LED_PIN_2                DoplnitPin
+#define LED_PIN_3                DoplnitPin
+#define LED_PIN_4                DoplnitPin
+#define LED_PIN_5                DoplnitPin
 
-#define LED_PIN_1         /* doplnit */
-#define LED_PIN_2         /* doplnit */
-#define LED_PIN_3         /* doplnit */
-#define LED_PIN_4         /* doplnit */
-#define LED_PIN_5         /* doplnit */
+#define BUTTON_PIN               DoplnitPin
 
-#define BUTTON_PIN        7   // tlačítko připojené k IO expanderu
-
-/* =========================================================
-   GLOBÁLNÍ PROMĚNNÉ
-   ========================================================= */
 
 PCF8574 ioExpander(PCF8574_ADDRESS);
 
-/* =========================================================
-   HARDWAROVÁ INICIALIZACE
-   ========================================================= */
 
+/**
+ * @brief Inicializace hardwaru pro EDUBOX IO expander
+ *
+ * @details
+ * Funkce inicializuje IO expander a nastaví režimy pinů:
+ * - LED jako OUTPUT
+ * - tlačítko jako INPUT
+ *
+ * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
+ */
 void EDUBOX_IOE_hwInit()
 {
     ioExpander.begin();
 
-    ioExpander.pinMode(LED_PIN, OUTPUT);
+    ioExpander.pinMode(LED_PIN_1, OUTPUT);
+    ioExpander.pinMode(LED_PIN_2, OUTPUT);
+    ioExpander.pinMode(LED_PIN_3, OUTPUT);
+    ioExpander.pinMode(LED_PIN_4, OUTPUT);
+    ioExpander.pinMode(LED_PIN_5, OUTPUT);
+
     ioExpander.pinMode(BUTTON_PIN, INPUT);
 }
 
-/* =========================================================
-   PŘÍKLADY
-   ========================================================= */
-
 /**
- * @brief Příklad 1 – Ovládání LED přes IO expander
+ * @brief Ukázka – Ovládání LED přes IO expander
  *
- * LED je připojena k výstupu IO expanderu.
- * Mikrokontrolér LED neovládá přímo pomocí GPIO.
+ * @details
+ * LED připojená k IO expanderu se opakovaně zapíná a vypíná s periodou 500 ms.
+ * Logická úroveň se nenastavuje přímo na GPIO mikrokontroléru, ale zapisuje se do IO expanderu.
  */
 void example_IOE_singleLED()
 {
-    ioExpander.digitalWrite(LED_PIN, HIGH);
+    ioExpander.digitalWrite(LED_PIN_1, HIGH);
     delay(500);
 
-    ioExpander.digitalWrite(LED_PIN, LOW);
+    ioExpander.digitalWrite(LED_PIN_1, LOW);
     delay(500);
 }
 
 /**
- * @brief Příklad 2 – Čtení tlačítka připojeného k IO expanderu
+ * @brief Ukázka – Čtení tlačítka připojeného k IO expanderu
  *
- * Tlačítko je připojeno k IO expanderu
- * a jeho stav je čten pomocí digitalRead().
- *
- * Příklad demonstruje práci se vstupem přes I2C.
+ * @details
+ * Stav tlačítka je čten z IO expanderu a podle aktuální úrovně se vypisuje informace
+ * do sériového monitoru. Tlačítko není připojeno přímo k mikrokontroléru.
  */
 void example_IOE_readButton()
 {
@@ -96,12 +129,11 @@ void example_IOE_readButton()
 }
 
 /**
- * @brief Příklad 3 – Ovládání LED pomocí tlačítka přes IO expander
+ * @brief Ukázka – Ovládání LED pomocí tlačítka přes IO expander
  *
- * Tlačítko i LED jsou připojeny k IO expanderu.
- *
- * Pokud je tlačítko stisknuto, LED svítí.
- * Pokud je tlačítko uvolněno, LED nesvítí.
+ * @details
+ * Pokud je tlačítko stisknuto, LED svítí. Pokud je tlačítko uvolněno, LED nesvítí.
+ * Stav tlačítka je čten z IO expanderu a výstup pro LED je nastavován také přes IO expander.
  */
 void example_IOE_buttonControlsLED()
 {
@@ -109,94 +141,62 @@ void example_IOE_buttonControlsLED()
 
     if (buttonState == LOW)
     {
-        ioExpander.digitalWrite(LED_PIN, HIGH);
+        ioExpander.digitalWrite(LED_PIN_1, HIGH);
     }
     else
     {
-        ioExpander.digitalWrite(LED_PIN, LOW);
+        ioExpander.digitalWrite(LED_PIN_1, LOW);
     }
 
     delay(50);
 }
 
-/* =========================================================
-   CVIČENÍ – ÚKOLY
-   ========================================================= */
 /**
- * @brief Cvičení 1 – Přepínání LED pomocí tlačítka
+ * @brief Cvičení – Přepínání LED pomocí tlačítka připojeného k IO expanderu
  *
- * Napište program, ve kterém:
- * - LED připojená k IO expanderu je zpočátku vypnutá
- * - při stisknutí tlačítka se stav LED přepne
- *   (vypnuto → zapnuto, zapnuto → vypnuto)
+ * @details
+ * Funkce přepíná stav LED mezi zapnutou a vypnutou při každém novém stisku tlačítka.
  *
- * Požadavky:
- * - tlačítko i LED musí být připojeny k IO expanderu
- * - ke změně stavu LED dojde pouze při změně stavu tlačítka
- * - stav LED musí být uložen v proměnné
+ * @todo Implementujte logiku funkce
  *
- * Cílem je naučit se:
- * - Vyzkoušet si práci s IO expanderem
- * - detekovat změnu stavu vstupu
- * - pracovat se stavovou proměnnou
+ * @note Použijte příkazy: ioExpander.digitalRead(), ioExpander.digitalWrite()
  */
-void task_IOE_LEDtoggle()
+void exercise_IOE_LEDtoggle()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
 
-
 /**
- * @brief Cvičení 2 – Režimy LED ovládané tlačítkem
+ * @brief Cvičení – Režimy LED ovládané tlačítkem
  *
- * Napište program, ve kterém jedno tlačítko postupně přepíná
- * tři pevně dané režimy LED:
+ * @details
+ * Tlačítkem je možné postupně přepínat tři pevně dané režimy LED ve smyčce:
+ * 1) LED vypnutá
+ * 2) LED trvale svítí
+ * 3) LED bliká s periodou 500 ms
  *
- * 1. LED vypnutá
- * 2. LED trvale svítí
- * 3. LED bliká s periodou 500 ms
+ * @todo Implementujte logiku funkce
  *
- * Pořadí režimů je pevně dané a cyklické.
- *
- * Požadavky:
- * - tlačítko i LED musí být připojeny k IO expanderu
- * - každý stisk tlačítka přepne program do dalšího režimu
- * - aktuální režim musí být uložen v proměnné
- *
- * Cílem je:
- * - Vyzkoušet si práci s IO expanderem
- * - práce se stavovým automatem
- * - oddělení logiky vstupu a chování výstupu
+ * @note Použijte příkazy: ioExpander.digitalRead(), ioExpander.digitalWrite(), delay() / millis()
  */
-void task_IOE_LEDmodes()
+void exercise_IOE_LEDmodes()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
 
-
 /**
- * @brief Cvičení 3 – Řízení LED sekvence tlačítkem
+ * @brief Cvičení – Řízení LED sekvence tlačítkem
  *
- * Napište program, který:
- * - vytváří LED sekvenci (běžící světlo) na IO expanderu
- * - tlačítkem sekvenci spustí a zastaví
+ * @details
+ * Tlačítkem je možné spustit a zastavit sekvenci, ve které se postupně (jedna za druhou) rozsvěcují LED.
+ * V momentě, kdy jsou rozsvíceny všechny LED, tak všechny najednou zhasnou a sekvence se opakuje.
+ * Tlačítkem lze sekvenci kdykoliv zastavit, přičemž LED zůstanou v aktuálním stavu (rozsvícené/zhasnuté).
  *
- * Chování programu:
- * - při prvním stisku tlačítka se sekvence spustí
- * - při dalším stisku tlačítka se sekvence zastaví
- * - další stisk opět sekvenci spustí
+ * @todo Implementujte logiku funkce
  *
- * Požadavky:
- * - tlačítko i všechny LED musí být připojeny k IO expanderu
- * - sekvence musí běžet pouze při aktivním stavu
- *
- * Cílem je:
- * - Vyzkoušet si práci s IO expanderem
- * - řízení programu pomocí stavu
- * - kombinace vstupu a více výstupů
+ * @note Použijte příkazy: ioExpander.digitalWrite(), ioExpander.digitalRead(), delay() / millis()
  */
-void task_IOE_LEDsequenceControl()
+void exercise_IOE_LEDsequenceControl()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
-

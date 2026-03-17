@@ -2,97 +2,101 @@
  * @file EDUBOX_UART.cpp
  * @brief Výukový EDUBOX – UART komunikace mezi PC a ESP32
  *
- * Tento EDUBOX se zaměřuje na praktické použití sériové komunikace (UART)
- * mezi počítačem a mikrokontrolérem ESP32.
+ * Připomenutí: UART
+ * UART (Universal Asynchronous Receiver/Transmitter) umožňuje sériovou komunikaci
+ * mezi dvěma zařízeními (např. PC a ESP32).
+ * V Arduino frameworku se pro UART komunikaci běžně používá objekt Serial.
  *
- * UART (Universal Asynchronous Receiver/Transmitter) umožňuje komunikaci
- * mezi dvěma zařízeními přes sériový port.
- * V Arduino frameworku používáme pro tuto komunikaci objekt Serial.
+ * Pro správnou funkci musí rychlost nastavená v kódu:
+ * - Serial.begin(baudrate);
+ * odpovídat nastavení v platformio.ini:
+ * - monitor_speed = baudrate
  *
- * ---------------------------------------------------------
- * Konfigurace PlatformIO a sériového monitoru
- * ---------------------------------------------------------
- * Rychlost sériové komunikace nastavená v programu pomocí:
  *
- *   Serial.begin(baudrate);
+ * Ukončení řádku a znak '\n'
+ * Textové příkazy odesílané z PC jsou typicky ukončeny znakem nového řádku '\n'.
+ * Tento znak generuje Serial Monitor podle nastavení konce řádku (CR / LF / CRLF).
+ * Funkce readStringUntil('\n') čte data až do znaku '\n'.
  *
- * MUSÍ odpovídat nastavení v souboru platformio.ini:
  *
- *   monitor_speed = baudrate
+ * Použité příkazy pro UART = funkce Serial (v tomto EDUBOXu)
  *
- * Pokud se tyto hodnoty neshodují, sériová komunikace nebude fungovat
- * správně (nečitelné znaky, žádný výstup, žádná reakce).
+ * - Serial.begin(baudrate);
+ *   Inicializuje sériovou komunikaci s danou rychlostí.
  *
- * -----------------------------------------------------------------------------------------
- * Konec řádku a znak '\n'
- * -----------------------------------------------------------------------------------------
- * Textové příkazy odesílané z PC jsou ukončeny znakem nového řádku '\n'.
- * Tento znak je generován Serial Monitorem při odeslání zprávy
- * (dle nastavení CR / LF / CRLF).
- *
- * Například funkce readStringUntil('\n') čte data až do tohoto znaku (až na něj narazí).
- * -----------------------------------------------------------------------------------------
+ * - Serial.available();
+ *   Vrací počet dostupných znaků k přečtení.
  * 
- * Použité příkazy a funkce:
- * - Serial.begin(baudrate): Inicializuje sériovou komunikaci s danou rychlostí (baudrate)
- * - Serial.print(data): Odesílá data do sériového portu BEZ NOVÉHO ŘÁDKU - datový typ (data) může být String, int, float, atd.
- * - Serial.println(data): Identicky odesílá data do sériového portu S NOVÝM ŘÁDKEM (znakem \n) - datový typ (data) může být String, int, float, atd.
- * - Serial.read(): Čte jeden znak z přijímacího bufferu
- * - Serial.available(): Vrací počet dostupných znaků k přečtení
- * - Serial.parseInt(): Parsuje a vrací první celé číslo z přijímacího bufferu
- * ...
+ * - Serial.read();
+ *   Přečte jeden znak z přijímacího bufferu.
+ *
+ * - Serial.print(data);
+ *   Odešle data bez nového řádku.
+ *
+ * - Serial.println(data);
+ *   Odešle data s novým řádkem (znak '\n').
+ *
+ * - Serial.readStringUntil('\n');
+ *   Načte řetězec až do znaku nového řádku "\n".
+ *
+ *
+ * Další dostupné příkazy Serial (v tomto EDUBOXu NEPOUŽITY)
+ *
+ * Následující funkce jsou užitečné, ale nejsou nutné pro pochopení tohoto EDUBOXu:
+ * - Serial.parseInt()
+ * Převede načtený řetězec na celé číslo (int). Používá se pro přvedení textových příkazů obsahujících čísla na číselné hodnoty. string "96" → int 96
  * 
- * Nepoužité, ale užitečné funkce:
- * - Serial.readStringUntil('\n'): Čte řetězec až do nového řádku
- * - Serial.parseFloat(): Parsuje a vrací první desetinné číslo z přijímacího bufferu
- * - Serial.printf(format, ...): Formátovaný výstup jako v jazyce C - nutnost používat formátovací řetězce jako %d, %f, %s, %c, atd.
- * - Serial.write(data): Odesílá binární data do sériového portu
- * - Serial.flush(): Vyprázdní přijímací buffer
- * - Serial.availableForWrite(): Vrací počet bajtů, které lze okamžitě zapsat do bufferu
- * - Serial.setTimeout(ms): Nastaví timeout pro čtení dat
- * další je možné najít v dokumentaci Arduino: https://www.arduino.cc/en/Reference/Serial (CTRL + klik)
+ * - Serial.parseFloat()
+ * Převede načtený řetězec na desetinné číslo (float). Používá se pro přvedení textových příkazů obsahujících desetinná čísla na číselné hodnoty. string "3.14" → float 3.14
  * 
+ * - Serial.printf(format, %d, %s, ...)
+ * Formátovaný výstup podobný funkci printf v jazyce C. Umožňuje vytvářet složitější výstupy s proměnnými.
  * 
+ * - Serial.write(data)
+ * Odešle data jako binární hodnoty, na rozdíl od Serial.print(), který odesílá data jako text.
+ * 
+ * - Serial.flush()
+ * Vyprázdní vysílací buffer a zajistí, že všechna data jsou odeslána před pokračováním v programu.
+ * 
+ * - Serial.availableForWrite()
+ * Vrací počet bajtů, které lze ještě odeslat do vysílacího bufferu, aniž by došlo k jeho přetečení.
+ * 
+ * - Serial.setTimeout(ms)
+ * Nastaví časový limit pro funkce, které čekají na data (např. readStringUntil()). Pokud data nepřijdou do tohoto časového limitu, funkce se vrátí s tím, co bylo načteno do té doby.
+ *
  * Tento soubor obsahuje:
  * - inicializaci hardwaru (RGB LED, potenciometr)
  * - pět hotových příkladů práce s UARTem
  * - tři cvičení (pouze zadání, bez implementace)
+ * 
+ * Cílem je ukázat smysl UART komunikace a její praktické využití v reálných scénářích.
  */
 
-#include <Arduino.h>
 #include "EDUBOX_UART.hpp"
 
-/* =========================================================
-   DEFINICE PINŮ
-   ========================================================= */
-#define RGB_RED_PIN        /* doplň pin */
-#define RGB_GREEN_PIN      /* doplň pin */
-#define RGB_BLUE_PIN       /* doplň pin */
 
-#define POTENTIOMETER_PIN  /* doplň pin (analogový vstup) */
+#define RGB_RED_PIN          DoplnitPin
+#define RGB_GREEN_PIN        DoplnitPin
+#define RGB_BLUE_PIN         DoplnitPin
 
-/* =========================================================
-   GLOBÁLNÍ PROMĚNNÉ
-   ========================================================= */
+#define POTENTIOMETER_PIN    DoplnitAnalogyPin
+
+
 bool ledState = false;
 
 uint8_t redValue   = 0;
 uint8_t greenValue = 0;
 uint8_t blueValue  = 0;
 
-/* =========================================================
-   HARDWAROVÁ INICIALIZACE
-   ========================================================= */
-
 /**
  * @brief Inicializace hardwaru pro EDUBOX UART
  *
- * Funkce nastaví:
- * - výstupní pin pro LED
- * - výstupní piny RGB LED
- * - vstupní pin pro potenciometr
+ * @details
+ * Funkce nastaví všechny potřebné piny:
+ * - RGB LED (OUTPUT)
+ * - potenciometr (INPUT)
  *
- * Funkce je volána z setup() v main.cpp.
+ * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
  */
 void EDUBOX_uart_hwInit()
 {
@@ -103,19 +107,12 @@ void EDUBOX_uart_hwInit()
     pinMode(POTENTIOMETER_PIN, INPUT);
 }
 
-/* =========================================================
-   PŘÍKLADY
-   ========================================================= */
-
 /**
- * @brief Příklad 1 – UART jako výstup (výpis millis())
+ * @brief Ukázka – Výpis millis() (UART jako výstup)
  *
- * Program periodicky vypisuje aktuální hodnotu
- * systémového času funkce millis() do Serial Monitoru.
- *
- * Příklad demonstruje:
- * - jednosměrnou komunikaci ESP → PC
- * - použití Serial.println() pro přenos dat
+ * @details
+ * Program periodicky vypisuje aktuální hodnotu systémového času funkce millis()
+ * do Serial Monitoru.
  */
 void example_uartMillisPrint()
 {
@@ -124,76 +121,71 @@ void example_uartMillisPrint()
 }
 
 
+
 /**
- * @brief Příklad 2 – UART jako výstup (čtení potenciometru)
+ * @brief Ukázka – Čtení potenciometru (UART jako výstup)
  *
- * Program čte analogovou hodnotu z potenciometru
- * a vypisuje ji do Serial Monitoru.
- *
- * Neprobíhá žádné řízení z PC – UART slouží pouze
- * jako výstupní kanál pro data.
+ * @details
+ * Program čte analogovou hodnotu z potenciometru a vypisuje ji do Serial Monitoru.
+ * Neprobíhá žádné řízení z PC – UART slouží pouze jako výstupní kanál pro data.
  */
 void example_uartPotentiometerRead()
 {
     int potValue = analogRead(POTENTIOMETER_PIN);
     Serial.println(potValue);
-    delay(300);
+    delay(200);
 }
 
 
 /**
- * @brief Příklad 3 – UART jako vstup (LED ON / OFF)
+ * @brief Ukázka – Ovládání LED (UART jako vstup)
  *
- * Program čte znak z UARTu a podle něj
- * zapíná nebo vypíná LED.
- *
- * Očekávané příkazy z PC:
- * - '1' → LED ON
- * - '0' → LED OFF
- *
- * Současně se zapínají nebo vypínají
- * všechny tři segmenty RGB LED.
+ * @details
+ * Pomocí příkazů zadaným do sériového monitoru ve tvaru:
+ * 'ON'  → všechny tři segmenty LED jsou rozsvíceny
+ * 'OFF' → všechny tři segmenty LED jsou zhasnuty
+ * 
+ * ON a OFF představují logické hodnoty (1 a 0)
+ * 
+ * @note Výše uvedené příkazy jsou jedinými platnými příkazy = ostatní vstupy jsou ignorovány
  */
 void example_uartLedOnOff()
 {
     if (Serial.available())
     {
-        char command = Serial.read();
+        String input = Serial.readStringUntil('\n');
+        input.trim();
 
-        if (command == '1')
+        if (input == "ON")
         {
             ledState = true;
+            digitalWrite(RGB_RED_PIN, HIGH);
+            digitalWrite(RGB_GREEN_PIN, HIGH);
+            digitalWrite(RGB_BLUE_PIN, HIGH);
         }
-        else if (command == '0')
+        else if (input == "OFF")
         {
             ledState = false;
+            digitalWrite(RGB_RED_PIN, LOW);
+            digitalWrite(RGB_GREEN_PIN, LOW);
+            digitalWrite(RGB_BLUE_PIN, LOW);
         }
-
-
-        digitalWrite(RGB_RED_PIN, ledState);
-        digitalWrite(RGB_GREEN_PIN, ledState);
-        digitalWrite(RGB_BLUE_PIN, ledState);
     }
 }
 
-
 /**
- * @brief Příklad 4 – UART příkazy s parametrem (RGB LED)
+ * @brief Ukázka - Ovládání RGB LED hodnotou (UART jako vstup)
  *
- * Program přijímá textové příkazy s parametrem
- * ve tvaru:
- *
- * - RED 150
- * - GREEN 80
- * - BLUE 50
+ * @details
+ * Pomocí příkazů zadaným do sériového monitoru ve tvaru:
+ * 'RED=150'   → nastaví červenou barvu na hodnotu 150
+ * 'GREEN=80'  → nastaví zelenou barvu na hodnotu 80
+ * 'BLUE=50'   → nastaví modrou barvu na hodnotu 50
  *
  * Hodnota 0–255 nastavuje jas daného segmentu RGB LED.
- * Jednotlivé barvy se NEvypínají automaticky.
- *
- * Pro vypnutí barvy je nutné explicitně zadat:
- * - RED 0
- * - GREEN 0
- * - BLUE 0
+ * Jednotlivé barvy se nevypínají automaticky – pro vypnutí je nutné zadat hodnotu 0.
+ * 
+ * @note Výše uvedené příkazy jsou jedinými platnými příkazy = ostatní vstupy jsou ignorovány
  */
 void example_uartRgbWithValue()
 {
@@ -202,37 +194,38 @@ void example_uartRgbWithValue()
         String input = Serial.readStringUntil('\n');
         input.trim();
 
-        if (input.startsWith("RED"))
+        if (input.startsWith("RED="))
         {
-            redValue = input.substring(3).toInt();
+            int redValue = input.substring(4).toInt();
+            analogWrite(RGB_RED_PIN, redValue);
         }
-        else if (input.startsWith("GREEN"))
+        else if (input.startsWith("GREEN="))
         {
-            greenValue = input.substring(5).toInt();
+            int greenValue = input.substring(6).toInt();
+            analogWrite(RGB_GREEN_PIN, greenValue);
         }
-        else if (input.startsWith("BLUE"))
+        else if (input.startsWith("BLUE="))
         {
-            blueValue = input.substring(4).toInt();
+            int blueValue = input.substring(5).toInt();
+            analogWrite(RGB_BLUE_PIN, blueValue);
         }
-
-        analogWrite(RGB_RED_PIN, redValue);
-        analogWrite(RGB_GREEN_PIN, greenValue);
-        analogWrite(RGB_BLUE_PIN, blueValue);
     }
 }
 
 
 /**
- * @brief Příklad 5 – Obousměrná UART komunikace (STATUS)
+ * @brief Ukázka STATUS – Obousměrná UART komunikace (UART jako vstup i výstup)
  *
- * Program reaguje na příkaz STATUS z PC
- * a vrací aktuální stav LED a RGB LED.
- *
- * Očekávaný příkaz:
- * - STATUS
- *
- * Odezva ESP:
- * - LED: ON / OFF
+ * @details
+ * Program umožňuje zapnout a vypnout LED pomocí příkazů zadaným do sériového monitoru:
+ * 'ON'  → LED se rozsvítí
+ * 'OFF' → LED zhasne
+ * 
+ * A také reaguje na příkaz 'STATUS' z PC a vrací aktuální stav LED:
+ * 'LED: ON'  → segmenty LED jsou rozsvíceny
+ * 'LED: OFF' → segmenty LED jsou zhasnuty
+ * 
+ * @note Výše uvedené příkazy jsou jedinými platnými příkazy = ostatní vstupy jsou ignorovány
  */
 void example_uartStatusResponse()
 {
@@ -241,7 +234,21 @@ void example_uartStatusResponse()
         String input = Serial.readStringUntil('\n');
         input.trim();
 
-        if (input == "STATUS")
+        if (input == "ON")
+        {
+            ledState = true;
+            digitalWrite(RGB_RED_PIN, HIGH);
+            digitalWrite(RGB_GREEN_PIN, HIGH);
+            digitalWrite(RGB_BLUE_PIN, HIGH);
+        }
+        else if (input == "OFF")
+        {
+            ledState = false;
+            digitalWrite(RGB_RED_PIN, LOW);
+            digitalWrite(RGB_GREEN_PIN, LOW);
+            digitalWrite(RGB_BLUE_PIN, LOW);
+        }
+        else if (input == "STATUS")
         {
             Serial.print("LED: ");
             Serial.println(ledState ? "ON" : "OFF");
@@ -249,81 +256,83 @@ void example_uartStatusResponse()
     }
 }
 
-/* =========================================================
-   CVIČENÍ – ÚKOLY
-   ========================================================= */
 
 /**
- * @brief Cvičení 1 – Řízení výpisu potenciometru (START / STOP)
+ * @brief Cvičení – Řízení výpisu potenciometru (START / STOP)
  *
- * Rozšiřte příklad čtení potenciometru tak,
- * aby bylo možné z PC řídit, zda se mají
- * hodnoty vypisovat nebo ne.
- *
- * Použijte příkazy:
+ * @details 
+ * Funkce je rozšířením ukázky výpisu hodnoty potenciometru.
+ * Kromě samotného čtení a výpisu hodnoty reaguje na příkazy ze sériového monitoru,
+ * které umožní uživateli spustit nebo zastavit periodický výpis hodnoty potenciometru.
+ * 
+ * Příkazy pro ovládání výpisu:
  * - START → zahájí periodický výpis hodnot
  * - STOP  → výpis zastaví
  *
- * Zaměřte se na:
- * - použití stavové proměnné
- * - oddělení příjmu příkazu a chování programu
+ * @todo Implementujte logiku funkce
+ *
+ * @note Použijte příkazy: Serial.readStringUntil(), analogRead(), millis(), Serial.println()
+ * 
+ * Není potřeba ošetřit jiné vstupy = ostatní vstupy jsou ignorovány
  */
-void task_uartStartStopPotentiometer()
+void exercise_uartStartStopPotentiometer()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
 
 
 /**
- * @brief Cvičení 2 – Rozšířený STATUS RGB LED
+ * @brief Cvičení – Rozšířený STATUS RGB LED
  *
- * Rozšiřte příkaz STATUS tak,
- * aby ESP32 vypisovalo aktuální hodnoty
- * jednotlivých RGB segmentů ve tvaru:
+ * @details
+ * Funkce umožňuje nastavovat intenzitu jednotlivých barevných kanálů RGB LED
+ * a současně vypisovat jejich aktuální hodnoty do Serial Monitoru.
+ * Stav LED je zde reprezentován hodnotami jednotlivých RGB složek.
+ * 
+ * Ukázka STATUS je rozšířena o vypisování aktuálních hodnot jednotlivých RGB segmentů ve tvaru:
+ * 'RED: 200'
+ * 'GREEN: 125'
+ * 'BLUE: 50'
+ * 
+ * Ovládání LED je tedy nyní řešeno analogově a nikoliv digitálně jako v ukázce.
+ * 
+ * @todo Implementujte logiku funkce
  *
- * RED: 200
- * GREEN: 125
- * BLUE: 50
- *
- * Zaměřte se na:
- * - formátování výstupu
- * - čitelnost odpovědi pro uživatele
+ * @note Použijte příkazy: analogWrite(), Serial.print(), Serial.println(), String.startsWith()
+ * 
+ * Není potřeba ošetřit jiné vstupy = ostatní vstupy jsou ignorovány
  */
-void task_uartRgbStatus()
+void exercise_uartRgbStatus()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
 
 
 /**
- * @brief Cvičení 3 – Řízení RGB LED s pravidly (pro šikovné)
+ * @brief Cvičení – Řízení RGB LED s pravidly (pro pokročilé)
  *
- * Vytvořte řídicí logiku pro RGB LED s následujícími pravidly:
- *
- * - červená barva může být zapnuta pouze tehdy,
- *   pokud je zelená nastavena alespoň na hodnotu 200
- *
- * - zelená barva může být zapnuta pouze tehdy,
- *   pokud je modrá nastavena alespoň na hodnotu 150
- *
- * - modrá barva nemá žádné omezení
- *
- * Pokud uživatel zadá příkaz, který porušuje pravidla,
- * ESP32:
+ * @details
+ * Funkce řídí jednotlivé barevné složky RGB LED na základě textových příkazů
+ * přijatých přes UART. Při nastavování barev jsou vyhodnocována definovaná pravidla
+ * - červená může být nastavena pouze pokud je zelená alespoň 200
+ * - zelená může být nastavena pouze pokud je modrá alespoň 150
+ * - modrá nemá žádné omezení
+ * 
+ * Pokud uživatel zadá příkaz, který porušuje pravidla, ESP32:
  * - změnu NEprovede
- * - vypíše do Serial Monitoru informaci,
- *   proč nebylo možné příkaz vykonat
- *
- * Příkaz STATUS:
- * - je dostupný pouze tehdy, pokud je modrá barva zapnuta nad hodnotu 50
+ * - vypíše důvod do Serial Monitoru, proč nebylo možné příkaz vykonat
+ * 
+ * Funkce také umožňuje podmíněný výpis stavu LED. Příkaz STATUS:
+ * - je dostupný pouze tehdy, pokud je modrá barva nastavena nad hodnotu 50
  * - vypisuje stav LED a hodnoty RGB
  *
- * Zaměřte se na:
- * - validaci vstupů
- * - návrh logických podmínek
- * - srozumitelnou komunikaci s uživatelem
+ * @todo Implementujte logiku funkce
+ *
+ * @note Použijte příkazy: analogWrite(), Serial.println(), String.startsWith(), podmínky if
+ * 
+ * Není potřeba ošetřit jiné vstupy = ostatní vstupy jsou ignorovány
  */
-void task_uartRgbRules()
-{
-    // TODO: doplnit řešení
+void exercise_uartRgbRules()
+{   
+    // Doplnit řešení
 }

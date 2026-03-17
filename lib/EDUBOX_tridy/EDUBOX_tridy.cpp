@@ -2,21 +2,14 @@
  * @file EDUBOX_tridy.cpp
  * @brief Výukový EDUBOX – základy práce s třídami (classes) v jazyce C++
  *
- * Tento EDUBOX slouží jako úvod do práce s třídami
- * v prostředí mikrokontroléru (ESP32, Arduino framework).
+ * Připomenutí: co je třída?
+ * Třída představuje vlastní datový typ, který umožňuje spojit data a funkce,
+ * které spolu logicky souvisí, do jednoho celku.
+ * V embedded programování se třídy často používají jako obal kolem hardwaru
+ * nebo určité části programu, což pomáhá zpřehlednit strukturu kódu.
  *
- * Třída je zde chápána jako:
- * - vlastní datový typ
- * - obal kolem hardwaru nebo logiky
- * - nástroj pro zpřehlednění a strukturování kódu
- *
- * Nejde o akademické OOP, ale o praktický nástroj
- * použitelný v reálných embedded projektech.
- *
- * ---
- *
- * ## Proč používat třídy
- *
+ * Proč používat třídy?
+ * 
  * Bez tříd:
  * - mnoho globálních proměnných
  * - duplicitní kód
@@ -26,71 +19,68 @@
  * - data a funkce, které spolu souvisí, jsou na jednom místě
  * - každá instance má vlastní stav
  * - kód je přehlednější a lépe se rozšiřuje
+ * 
+ * V tomto EDUBOXu je třída použita jako jednoduchý a praktický nástroj,
+ * nikoliv jako čistě teoretický objektově orientovaný koncept.
  *
- * ---
  *
- * ## Použité prvky jazyka C++ (v tomto EDUBOXu)
+ * Použité prvky jazyka C++ (v tomto EDUBOXu)
  *
  * - class
+ *   Definuje vlastní datový typ.
+ *
  * - konstruktor
+ *   Slouží k inicializaci objektu při jeho vytvoření.
+ *
  * - public / private
+ *   Určuje, které části třídy jsou přístupné zvenčí a které jsou pouze interní.
+ *
  * - metody třídy
+ *   Funkce definované uvnitř třídy, které pracují s daty objektu.
+ *
  * - vytváření instancí objektů
+ *   Umožňuje vytvořit více samostatných objektů stejné třídy.
  *
- * Tyto prvky jsou plně dostačující pro základní
- * a velmi časté použití tříd v embedded aplikacích.
- *
- * ---
- *
- * ## Nepoužité prvky jazyka C++ (v tomto EDUBOXu NEPOUŽITY)
- *
- * - dědičnost
- * - virtual funkce
- * - šablony (templates)
- * - dynamická alokace paměti (new / delete)
- *
- *
- * ---
+ * Tyto prvky jsou plně dostačující pro základní a velmi časté použití tříd
+ * v jednoduchých embedded aplikacích.
  *
  * Tento soubor obsahuje:
  * - definici jednoduché třídy SimpleLed
- * - tři hotové příklady použití třídy
+ * - tři hotové ukázky použití třídy
  * - tři cvičení (pouze zadání, bez implementace)
  *
- * Cílem EDUBOXu je pochopit:
- * - co je třída
- * - proč existuje public a private část
- * - jak a proč se vytvářejí instance objektů
+ * Cílem EDUBOXu je ukázat, jak lze pomocí tříd zpřehlednit práci s hardwarem
+ * a jak lze vytvářet více objektů se stejným chováním, ale s vlastním stavem.
  */
 
-#include <Arduino.h>
 #include "EDUBOX_tridy.hpp"
 
-/* =========================================================
-   DEFINICE PINŮ
-   ========================================================= */
-#define LED1_PIN    25
-#define LED2_PIN    24
+#define LED_PIN_1    DoplnitPin
+#define LED_PIN_2    DoplnitPin
 
-/* =========================================================
-   DEFINICE TŘÍDY
-   ========================================================= */
+#define BUZZER_PIN    DoplnitPin
+
+void EDUBOX_tridy_hwInit()
+{
+    pinMode(LED_PIN_1, OUTPUT);
+    pinMode(LED_PIN_2, OUTPUT);
+
+    pinMode(BUZZER_PIN, OUTPUT);
+}
 
 /**
  * @class SimpleLed
  * @brief Jednoduchá třída pro ovládání LED
  *
- * Tato třída slouží jako jednoduchý příklad,
- * jak lze zapouzdřit ovládání jednoho hardwarového prvku
- * (LED diody) do samostatného objektu.
+ * Tato třída slouží jako jednoduchý příklad zapouzdření ovládání
+ * jednoho hardwarového prvku do samostatného objektu.
  *
  * Třída obsahuje:
- * - data (na kterém pinu je LED připojena)
- * - funkce (co lze s LED dělat)
+ * - informaci o použitém pinu
+ * - metody pro zapnutí, vypnutí a přepnutí stavu LED
  *
- * Díky tomu:
- * - není potřeba používat globální proměnné
- * - lze snadno vytvořit více LED se stejným chováním
+ * Díky tomu je možné snadno vytvářet více objektů stejné třídy,
+ * které ovládají různé LED, ale používají stejnou logiku.
  */
 class SimpleLed
 {
@@ -98,86 +88,53 @@ public:
     /**
      * @brief Konstruktor třídy SimpleLed
      *
-     * Konstruktor je funkce, která se zavolá automaticky
-     * při vytvoření objektu třídy.
+     * Konstruktor uloží číslo pinu, nastaví jeho režim jako výstup
+     * a uvede LED do výchozího vypnutého stavu.
      *
-     * Používá se zde k:
-     * - uložení čísla pinu
-     * - inicializaci hardwaru (nastavení pinMode)
-     *
-     * Konstruktor je PUBLIC,
-     * protože objekt musí být možné vytvořit
-     * z jiných částí programu (např. v main.cpp).
-     *
-     * @param pin Číslo pinu, na který je LED připojena
+     * @param pin Číslo pinu, ke kterému je LED připojena
      */
     SimpleLed(int pin);
 
     /**
      * @brief Zapne LED
      *
-     * Tato metoda:
-     * - nastaví výstupní pin do log. 1
-     *
-     * Metoda je PUBLIC,
-     * protože zapnutí LED je akce,
-     * kterou má mít uživatel objektu povolenu.
+     * Metoda nastaví výstupní pin do logické úrovně HIGH
+     * a uloží informaci o zapnutém stavu LED.
      */
     void on();
 
     /**
      * @brief Vypne LED
      *
-     * Tato metoda:
-     * - nastaví výstupní pin do log. 0
-     *
-     * Stejně jako metoda on() je PUBLIC,
-     * protože představuje základní chování LED.
+     * Metoda nastaví výstupní pin do logické úrovně LOW
+     * a uloží informaci o vypnutém stavu LED.
      */
     void off();
 
     /**
-     * @brief Přepne stav LED (zapnuto / vypnuto)
+     * @brief Přepne aktuální stav LED
      *
-     * Metoda využívá vnitřní stav objektu
-     * a podle něj LED zapne nebo vypne.
-     *
-     * Tato metoda demonstruje,
-     * že třída může uchovávat vlastní stav.
+     * Metoda podle aktuálně uloženého stavu rozhodne,
+     * zda má být LED zapnuta nebo vypnuta.
      */
     void toggle();
 
 private:
     /**
-     * @brief Číslo pinu, ke kterému je LED připojena
+     * @brief Pin připojené LED
      *
-     * Tento atribut je PRIVATE,
-     * protože:
-     * - uživatel objektu nemá důvod pin měnit
-     * - chráníme vnitřní stav objektu
-     *
-     * Pin je nastaven pouze v konstruktoru
-     * a poté používán interně metodami třídy.
+     * Ukládá číslo výstupního pinu, na kterém je daná LED připojena.
      */
     int _pin;
 
     /**
      * @brief Aktuální stav LED
      *
-     * true  = LED svítí
-     * false = LED je zhasnutá
-     *
-     * Tento atribut je PRIVATE,
-     * protože:
-     * - stav LED má spravovat pouze samotná třída
-     * - zamezíme nekonzistentnímu chování
+     * true znamená zapnutou LED, false znamená vypnutou LED.
      */
     bool _isOn;
 };
 
-/* =========================================================
-   IMPLEMENTACE TŘÍDY
-   ========================================================= */
 
 SimpleLed::SimpleLed(int pin)
 {
@@ -212,49 +169,31 @@ void SimpleLed::toggle()
     }
 }
 
-/* =========================================================
-   GLOBÁLNÍ OBJEKTY (INSTANCE TŘÍDY)
-   ========================================================= */
+SimpleLed led1(LED_PIN_1);
+SimpleLed led2(LED_PIN_2);
 
 /**
- * Vytvoření dvou instancí stejné třídy.
+ * @brief Ukázka – Ovládání jedné LED pomocí objektu
  *
- * Každý objekt:
- * - používá jiný pin
- * - má vlastní vnitřní stav
- *
- * Přesto používají stejný kód třídy SimpleLed.
- */
-SimpleLed led1(LED1_PIN);
-SimpleLed led2(LED2_PIN);
-
-/* =========================================================
-   PŘÍKLADY
-   ========================================================= */
-
-/**
- * @brief Příklad 1 – Ovládání jedné LED pomocí objektu
- *
- * Ukazuje:
- * - vytvoření instance třídy
- * - volání metod objektu
- *
- * LED se střídavě zapíná a vypíná.
+ * @details
+ * Objekt led1 postupně zapne a vypne LED připojenou na svém pinu.
+ * Ukázka demonstruje základní volání metod objektu třídy.
  */
 void example_singleLed()
 {
     led1.on();
     delay(500);
+
     led1.off();
     delay(500);
 }
 
 /**
- * @brief Příklad 2 – Dvě LED jako dva objekty
+ * @brief Ukázka – Dvě LED jako dva objekty stejné třídy
  *
- * Ukazuje:
- * - že jedna třída může mít více instancí
- * - každá instance ovládá jiný hardware
+ * @details
+ * Dva různé objekty stejné třídy ovládají dvě různé LED.
+ * Každý objekt má vlastní stav a pracuje se svým vlastním pinem.
  */
 void example_twoLeds()
 {
@@ -262,74 +201,70 @@ void example_twoLeds()
     led2.off();
     delay(500);
 
-    led1.off(); 
+    led1.off();
     led2.on();
     delay(500);
 }
 
 /**
- * @brief Příklad 3 – Přepínání stavu pomocí metody toggle()
+ * @brief Ukázka – Přepínání stavu LED pomocí metody toggle()
  *
- * Ukazuje:
- * - použití vnitřního stavu objektu
- * - že objekt „ví“, v jakém je stavu
+ * @details
+ * Metoda toggle() využívá interně uložený stav objektu a podle něj LED
+ * buď zapne, nebo vypne.
  */
 void example_toggleLed()
 {
     led1.toggle();
-    delay(300);
-}
-
-/* =========================================================
-   CVIČENÍ – ÚKOLY
-   ========================================================= */
-
-/**
- * @brief Cvičení 1 – Doplnění metod třídy
- *
- * Vytvořte novou třídu (např. SimpleBuzzer),
- * která bude:
- * - uchovávat pin bzučáku
- * - obsahovat metody pro zapnutí a vypnutí zvuku
- *
- * Zaměřte se na:
- * - správné použití public / private
- * - inicializaci pinu v konstruktoru
- */
-void task_createSimpleClass()
-{
-    // TODO: doplnit řešení
+    delay(250);
 }
 
 /**
- * @brief Cvičení 2 – Rozšíření třídy o nový atribut
+ * @brief Cvičení – Použití třídy SimpleLed
  *
- * Rozšiřte třídu SimpleLed o:
- * - nový atribut (např. blinkDelay)
- * - metodu, která LED rozbliká podle této hodnoty
+ * @details
+ * Funkce vytvoří objekt třídy (instanci) SimpleLed pro LED připojenou na pinu LED_PIN_1
+ * a pomocí metod objektu LED zapne a následně vypne.
  *
- * Zaměřte se na:
- * - ukládání hodnot do atributů třídy
- * - použití těchto hodnot v metodách
+ * @todo Implementujte logiku funkce
+ *
+ * @note Použijte příkazy: konstruktor třídy, on(), off(), delay()
  */
-void task_extendClass()
+void exercise_useSimpleClass()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
 
 /**
- * @brief Cvičení 3 – Návrh vlastní třídy komponenty
+ * @brief Cvičení – Rozšíření třídy o nový atribut a metodu blink()
  *
- * Navrhněte vlastní třídu (např. Button),
- * která:
- * - uchovává číslo vstupního pinu
- * - umožňuje zjistit aktuální stav tlačítka
+ * @details
+ * Funkce využívá rozšířenou třídu, která kromě čísla pinu uchovává také
+ * časovou prodlevu pro blikání LED. Metoda blink() LED rozsvítí a zhasne
+ * podle této uložené hodnoty.
  *
- * Zaměřte se na:
- * - návrh rozhraní třídy
- * - rozhodnutí, co má být public a co private
+ * @todo Implementujte logiku funkce
+ *
+ * @note Použijte příkazy: konstruktor třídy, digitalWrite(), pinMode(), delay()
  */
-void task_designOwnClass()
+void exercise_useExtendedClass()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
+}
+
+/**
+ * @brief Cvičení – Vytvoření vlastní třídy pro jiný hardware
+ *
+ * @details
+ * Funkce pracuje s novou třídou, která zapouzdřuje ovládání jiného prvku,
+ * například bzučáku. Třída uchovává číslo pinu a poskytuje metody
+ * pro zapnutí a vypnutí výstupu.
+ *
+ * @todo Implementujte logiku funkce
+ *
+ * @note Použijte příkazy: class, public, private, konstruktor třídy, digitalWrite(), pinMode()
+ */
+void exercise_createSimpleClass()
+{
+    // Doplnit řešení
 }

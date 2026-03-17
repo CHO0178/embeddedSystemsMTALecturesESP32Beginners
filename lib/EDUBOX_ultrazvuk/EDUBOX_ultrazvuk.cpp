@@ -1,84 +1,104 @@
- /**
- * @file EDUBOX_knihovny_ultrazvuk.cpp
- * @brief Výukový EDUBOX – práce s knihovnou NewPing a ultrazvukovým senzorem vzdálenosti HC-SR04
- * Princip: vysílá ultrazvukový impuls a měří čas, za který se vrátí odražený signál.
- * 
- * ## Použité příkazy knihovny NewPing (v tomto EDUBOXu)
+/**
+ * @file EDUBOX_ultrazvuk.cpp
+ * @brief Výukový EDUBOX – měření vzdálenosti ultrazvukovým senzorem HC-SR04 bez použití knihovny.
  *
- * - NewPing sonar(triggerPin, echoPin, maxDistance);
- *   Vytvoří objekt ultrazvukového senzoru a nastaví jeho piny.
+ * Připomenutí: princip ultrazvukového senzoru
+ * Ultrazvukový senzor HC-SR04 funguje tak, že vyšle krátký ultrazvukový impuls
+ * a měří dobu, za kterou se odražený signál vrátí zpět.
+ * Na základě této doby lze vypočítat vzdálenost objektu od senzoru.
  *
- * - sonar.ping_cm();
- *   Vrátí změřenou vzdálenost v centimetrech.
+ * V tomto EDUBOXu je měření realizováno přímo pomocí základních funkcí Arduino prostředí,
+ * bez použití externí knihovny.
  *
- * Tyto příkazy jsou plně dostačující pro běžné měření vzdálenosti
- * a jsou použity ve všech příkladech tohoto EDUBOXu.
+ * Použité příkazy pro obsluhu ultrazvukového senzoru (v tomto EDUBOXu)
+ * - delayMicroseconds(us);
+ *   Vytvoří krátké zpoždění v mikrosekundách.
  *
- * ---
+ * - pulseIn(pin, value, timeout);
+ *   Změří délku pulzu na vstupním pinu.
+
+ * - tone(pin, frequency);
+ *   Spustí generování tónu na bzučáku.
  *
- * ## Další dostupné příkazy knihovny NewPing (v tomto EDUBOXu NEPOUŽITY)
+ * - noTone(pin);
+ *   Vypne generování tónu na bzučáku.
  *
- * - sonar.ping();
- *   Vrací dobu letu ultrazvuku v mikrosekundách.
- *
- * - sonar.ping_median(iterations);
- *   Vrací průměrnou hodnotu z více měření.
- *
- * - sonar.convert_cm(time);
- *   Převod času letu na vzdálenost v centimetrech.
- *
- * Tyto funkce nejsou nutné pro základní pochopení práce
- * s ultrazvukovým senzorem a nejsou v tomto EDUBOXu použity.
- *
- * ---
- * 
  * Tento soubor obsahuje:
  * - inicializaci hardwaru pro ultrazvukový senzor, RGB LED a bzučák
- * - tři hotové příklady použití senzoru
+ * - tři hotové ukázky použití senzoru
  * - tři cvičení (pouze zadání, bez implementace)
  *
- * Cílem je praktické použití ultrazvukového senzoru
- * v reálných scénářích (indikace vzdálenosti, parkovací senzory).
+ * Cílem je pochopit princip měření vzdálenosti pomocí ultrazvukového senzoru
+ * a jeho praktické využití.
  */
 
-#include <Arduino.h>
-#include <NewPing.h>
+
 #include "EDUBOX_ultrazvuk.hpp"
 
-/* =========================================================
-   DEFINICE PINŮ A KONSTANT
-   ========================================================= */
-#define ULTRASONIC_TRIG_PIN     /* doplň pin */
-#define ULTRASONIC_ECHO_PIN     /* doplň pin */
+#define ULTRASONIC_TRIG_PIN     DoplnitPin
+#define ULTRASONIC_ECHO_PIN     DoplnitPin
 #define ULTRASONIC_MAX_DISTANCE 200   // maximální vzdálenost v cm
 
-#define RGB_RED_PIN             /* doplň pin */
-#define RGB_GREEN_PIN           /* doplň pin */
-#define RGB_BLUE_PIN            /* doplň pin */
+#define RGB_RED_PIN             DoplnitPin
+#define RGB_GREEN_PIN           DoplnitPin
+#define RGB_BLUE_PIN            DoplnitPin
 
-#define BUZZER_PIN              /* doplň pin */
+#define BUZZER_PIN              DoplnitPin
+ 
+/**
+ * @brief Měření vzdálenosti pomocí ultrazvukového senzoru
+ * @details
+ * Funkce vyšle ultrazvukový impuls a změří dobu, za kterou se odražený signál vrátí zpět.
+ * Na základě této doby vypočítá vzdálenost v centimetrech.
+ * 
+ * Vzdálenost se vypočítá podle vzorce: vzdálenost (cm) = doba (us) / 58
+ * Vysvětlení čísla 58: zvuk se pohybuje rychlostí přibližně 340 m/s, což odpovídá 29 mikrosekundám na centimetr tam a zpět (2 * 29 = 58).
+ * 
+ * Funkce také zohledňuje situaci, kdy není detekován žádný objekt (doba měření je 0) nebo je objekt mimo dosah senzoru, a v takovém případě vrací 0.
+ * Využívá funkci pulseIn() s nastaveným timeoutem, aby se předešlo zablokování programu při nedetekování objektu.
+ * 
+ * pulseIn(PIN, VALUE, TIMEOUT)
+ * - PIN: připojení echo pinu ultrazvukového senzoru
+ * - VALUE: logická úroveň, kterou chceme měřit (HIGH pro měření doby, kdy je echo pin v log. 1)
+ * - TIMEOUT: maximální doba měření v mikrosekundách (v tomto případě odpovídající maximální vzdálenosti senzoru)
+ *  
+ * @note Tuto funkci je možné využít libovolně ve všech cvičeních, protože princip měření vzdálenosti je vždy totožný.
+ * 
+ * @return Vzdálenost v centimetrech typu long
 
-/* =========================================================
-   GLOBÁLNÍ PROMĚNNÉ
-   ========================================================= */
-NewPing sonar(ULTRASONIC_TRIG_PIN, ULTRASONIC_ECHO_PIN, ULTRASONIC_MAX_DISTANCE);
+ */
+long ultrasonic_measure_cm()
+{
+    digitalWrite(ULTRASONIC_TRIG_PIN, LOW);     // Ujistíme se, že TRIG pin je na začátku v log. 0
+    delayMicroseconds(2);                       // Krátké zpoždění pro stabilizaci senzoru
+    digitalWrite(ULTRASONIC_TRIG_PIN, HIGH);    // Vyslání ultrazvukového impulsu
+    delayMicroseconds(10);                      // Impuls musí být alespoň 10 mikrosekund dlouhý
+    digitalWrite(ULTRASONIC_TRIG_PIN, LOW);     // Ukončení vysílání impulsu
+ 
+    long duration = pulseIn(ULTRASONIC_ECHO_PIN, HIGH, ULTRASONIC_MAX_DISTANCE * 58UL); // Inicializace příkazu měření doby s timeoutem odpovídajícím maximální vzdálenosti senzoru
 
-/* =========================================================
-   HARDWAROVÁ INICIALIZACE
-   ========================================================= */
+    if (duration == 0)      // žádný objekt nebyl detekován (doba měření je 0) / nebo je objekt mimo dosah senzoru
+        return 0;           // Bezpečný přístup v automatizaci = vracíme 0 pro zamezení případnému chybného chování systému
+
+    return duration / 58;   // Výpočet vzdálenosti v centimetrech podle vzorce: vzdálenost (cm) = doba (us) / 58
+}
 
 /**
  * @brief Inicializace hardwaru pro EDUBOX ultrazvuk
  *
- * Funkce nastaví:
- * - piny RGB LED
- * - pin pro bzučák
- * - inicializuje ultrazvukový senzor
+ * @details 
+ * Funkce nastaví všechny potřebné piny pro správnou funkci ultrazvukového senzoru a přidružených komponent:
+ * - ultrazvukový senzor
+ * - RGB LED
+ * - bzučák
  *
- * Funkce je volána z setup() v main.cpp.
+ * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
  */
 void EDUBOX_ultrazvuk_hwInit()
 {
+    pinMode(ULTRASONIC_TRIG_PIN, OUTPUT);
+    pinMode(ULTRASONIC_ECHO_PIN, INPUT);
+
     pinMode(RGB_RED_PIN, OUTPUT);
     pinMode(RGB_GREEN_PIN, OUTPUT);
     pinMode(RGB_BLUE_PIN, OUTPUT);
@@ -86,33 +106,31 @@ void EDUBOX_ultrazvuk_hwInit()
     pinMode(BUZZER_PIN, OUTPUT);
 }
 
-/* =========================================================
-   PŘÍKLADY
-   ========================================================= */
-
 /**
- * @brief Příklad 1 – Základní měření vzdálenosti
+ * @brief Ukázka – Základní měření vzdálenosti
  *
- * Změří vzdálenost pomocí ultrazvukového senzoru
- * a vypíše ji do konzole pomocí Serial.println().
+ * @details
+ * Funkce změří vzdálenost pomocí ultrazvukového senzoru
+ * a vypíše ji do sériové konzole.
  */
 void example_distanceSerialPrint()
 {
-    int distance = sonar.ping_cm();
+    int distance = ultrasonic_measure_cm();
     Serial.println(distance);
     delay(500);
 }
 
 /**
- * @brief Příklad 2 – Indikace vzdálenosti pomocí RGB LED
+ * @brief Ukázka – Indikace vzdálenosti pomocí RGB LED
  *
- * Podle vzdálenosti se rozsvítí:
- * - zelená barva (daleko)
- * - červená barva (blízko)
+ * @details
+ * Podle změřené vzdálenosti se rozsvítí jedna ze dvou barev RGB LED.
+ * Pokud je objekt dále než stanovená mez, svítí zelená LED.
+ * Pokud je objekt blíže, svítí červená LED.
  */
 void example_distanceRgbIndicator()
 {
-    int distance = sonar.ping_cm();
+    int distance = ultrasonic_measure_cm();
 
     if (distance > 50)
     {
@@ -130,16 +148,16 @@ void example_distanceRgbIndicator()
 }
 
 /**
- * @brief Příklad 3 – Parkovací senzor (bzučák)
+ * @brief Ukázka – Parkovací senzor s bzučákem
  *
- * Podle vzdálenosti:
- * - daleko: žádný zvuk
- * - středně: pomalé pípání
- * - blízko: rychlé pípání
+ * @details
+ * Podle změřené vzdálenosti se mění zvuková signalizace bzučáku.
+ * Při velké vzdálenosti je bzučák vypnutý, při střední vzdálenosti pípá pomalu
+ * a při malé vzdálenosti pípá rychleji.
  */
 void example_parkingBuzzer()
 {
-    int distance = sonar.ping_cm();
+    int distance = ultrasonic_measure_cm();
 
     if (distance > 80)
     {
@@ -161,112 +179,56 @@ void example_parkingBuzzer()
     }
 }
 
-/* =========================================================
-   CVIČENÍ – ÚKOLY
-   ========================================================= */
-
 /**
- * @brief Cvičení 1 – Plynulý barevný indikátor vzdálenosti
+ * @brief Cvičení – Barevná signalizace vzdálenosti pomocí RGB LED
  *
- * Cílem tohoto cvičení je převést měřenou vzdálenost
- * z ultrazvukového senzoru na vizuální informaci pomocí RGB LED.
+ * @details 
+ * Funkce průběžně měří vzdálenost ultrazvukovým senzorem
+ * a podle několika pásem vzdálenosti nastavuje barvu RGB LED.
+ * Pro různé rozsahy vzdálenosti bude svítit například modrá, zelená,
+ * oranžová nebo červená barva.
  *
- * Program musí:
- * - průběžně měřit vzdálenost v centimetrech
- * - podle hodnoty vzdálenosti rozdělit měření do několika pásem
- * - každému pásmu přiřadit jinou barvu RGB LED
- *
- * Požadované barevné zóny:
- * - velmi daleko (nad X cm): modrá
- * - střední vzdálenost: zelená
- * - blízký objekt: oranžová (kombinace červené a zelené)
- * - velmi blízko: červená
- *
- * Hodnoty vzdáleností (prahy) si můžete zvolit sami
- * a zapíše je přímo do podmínek v kódu.
- *
- * Zaměřte se na:
- * - práci s podmínkami if / else if / else
- * - kombinaci barev RGB LED
- * - přehlednost a čitelnost kódu
+ * @todo Implementujte logiku funkce
+ * 
+ * @note Použijte příkazy: digitalWrite(), delay()
  */
-void task_distanceColorScale()
+void exercise_distanceColorScale()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
 
-
 /**
- * @brief Cvičení 2 – Parkovací senzor: kombinace RGB LED a bzučáku
+ * @brief Cvičení – Parkovací asistent s LED signalizací
  *
- * V tomto cvičení vytvořte jednoduchý parkovací asistent,
- * který kombinuje světelnou a zvukovou signalizaci.
- *
- * Program musí:
- * - průběžně měřit vzdálenost ultrazvukovým senzorem
- * - rozdělit vzdálenost do čtyř jasně definovaných úrovní
- * - pro každou úroveň aktivovat jinou kombinaci LED a bzučáku
- *
- * Požadované úrovně:
- *
- * 1) Objekt je velmi daleko
- *    - RGB LED: modrá
- *    - bzučák: vypnutý
- *
- * 2) Objekt se přibližuje (úroveň 1)
- *    - RGB LED: zelená
- *    - bzučák: pomalé přerušované pípání
- *
- * 3) Objekt je blízko (úroveň 2)
- *    - RGB LED: oranžová
- *    - bzučák: rychlejší pípání s vyšší frekvencí
- *
- * 4) Objekt je velmi blízko (kritická vzdálenost)
- *    - RGB LED: červená
- *    - bzučák: trvalý tón
- *
- * Prahové vzdálenosti i frekvence tónů si můžete zvolit sami.
- *
- * Zaměřte se na:
- * - přehlednou strukturu podmínek
- * - správné použití funkcí tone() a noTone()
- * - sladění světelné a zvukové signalizace
+ * @details
+ * Funkce vytváří jednoduchý parkovací asistent, který podle změřené vzdálenosti
+ * kombinuje světelnou signalizaci RGB LED a zvukovou signalizaci bzučáku.
+ * Pro různé úrovně vzdálenosti se mění barva LED i chování bzučáku.
+ * 
+ * @todo Implementujte logiku funkce
+ * 
+ * @note Použijte příkazy: digitalWrite(), tone(), noTone(), delay()
  */
-void task_ledBuzzerLevels()
+void exercise_ledBuzzerLevels()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
 
-
 /**
- * @brief Cvičení 3 – Ultrazvukový alarm s hysterezí (pro pokročilé)
+ * @brief Cvičení – Ultrazvukový alarm s hysterezí
  *
- * Toto cvičení simuluje bezpečnostní nebo ochranný systém,
- * který reaguje na přiblížení objektu.
- *
- * Program musí:
- * - měřit vzdálenost ultrazvukovým senzorem
- * - při překročení kritické vzdálenosti AKTIVOVAT alarm
- * - alarm zůstane aktivní, i když se objekt mírně oddálí
- *
- * Chování alarmu:
- * - pokud vzdálenost klesne pod dolní mez → alarm se zapne
- * - pokud je alarm zapnutý, zůstává aktivní,
- *   dokud vzdálenost nepřekročí horní mez
- *
- * Alarm je tvořen:
- * - červenou RGB LED
- * - zvukovým signálem bzučáku
- *
- * Rozdíl mezi dolní a horní mezí se nazývá hystereze
- * a zabraňuje neustálému zapínání a vypínání alarmu.
- *
- * Zaměřte se na:
- * - použití stavové proměnné (např. bool alarmActive)
- * - pochopení principu hystereze
- * - návrh stabilního chování systému
+ * @details
+ * Funkce sleduje vzdálenost objektu pomocí ultrazvukového senzoru
+ * a při přiblížení pod kritickou mez aktivuje alarm.
+ * Alarm zůstává aktivní i při mírném oddálení objektu
+ * a vypne se až po překročení vyšší vypínací meze.
+ * Tím je vytvořena hystereze, která zajišťuje stabilnější chování systému.
+ * 
+ * @todo Implementujte logiku funkce
+ * 
+ * @note Použijte příkazy: digitalWrite(), tone(), noTone()
  */
-void task_ultrasonicAlarm()
+void exercise_ultrasonicAlarm()
 {
-    // TODO: doplnit řešení
+    // Doplnit řešení
 }
