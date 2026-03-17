@@ -347,21 +347,20 @@
 #include "EDUBOX_opakovaniZakladu.hpp"
 
 // INPUTS
-#define BTN_PIN                    2
-#define POT_PIN                    4
-
+#define BTN_PIN                    DoplnitPin
+#define POT_PIN                    DoplnitPin
 // OUTPUTS
-#define DICE_LED_PIN_0             5
-#define DICE_LED_PIN_1             12
-#define DICE_LED_PIN_2             13
-#define DICE_LED_PIN_3             14
-#define DICE_LED_PIN_4             25
-#define DICE_LED_PIN_5             26
-#define DICE_LED_PIN_6             27
+#define DICE_LED_PIN_0             DoplnitPin
+#define DICE_LED_PIN_1             DoplnitPin
+#define DICE_LED_PIN_2             DoplnitPin
+#define DICE_LED_PIN_3             DoplnitPin
+#define DICE_LED_PIN_4             DoplnitPin
+#define DICE_LED_PIN_5             DoplnitPin
+#define DICE_LED_PIN_6             DoplnitPin
 // Pro exercise_extendedDiceDisplay:
-#define DICE_LED_PIN_7          32
-#define DICE_LED_PIN_8          33
-#define DICE_LED_PIN_9          34
+#define DICE_LED_PIN_7             DoplnitPin
+#define DICE_LED_PIN_8             DoplnitPin
+#define DICE_LED_PIN_9             DoplnitPin
 
 #define LED_GREEN_1                DICE_LED_PIN_1
 #define LED_GREEN_2                DICE_LED_PIN_2
@@ -370,7 +369,7 @@
 #define LED_YELLOW_2               DICE_LED_PIN_5
 #define LED_RED                    DICE_LED_PIN_6
 
-#define LED_BLUE                   36
+#define LED_BLUE                   DoplnitPin
 
 #define RGB_RED                    LED_RED
 #define RGB_GREEN                  LED_GREEN_1
@@ -451,7 +450,7 @@ void EDUBOX_opakovaniZakladu_hwInitRollingDice()
  * Ukázka demonstruje základní použití konstrukce if / else.
  */
 void example_holdBtnLightLed()
-{\
+{
     if (digitalRead(BTN_PIN) == LOW)
     {
         digitalWrite(LED_BLUE, HIGH);
@@ -553,7 +552,7 @@ void example_gameDice()
 void example_vuMeterWithPotentiometer()
 {
     int value = analogRead(POT_PIN);
-    int level = map(value, 0, 1023, 0, 7);
+    int level = map(value, 0, 4095, 0, 6);
 
     for (int i = 0; i < 6; i++)
     {
