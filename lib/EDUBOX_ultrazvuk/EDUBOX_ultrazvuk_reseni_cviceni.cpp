@@ -19,31 +19,48 @@
 
 #define BUZZER_PIN              DoplnitPin
 
+/**
+ * @brief Měření vzdálenosti pomocí ultrazvukového senzoru
+ * @details
+ * Funkce vyšle ultrazvukový impuls a změří dobu, za kterou se odražený signál vrátí zpět.
+ * Na základě této doby vypočítá vzdálenost v centimetrech.
+ * 
+ * Vzdálenost se vypočítá podle vzorce: vzdálenost (cm) = doba (us) / 58
+ * Vysvětlení čísla 58: zvuk se pohybuje rychlostí přibližně 340 m/s, což odpovídá 29 mikrosekundám na centimetr tam a zpět (2 * 29 = 58).
+ * 
+ * Funkce také zohledňuje situaci, kdy není detekován žádný objekt (doba měření je 0) nebo je objekt mimo dosah senzoru, a v takovém případě vrací 0.
+ * Využívá funkci pulseIn() s nastaveným timeoutem, aby se předešlo zablokování programu při nedetekování objektu.
+ * 
+ * pulseIn(PIN, VALUE, TIMEOUT)
+ * - PIN: připojení echo pinu ultrazvukového senzoru
+ * - VALUE: logická úroveň, kterou chceme měřit (HIGH pro měření doby, kdy je echo pin v log. 1)
+ * - TIMEOUT: maximální doba měření v mikrosekundách (v tomto případě odpovídající maximální vzdálenosti senzoru)
+ *  
+ * @note Tuto funkci je možné využít libovolně ve všech cvičeních, protože princip měření vzdálenosti je vždy totožný.
+ * 
+ * @return Vzdálenost v centimetrech typu long
+ */
 long ultrasonic_measure_cm()
 {
-    digitalWrite(ULTRASONIC_TRIG_PIN, LOW);
-    delayMicroseconds(2);
-    digitalWrite(ULTRASONIC_TRIG_PIN, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(ULTRASONIC_TRIG_PIN, LOW);
+    digitalWrite(ULTRASONIC_TRIG_PIN, LOW);     // Ujistíme se, že TRIG pin je na začátku v log. 0
+    delayMicroseconds(2);                       // Krátké zpoždění pro stabilizaci senzoru
+    digitalWrite(ULTRASONIC_TRIG_PIN, HIGH);    // Vyslání ultrazvukového impulsu
+    delayMicroseconds(10);                      // Impuls musí být alespoň 10 mikrosekund dlouhý
+    digitalWrite(ULTRASONIC_TRIG_PIN, LOW);     // Ukončení vysílání impulsu
+ 
+    long duration = pulseIn(ULTRASONIC_ECHO_PIN, HIGH, ULTRASONIC_MAX_DISTANCE * 58UL); // Inicializace příkazu měření doby s timeoutem odpovídajícím maximální vzdálenosti senzoru
 
-    long duration = pulseIn(
-        ULTRASONIC_ECHO_PIN,
-        HIGH,
-        ULTRASONIC_MAX_DISTANCE * 58UL
-    );
+    if (duration == 0)      // žádný objekt nebyl detekován (doba měření je 0) / nebo je objekt mimo dosah senzoru
+        return 0;           // Bezpečný přístup v automatizaci = vracíme 0 pro zamezení případnému chybného chování systému
 
-    if (duration == 0)
-        return ULTRASONIC_MAX_DISTANCE;
-
-    return duration / 58;
+    return duration / 58;   // Výpočet vzdálenosti v centimetrech podle vzorce: vzdálenost (cm) = doba (us) / 58
 }
 
 /**
  * @brief Inicializace hardwaru pro EDUBOX ultrazvuk
  *
  * @details 
- * Funkce nastaví všechny potřebné piny pro správnou funkci ultrazvukového senzoru a přidružených komponent:
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
  * - ultrazvukový senzor
  * - RGB LED
  * - bzučák

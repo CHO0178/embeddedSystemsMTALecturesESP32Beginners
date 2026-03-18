@@ -53,14 +53,15 @@
 
 #define PCF8574_ADDRESS          0x20
 
-// Piny IO expanderu pro LED a tlačítko – doplňte podle zapojení
+#define BUTTON_PIN               DoplnitPin
+
 #define LED_PIN_1                DoplnitPin
 #define LED_PIN_2                DoplnitPin
 #define LED_PIN_3                DoplnitPin
 #define LED_PIN_4                DoplnitPin
 #define LED_PIN_5                DoplnitPin
 
-#define BUTTON_PIN               DoplnitPin
+
 
 
 PCF8574 ioExpander(PCF8574_ADDRESS);
@@ -70,23 +71,23 @@ PCF8574 ioExpander(PCF8574_ADDRESS);
  * @brief Inicializace hardwaru pro EDUBOX IO expander
  *
  * @details
- * Funkce inicializuje IO expander a nastaví režimy pinů:
- * - LED jako OUTPUT
- * - tlačítko jako INPUT
- *
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
+ * - tlačítko s interním pull-up rezistorem = aktivní stav je LOW (stisknuto)
+ * - LED
+ * 
  * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
  */
 void EDUBOX_IOE_hwInit()
 {
     ioExpander.begin();
 
+    ioExpander.pinMode(BUTTON_PIN, INPUT);
+
     ioExpander.pinMode(LED_PIN_1, OUTPUT);
     ioExpander.pinMode(LED_PIN_2, OUTPUT);
     ioExpander.pinMode(LED_PIN_3, OUTPUT);
     ioExpander.pinMode(LED_PIN_4, OUTPUT);
     ioExpander.pinMode(LED_PIN_5, OUTPUT);
-
-    ioExpander.pinMode(BUTTON_PIN, INPUT);
 }
 
 /**

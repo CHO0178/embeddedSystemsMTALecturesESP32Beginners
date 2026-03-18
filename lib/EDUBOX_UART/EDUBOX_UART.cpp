@@ -79,7 +79,7 @@
 #define RGB_GREEN_PIN        DoplnitPin
 #define RGB_BLUE_PIN         DoplnitPin
 
-#define POTENTIOMETER_PIN    DoplnitAnalogyPin
+#define POTENTIOMETER_PIN    DoplnitAnalogPin
 
 
 bool ledState = false;
@@ -92,9 +92,9 @@ uint8_t blueValue  = 0;
  * @brief Inicializace hardwaru pro EDUBOX UART
  *
  * @details
- * Funkce nastaví všechny potřebné piny:
- * - RGB LED (OUTPUT)
- * - potenciometr (INPUT)
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
+ * - potenciometr
+ * - RGB LED
  *
  * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
  */

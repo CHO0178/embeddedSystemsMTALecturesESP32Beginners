@@ -15,10 +15,10 @@
  * @brief Inicializace hardwaru pro EDUBOX servo
  *
  * @details 
- * Funkce nastaví všechny potřebné piny pro správnou funkci serva a přidružených komponent:
- * - servo
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
+ * - servo pomocí metody attach() z knihovny Servo
+ * - tlačítko s interním pull-up rezistorem = aktivní stav je LOW (stisknuto)
  * - potenciometr
- * - tlačítko
  * - teplotní senzor
  *
  * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
@@ -78,14 +78,15 @@ void example_thresholdBasedServo();
 void exercise_servoSequence();
 
 /**
- * @brief Cvičení – Regulace serva podle teploty
+ * @brief Cvičení – Regulace serva podle analogové hodnoty senzoru
  *
  * @details
- * Servo reaguje na hodnotu z teplotního senzoru, která je rozdělena do několika rozsahů (např. nízká, střední, vysoká teplota).
- * Pro každý rozsah teploty je servo nastaveno do jiné polohy (např. 0° pro nízkou, 90° pro střední a 180° pro vysokou teplotu).
- * 
+ * Servo reaguje na hodnotu načtenou z analogového vstupu připojeného k teplotnímu senzoru.
+ * Naměřená hodnota je rozdělena do několika rozsahů ADC a pro každý rozsah
+ * je servo nastaveno do jiné polohy.
+ *
  * @todo Implementujte logiku funkce
- * 
+ *
  * @note Použijte příkazy: servo.write(), analogRead() ; Nepovinné: map()
  */
 void exercise_temperatureBasedServo();

@@ -15,10 +15,10 @@
  * @brief Inicializace hardwaru pro EDUBOX IO expander
  *
  * @details
- * Funkce inicializuje IO expander a nastaví režimy pinů:
- * - LED jako OUTPUT
- * - tlačítko jako INPUT
- *
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
+ * - tlačítko s interním pull-up rezistorem = aktivní stav je LOW (stisknuto)
+ * - LED
+ * 
  * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
  */
 void EDUBOX_IOE_hwInit();

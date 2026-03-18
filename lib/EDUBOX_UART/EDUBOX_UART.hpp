@@ -17,9 +17,9 @@
  * @brief Inicializace hardwaru pro EDUBOX UART
  *
  * @details
- * Funkce nastaví všechny potřebné piny:
- * - RGB LED (OUTPUT)
- * - potenciometr (INPUT)
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
+ * - potenciometr
+ * - RGB LED
  *
  * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
  */

@@ -38,7 +38,7 @@ void EDUBOX_opakovaniZakladu_hwInitBase();
 void EDUBOX_opakovaniZakladu_hwInitRollingDice();
 
 /**
- * @brief Ukázka – LED svítí po dobu držení tlačítka
+ * @brief Ukázka – Svícení LED podle stavu tlačítka
  *
  * @details
  * Pokud je tlačítko stisknuto, modrá LED svítí.
@@ -51,7 +51,7 @@ void example_holdBtnLightLed();
  * @brief Ukázka – Herní kostka
  *
  * @details
- * Při novém stisku tlačítka se vygeneruje náhodná hodnota od 1 do 6.
+ * Při každém stisku tlačítka se vygeneruje náhodná hodnota od 1 do 6.
  * Tato hodnota je následně zobrazena pomocí LED v rozložení podobném
  * klasické hrací kostce a zůstává zobrazena do dalšího hodu.
  */
@@ -181,7 +181,7 @@ void exercise_potChangeDetect();
  * @details
  * Funkce postupně rozsvěcuje LED jednu po druhé.
  * Během sekvence sleduje hodnotu potenciometru a při překročení mezní hodnoty
- * sekvenci okamžitě přeruší. Pokud k přerušení nedojde, LED se po dokončení
+ * sekvenci okamžitě přeruší. Pokud k přerušení nedojde, všechna LED po dokončení
  * sekvence zhasnou a celá smyčka se může opakovat.
  *
  * @todo Implementujte logiku funkce

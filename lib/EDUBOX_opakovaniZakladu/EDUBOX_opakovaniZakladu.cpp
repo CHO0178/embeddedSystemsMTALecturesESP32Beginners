@@ -360,7 +360,6 @@
 // Pro exercise_extendedDiceDisplay:
 #define DICE_LED_PIN_7             DoplnitPin
 #define DICE_LED_PIN_8             DoplnitPin
-#define DICE_LED_PIN_9             DoplnitPin
 
 #define LED_GREEN_1                DICE_LED_PIN_1
 #define LED_GREEN_2                DICE_LED_PIN_2
@@ -388,10 +387,10 @@ int prevValue = -1;
  *
  * @details
  * Funkce nastaví základní periférie používané v příkladech a cvičeních:
- * - tlačítko
+ * - tlačítko s interním pull-up rezistorem = aktivní stav je LOW (stisknuto)
  * - potenciometr
  * - modrou LED
- * - LED pro jednoduchý LED bar / VU metr
+ * - LED pro jednoduchý LED bar / VU metr (zelené, žluté a červenou)
  * - RGB LED
  *
  * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
@@ -435,14 +434,13 @@ void EDUBOX_opakovaniZakladu_hwInitRollingDice()
     // Pro exercise_extendedDiceDisplay:
     pinMode(DICE_LED_PIN_7, OUTPUT);
     pinMode(DICE_LED_PIN_8, OUTPUT);
-    pinMode(DICE_LED_PIN_9, OUTPUT);
 }
 
 
 
 
 /**
- * @brief Ukázka – LED svítí po dobu držení tlačítka
+ * @brief Ukázka – Svícení LED podle stavu tlačítka
  *
  * @details
  * Pokud je tlačítko stisknuto, modrá LED svítí.
@@ -465,7 +463,7 @@ void example_holdBtnLightLed()
  * @brief Ukázka – Herní kostka
  *
  * @details
- * Při novém stisku tlačítka se vygeneruje náhodná hodnota od 1 do 6.
+ * Při každém stisku tlačítka se vygeneruje náhodná hodnota od 1 do 6.
  * Tato hodnota je následně zobrazena pomocí LED v rozložení podobném
  * klasické hrací kostce a zůstává zobrazena do dalšího hodu.
  */
@@ -542,7 +540,7 @@ void example_gameDice()
 }
 
 /**
- * @brief Ukázka – LED bar řízený potenciometrem
+ * @brief Ukázka – Řada LED řízená potenciometrem (VU metr)
  *
  * @details
  * Hodnota z potenciometru je převedena na úroveň a podle ní se rozsvítí
@@ -568,15 +566,15 @@ void example_vuMeterWithPotentiometer()
 }
 
 /**
- * @brief Ukázka – LED blikne zadaný početkrát
+ * @brief Ukázka – Bliknutí LED podle pevně daného počtu
  *
  * @details
- * Počet bliknutí je určen konstantou uloženou přímo ve funkci.
+ * Počet bliknutí je nastaven konstantou definovanou přímo ve funkci.
  * Ukázka demonstruje opakované vykonání stejné činnosti pomocí cyklu for.
  */
 void example_ledBlinkXTimes()
 {
-    const int BLINK_COUNT = 5;
+    static const int BLINK_COUNT = 5;
 
     pinMode(LED_BLUE, OUTPUT);
 
@@ -691,12 +689,11 @@ void exercise_toggleLedByButton()
 }
 
 /**
- * @brief Cvičení – Rozšířené zobrazení hodnoty pomocí LED
+ * @brief Cvičení – Rozšíření herní kostky pro 9 čísel
  *
  * @details
- * Funkce po stisku tlačítka vygeneruje novou hodnotu a zobrazí ji pomocí LED.
- * Úkolem je rozšířit základní princip ukázky s kostkou na větší počet stavů
- * podle dostupného počtu LED v zapojení.
+ * Identicky jako u ukázky herní kostky pro 6 čísel se po každém stisknutí
+ * tlačítka vygeneruje nová náhodná hodnota z intervalu 1-9 a zobrazí se pomocí LED.
  *
  * @todo Implementujte logiku funkce
  *
@@ -763,7 +760,7 @@ void exercise_potChangeDetect()
  * @details
  * Funkce postupně rozsvěcuje LED jednu po druhé.
  * Během sekvence sleduje hodnotu potenciometru a při překročení mezní hodnoty
- * sekvenci okamžitě přeruší. Pokud k přerušení nedojde, LED se po dokončení
+ * sekvenci okamžitě přeruší. Pokud k přerušení nedojde, všechna LED po dokončení
  * sekvence zhasnou a celá smyčka se může opakovat.
  *
  * @todo Implementujte logiku funkce

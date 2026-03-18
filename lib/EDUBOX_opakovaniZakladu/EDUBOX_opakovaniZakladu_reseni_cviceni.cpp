@@ -10,21 +10,20 @@
 #include "EDUBOX_opakovaniZakladu.hpp"
 
 // INPUTS
-#define BTN_PIN                    2
-#define POT_PIN                    4
+#define BTN_PIN                    DoplnitPin
+#define POT_PIN                    DoplnitPin
 
 // OUTPUTS
-#define DICE_LED_PIN_0             5
-#define DICE_LED_PIN_1             12
-#define DICE_LED_PIN_2             13
-#define DICE_LED_PIN_3             14
-#define DICE_LED_PIN_4             25
-#define DICE_LED_PIN_5             26
-#define DICE_LED_PIN_6             27
+#define DICE_LED_PIN_0             DoplnitPin
+#define DICE_LED_PIN_1             DoplnitPin
+#define DICE_LED_PIN_2             DoplnitPin
+#define DICE_LED_PIN_3             DoplnitPin
+#define DICE_LED_PIN_4             DoplnitPin
+#define DICE_LED_PIN_5             DoplnitPin
+#define DICE_LED_PIN_6             DoplnitPin
 // Pro exercise_extendedDiceDisplay:
-#define DICE_LED_PIN_7          32
-#define DICE_LED_PIN_8          33
-#define DICE_LED_PIN_9          34
+#define DICE_LED_PIN_7             DoplnitPin
+#define DICE_LED_PIN_8             DoplnitPin
 
 #define LED_GREEN_1                DICE_LED_PIN_1
 #define LED_GREEN_2                DICE_LED_PIN_2
@@ -33,7 +32,7 @@
 #define LED_YELLOW_2               DICE_LED_PIN_5
 #define LED_RED                    DICE_LED_PIN_6
 
-#define LED_BLUE                   36
+#define LED_BLUE                   DoplnitPin
 
 #define RGB_RED                    LED_RED
 #define RGB_GREEN                  LED_GREEN_1
@@ -52,10 +51,10 @@ int prevValue = -1;
  *
  * @details
  * Funkce nastaví základní periférie používané v příkladech a cvičeních:
- * - tlačítko
+ * - tlačítko s interním pull-up rezistorem = aktivní stav je LOW (stisknuto)
  * - potenciometr
  * - modrou LED
- * - LED pro jednoduchý LED bar / VU metr
+ * - LED pro jednoduchý LED bar / VU metr (zelené, žluté a červenou)
  * - RGB LED
  *
  * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
@@ -99,7 +98,6 @@ void EDUBOX_opakovaniZakladu_hwInitRollingDice()
     // Pro exercise_extendedDiceDisplay:
     pinMode(DICE_LED_PIN_7, OUTPUT);
     pinMode(DICE_LED_PIN_8, OUTPUT);
-    pinMode(DICE_LED_PIN_9, OUTPUT);
 }
 
 
@@ -134,12 +132,11 @@ void exercise_toggleLedByButton()
 }
 
 /**
- * @brief Cvičení – Rozšířené zobrazení hodnoty pomocí LED
+ * @brief Cvičení – Rozšíření herní kostky pro 9 čísel
  *
  * @details
- * Funkce po stisku tlačítka vygeneruje novou hodnotu a zobrazí ji pomocí LED.
- * Úkolem je rozšířit základní princip ukázky s kostkou na větší počet stavů
- * podle dostupného počtu LED v zapojení.
+ * Identicky jako u ukázky herní kostky pro 6 čísel se po každém stisknutí
+ * tlačítka vygeneruje nová náhodná hodnota z intervalu 1-9 a zobrazí se pomocí LED.
  *
  * @todo Implementujte logiku funkce
  *
@@ -155,7 +152,7 @@ void exercise_extendedDiceDisplay()
 
     if (lastButtonState == HIGH && currentButtonState == LOW)
     {
-        currentValue = random(1, 8);
+        currentValue = random(1, 10);
     }
     lastButtonState = currentButtonState;
 
@@ -168,7 +165,10 @@ void exercise_extendedDiceDisplay()
         digitalWrite(DICE_LED_PIN_4, LOW);
         digitalWrite(DICE_LED_PIN_5, LOW);
         digitalWrite(DICE_LED_PIN_6, LOW);
+        digitalWrite(DICE_LED_PIN_7, LOW);
+        digitalWrite(DICE_LED_PIN_8, LOW);
 
+ 
         switch (currentValue)
         {
             case 1:
@@ -219,6 +219,29 @@ void exercise_extendedDiceDisplay()
                 digitalWrite(DICE_LED_PIN_5, HIGH);
                 digitalWrite(DICE_LED_PIN_6, HIGH);
                 break;
+
+            case 8:
+                digitalWrite(DICE_LED_PIN_0, HIGH);
+                digitalWrite(DICE_LED_PIN_1, HIGH);
+                digitalWrite(DICE_LED_PIN_2, HIGH);
+                digitalWrite(DICE_LED_PIN_4, HIGH);
+                digitalWrite(DICE_LED_PIN_5, HIGH);
+                digitalWrite(DICE_LED_PIN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_7, HIGH);
+                digitalWrite(DICE_LED_PIN_8, HIGH);
+                break;
+            
+            case 9:
+                digitalWrite(DICE_LED_PIN_0, HIGH);
+                digitalWrite(DICE_LED_PIN_1, HIGH);
+                digitalWrite(DICE_LED_PIN_2, HIGH);
+                digitalWrite(DICE_LED_PIN_3, HIGH);
+                digitalWrite(DICE_LED_PIN_4, HIGH);
+                digitalWrite(DICE_LED_PIN_5, HIGH);
+                digitalWrite(DICE_LED_PIN_6, HIGH);
+                digitalWrite(DICE_LED_PIN_7, HIGH);
+                digitalWrite(DICE_LED_PIN_8, HIGH);
+                break;
         }
 
         lastValue = currentValue;
@@ -253,7 +276,7 @@ void exercise_configurableBlinkingLEDs()
         }
 
         int potValue = analogRead(POT_PIN);
-        int ledsToBlink = map(potValue, 0, 1023, 1, 6);
+        int ledsToBlink = map(potValue, 0, 4095, 1, 6);
 
         for (int i = 0; i < blinkCount; i++)
         {
@@ -289,7 +312,7 @@ void exercise_configurableBlinkingLEDs()
  */
 void exercise_rgbRainbowSpeedControl()
 {
-    int delayTime = map(analogRead(POT_PIN), 0, 1023, 2, 20);
+    int delayTime = map(analogRead(POT_PIN), 0, 4095, 5, 100);
 
     int red = 255;
     int green = 0;
@@ -367,9 +390,9 @@ void exercise_potChangeDetect()
  * @details
  * Funkce postupně rozsvěcuje LED jednu po druhé.
  * Během sekvence sleduje hodnotu potenciometru a při překročení mezní hodnoty
- * sekvenci okamžitě přeruší. Pokud k přerušení nedojde, LED se po dokončení
+ * sekvenci okamžitě přeruší. Pokud k přerušení nedojde, všechna LED po dokončení
  * sekvence zhasnou a celá smyčka se může opakovat.
- *
+ * 
  * @todo Implementujte logiku funkce
  *
  * @note Použijte příkazy: for, break, analogRead(), digitalWrite(), delay()

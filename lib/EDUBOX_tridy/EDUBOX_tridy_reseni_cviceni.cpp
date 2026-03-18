@@ -9,9 +9,28 @@
 #include <Arduino.h>
 #include "EDUBOX_tridy.hpp"
 
-#define LED1_PIN    DoplnitPin
-#define LED2_PIN    DoplnitPin
-#define BUZZER_PIN  26
+#define LED_PIN_1    DoplnitPin
+#define LED_PIN_2    DoplnitPin
+#define BUZZER_PIN  DoplnitPin
+
+/**
+ * @brief Inicializace hardwaru pro EDUBOX třídy
+ *
+ * @details 
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
+ * - LED  
+ * - bzučák  
+ * 
+ * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
+ */
+void EDUBOX_tridy_hwInit()
+{
+    pinMode(LED_PIN_1, OUTPUT);
+    pinMode(LED_PIN_2, OUTPUT);
+
+    pinMode(BUZZER_PIN, OUTPUT);
+}
+
 
 /**
  * @class SimpleLed
@@ -191,7 +210,7 @@ void exercise_useExtendedClass()
  *
  * @todo Implementujte logiku funkce
  *
- * @note Použijte příkazy: class, public, private, konstruktor třídy, pinMode(), tone(), noTone()
+ * @note Použijte příkazy: class, public, private, konstruktor třídy, tone(), noTone()
  */
 class SimpleBuzzer
 {

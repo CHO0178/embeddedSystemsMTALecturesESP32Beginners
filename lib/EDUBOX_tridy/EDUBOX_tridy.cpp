@@ -64,9 +64,9 @@
  * @brief Inicializace hardwaru pro EDUBOX třídy
  *
  * @details 
- * Funkce nastaví všechny potřebné piny pro správnou funkci LED a buzzeru.
- * - LED jako OUTPUT
- * - bzučák jako OUTPUT
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
+ * - LED  
+ * - bzučák  
  * 
  * @note Funkci při použití eduboxu volejte ze setup() v main.cpp
  */
@@ -272,7 +272,7 @@ void exercise_useExtendedClass()
  *
  * @todo Implementujte logiku funkce
  *
- * @note Použijte příkazy: class, public, private, konstruktor třídy, digitalWrite(), pinMode()
+ * @note Použijte příkazy: class, public, private, konstruktor třídy, tone(), noTone()
  */
 void exercise_createSimpleClass()
 {

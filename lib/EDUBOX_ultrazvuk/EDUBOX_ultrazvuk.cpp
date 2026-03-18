@@ -86,7 +86,7 @@ long ultrasonic_measure_cm()
  * @brief Inicializace hardwaru pro EDUBOX ultrazvuk
  *
  * @details 
- * Funkce nastaví všechny potřebné piny pro správnou funkci ultrazvukového senzoru a přidružených komponent:
+ * Funkce nastaví základní periférie používané v příkladech a cvičeních:
  * - ultrazvukový senzor
  * - RGB LED
  * - bzučák
@@ -189,7 +189,7 @@ void example_parkingBuzzer()
  *
  * @todo Implementujte logiku funkce
  * 
- * @note Použijte příkazy: digitalWrite(), delay()
+ * @note Použijte příkazy: digitalWrite(), if / else if / else
  */
 void exercise_distanceColorScale()
 {
