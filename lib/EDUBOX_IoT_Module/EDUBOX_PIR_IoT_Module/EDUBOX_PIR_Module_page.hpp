@@ -4,19 +4,20 @@
 #include <pgmspace.h>
 
 /**
- * @brief Ukazka HTML stránky s JavaScriptem pro modul PIR.
- * @details Tato HTML stránka zobrazuje aktuální stav detekce PIR senzoru a aktualizuje jej každou sekundu.
+ * @brief Ukázka HTML stránky s JavaScriptem pro PIR modul.
+ * @details Tato HTML stránka zobrazuje stav detekce pohybu a automaticky se obnovuje.
+ * 
  */
 const char EXAMPLE_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" http-equiv="refresh" content="2">
-  <title>PIR</title>
+  <meta charset="UTF-8">
+  <title>PIR senzor ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>PIR modul</h1>
-  <h2>PIR detekce: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>PIR modul - Ukázka</h1>
+  <h2>Detekce pohybu: <span id="detection">NAČÍTÁNÍ...</span></h2>
 </body>
 
 <script>
@@ -24,58 +25,66 @@ const char EXAMPLE_PIR_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.detection;
+        document.getElementById('detection').innerText = data.detection ? 'POHYB DETEKOVÁN' : 'Klid';
       });
   }
+
+  setInterval(fetchData, 1000);
+  fetchData();
 </script>
 </html>
 )HTML";
 
 /**
- * @brief Cvičení - 
+ * @brief Cvičení – Zobrazení PIR detekce + datum a čas poslední změny stavu 
  * 
  */
-const char EXERCISE_TEXT_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_TIMESTAMP_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>PIR - Úkol 1</title>
+  <title>PIR senzor cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>PIR modul</h1>
-  <h2>PIR detekce: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>PIR modul - Cvičení</h1>
+  <h2>Detekce pohybu: <span id="detection">NAČÍTÁNÍ...</span></h2>
+  <!-- ZDE doplňte element pro zobrazení data a času poslední změny stavu -->
 </body>
 
 <script>
+  // ZDE doplňte proměnnou pro sledování předchozího stavu
+
   function fetchData() {
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.detection;
+        document.getElementById('detection').innerText = data.detection ? 'POHYB DETEKOVÁN' : 'Klid';
+        // ZDE doplňte detekci změny stavu a uložení času pomocí Date()
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
 
 /**
- * @brief Cvičení 
+ * @brief Cvičení – Rozšíření JSON odpovědi (/data) o status a timestamp
  * 
  */
-const char EXERCISE_TEXT_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_EXTENDEDJSON_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>PIR - Úkol 2</title>
+  <title>PIR senzor cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>PIR modul</h1>
-  <h2>PIR detekce: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>PIR modul - Cvičení</h1>
+  <h2>Detekce pohybu: <span id="detection">NAČÍTÁNÍ...</span></h2>
+  <!-- ZDE doplňte elementy pro zobrazení polí status a timestamp -->
 </body>
 
 <script>
@@ -83,31 +92,34 @@ const char EXERCISE_TEXT_PIR_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.detection;
+        document.getElementById('detection').innerText = data.detection ? 'POHYB DETEKOVÁN' : 'Klid';
+        // ZDE doplňte zobrazení polí status a timestamp
       });
   }
+      
   setInterval(fetchData, 1000);
-  window.onload = fetchData;
+  fetchData();
 </script>
-
 </html>
 )HTML";
 
 
 /**
- * @brief Cvičení - 
+ * @brief Cvičení – Alarm pomocí PIR + potvrzení alarmu přes web 
  * 
  */
-const char EXERCISE_TEXT_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_ALARM_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>PIR - Úkol 3</title>
+  <title>PIR senzor cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>PIR modul</h1>
-  <h2>PIR detekce: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>PIR modul - Cvičení</h1>
+  <h2>Detekce pohybu: <span id="detection">NAČÍTÁNÍ...</span></h2>
+  <!-- ZDE doplňte zobrazení stavu alarmu (armed/alarm) -->
+  <!-- ZDE doplňte tlačítka pro Aktivovat / Deaktivovat / Potvrdit alarm -->
 </body>
 
 <script>
@@ -115,16 +127,17 @@ const char EXERCISE_TEXT_PIR_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.detection;
+        document.getElementById('detection').innerText = data.detection ? 'POHYB DETEKOVÁN' : 'Klid';
+        // ZDE doplňte zobrazení stavu armed a alarm
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  // ZDE doplňte funkce pro volání /arm, /disarm, /ack
+
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
-
-
 
 #endif

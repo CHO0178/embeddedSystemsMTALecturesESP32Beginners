@@ -1,7 +1,7 @@
 /**
- * @file WaterLevel_Module.cpp
+ * @file WaterLevel_Module_RESENI.cpp
  * @author Bc. Dalibor Slíva
- * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu osvětlení v projektu MTA-TP.
+ * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu se senzorem hladiny vody v projektu MTA-TP.
  * @version 0.1
  * @date 2025-08-13
  * 
@@ -10,252 +10,263 @@
  */
 
 #include <WebServer.h>
-#include "EDUBOX_WaterLevel_Module_page.hpp"
+#include "EDUBOX_WaterLevel_Module_page_RESENI.hpp"
 #include "EDUBOX_WaterLevel_Module.hpp"
 
-const int waterLevelSensorPin = 17;
-const int ledPin = 15;
+#define LEDPIN 15
+#define WATERLEVELPIN 17
 
 // Web server běžící na portu 80 - Tedy standardní HTTP port
 WebServer server_WaterLevel_Module(80);
 
 /**
+ * @brief Pomocná funkce pro převod analogové hodnoty na procenta.
+ * @details Vrací hodnotu v rozsahu 0 až 100.
+ * 
+ */
+int waterLevelModule_getPercent(int rawValue) {
+    int percent = map(rawValue, 0, 4095, 0, 100);
+
+    if (percent < 0) {
+        percent = 0;
+    }
+
+    if (percent > 100) {
+        percent = 100;
+    }
+
+    return percent;
+}
+
+/**
  * @brief Obsluha kořenové URL.
- * @details Zobrazí HTML stránku.
+ * @details Zobrazí HTML stránku s ukázkou modulu snímání hladiny vody.
  */
-void hadleRootWaterLevelModule() {
-  String page = FPSTR(WATERLEVEL_MODULE_JAVASCRIPT_HTML);
-  server_WaterLevel_Module.send(200, "text/html; charset=utf-8", page);
+void example_handlerRoot_WaterLevelModule() {
+    String page = FPSTR(RES_EXAMPLE_WATERLEVEL_MODULE_HTML);
+    server_WaterLevel_Module.send(200, "text/html; charset=utf-8", page);
 }
 
 /**
- * @brief Obsluha URL pro získání dat ve formátu JSON.
- * @details Čte data z senzoru vodní hladiny a odešle je klientovi ve formátu JSON.
+ * @brief Obsluha pro získání dat ve formátu JSON.
+ * @details Tato funkce načte analogovou hodnotu senzoru hladiny vody a odešle ji klientovi.
+ * 
  */
-void handleDataWaterLevelModule() {
-  float actualLevel = analogRead(waterLevelSensorPin);
+void example_handlerData_WaterLevelModule() {
+    int rawValue = analogRead(WATERLEVELPIN);
+    int percent = waterLevelModule_getPercent(rawValue);
 
-  String json = "{";
-  json += "\"level\": " + String(actualLevel,1);
-  json += "}";
+    String json = "{";
+    json += "\"raw\": " + String(rawValue) + ", ";
+    json += "\"percent\": " + String(percent);
+    json += "}";
 
-  server_WaterLevel_Module.send(200, "application/json", json);
+    server_WaterLevel_Module.send(200, "application/json", json);
 }
-
 
 /**
- * @brief Inicializace WaterLevel modulu.
- * @details Nastaví pin pro senzor vodní hladiny a inicializuje webový server s příslušnými obslužnými funkcemi.
+ * @brief Inicializace modulu snímání hladiny vody.
+ * @details Nastaví pin senzoru, LED a inicializuje webový server.
  */
-void setupWaterLevelModule() {
-  Serial.begin(115200);
-  setupWifiWaterLevelModule("WiFi-name", "WiFi-password");
-  pinMode(waterLevelSensorPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+void example_setup_WaterLevelModule() {
+    Serial.begin(115200);
+    setupWifi_WaterLevelModule("WiFi-name", "WiFi-password");
 
-  server_WaterLevel_Module.on("/", hadleRootWaterLevelModule);
-  server_WaterLevel_Module.on("/data", handleDataWaterLevelModule);   
+    pinMode(WATERLEVELPIN, INPUT);
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  server_WaterLevel_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_WaterLevel_Module.on("/", example_handlerRoot_WaterLevelModule);
+    server_WaterLevel_Module.on("/data", example_handlerData_WaterLevelModule);
+
+    server_WaterLevel_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
-/** 
- * @brief Hlavní smyčka WaterLevel modulu.
+/**
+ * @brief Hlavní smyčka modulu snímání hladiny vody.
  * @details Zpracovává příchozí HTTP požadavky.
  */
-void loopWaterLevelModule() {
-  server_WaterLevel_Module.handleClient();
+void example_loop_WaterLevelModule() {
+    server_WaterLevel_Module.handleClient();
 }
 
 
-
 /**
- * @brief ÚKOL 1 – Zobrazení hladiny vody a změny stavu
+ * @brief Cvičení – Grafické zobrazení hladiny vody
  *
  * @details
- * Cílem tohoto úkolu je rozšířit webové rozhraní modulu snímání hladiny vody
- * tak, aby uživatel získal přehled nejen o aktuální hodnotě hladiny,
- * ale také o tom, kdy došlo ke změně jejího stavu.
+ * Toto rozšíření webové stránky modulu přidává vlastní grafické
+ * zobrazení hladiny vody pomocí HTML prvků a JavaScriptu.
  *
  * @todo
- * 1. Upravte webovou stránku tak, aby zobrazovala aktuální hodnotu hladiny vody.
- * 2. Rozlišujte alespoň dva stavy hladiny (např. běžný stav a nízká hladina).
- * 3. Při změně stavu zaznamenejte a zobrazte čas, kdy ke změně došlo.
+ * 1. Do HTML stránky doplňte prvek představující nádrž.
+ * 2. Doplňte vnitřní prvek představující vodu.
+ * 3. Upravte vzhled zobrazení tak, aby se lišil od ukázky,
+ *    například barvou, velikostí nebo tvarem nádrže.
+ * 4. Upravte JavaScript tak, aby měnil výšku vody podle `data.percent`.
  *
  * @note
+ * Pro vykreslení stačí použít běžné HTML prvky `<div>`.
+ *
+ * @note
+ * Výšku vody lze měnit například takto:
  * @code
- * const now = new Date();
- * now.toLocaleString();
+ * document.getElementById('water').style.height = data.percent + '%';
  * @endcode
  *
- * @result
- * Webová stránka zobrazuje aktuální hladinu a varování s časem poslední změny.
- *
- * @note
- * Po dokončení úkolu je třeba do funkce setupWaterLevelModule() přidat námi nově vytvořenou obslužnou funkci.
  */
-void Exercise1_handleRootWaterLevelModule() {
-  String page = FPSTR(EXERCISE_1_WATERLEVEL_MODULE_HTML);
-  server_WaterLevel_Module.send(200, "text/html; charset=utf-8", page);
+void exercise_graphic_handlerRoot_WaterLevelModule() {
+    String page = FPSTR(RES_EXERCISE_GRAPHIC_WATERLEVEL_MODULE_HTML);
+    server_WaterLevel_Module.send(200, "text/html; charset=utf-8", page);
 }
 
-void Exercise1_setupWaterLevelModule() {
-  Serial.begin(115200);
-  setupWifiWaterLevelModule("WiFi-name", "WiFi-password");
-  pinMode(waterLevelSensorPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+void exercise_graphic_setup_WaterLevelModule() {
+    Serial.begin(115200);
+    setupWifi_WaterLevelModule("WiFi-name", "WiFi-password");
 
-  server_WaterLevel_Module.on("/", Exercise1_handleRootWaterLevelModule);
-  server_WaterLevel_Module.on("/data", handleDataWaterLevelModule);
-  server_WaterLevel_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    pinMode(WATERLEVELPIN, INPUT);
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
+
+    server_WaterLevel_Module.on("/", exercise_graphic_handlerRoot_WaterLevelModule);
+    server_WaterLevel_Module.on("/data", example_handlerData_WaterLevelModule);
+
+    server_WaterLevel_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
 
 
 /**
- * @brief ÚKOL 2 – Rozšíření datového rozhraní modulu snímání hladiny vody
+ * @brief Cvičení – Rozšíření JSON odpovědi
  *
  * @details
- * Cílem tohoto úkolu je rozšířit datové rozhraní (endpoint `/data`) modulu tak,
- * aby poskytovalo kromě surové hodnoty také lépe interpretovatelnou informaci
- * o stavu hladiny vody. Výstupem má být strukturovaná JSON odpověď, kterou lze
- * snadno zobrazit ve webovém rozhraní.
+ * Toto rozšíření endpointu `/data` přidává další informace o stavu hladiny vody.
  *
- * @task
- * 1. Upravte endpoint `/data` tak, aby vracel JSON obsahující minimálně následující položky:
- *    - `raw`       – surová naměřená hodnota (např. z ADC)
- *    - `percent`   – hladina vyjádřená v procentech (0–100)
- *    - `status`    – slovní vyhodnocení stavu (např. "low" / "ok" / "high")
- *    - `timestamp` – časová značka měření (např. v milisekundách od startu)
- * 2. Navrhněte způsob, jak ze surové hodnoty odvodit `percent` a `status`
- *    (např. pomocí prahů nebo převodu na rozsah 0–100).
- * 3. Upravte webovou stránku tak, aby nové položky z JSON odpovědi zobrazovala.
- *
- * @hint
- * U surových hodnot senzoru je běžné provést škálování na interval 0–100 %
- * a následně rozdělit hodnoty do více stavů (např. nízká / normální / vysoká).
- *
- * @example JSON
- * Ukázka struktury odpovědi (hodnoty jsou pouze ilustrativní):
- * @code
- * {
- *   "raw": 1234,
- *   "percent": 30,
- *   "status": "ok",
- *   "timestamp": 45678
- * }
- * @endcode
- *
- * @result
- * Webové rozhraní zobrazuje hladinu vody ve formě surové hodnoty, procent a stavové informace.
+ * @todo
+ * 1. Upravte endpoint `/data`, aby kromě raw hodnoty vracel také:
+ *    - `percent`
+ *    - `status`
+ *    - `timestamp`
+ * 2. Doplňte textové vyhodnocení stavu hladiny, například:
+ *    - low
+ *    - medium
+ *    - high
+ * 3. Rozsviťte LED při vysoké hladině vody.
+ * 4. Na webové stránce zobrazte všechny nové položky z JSON odpovědi.
  *
  * @note
- * Konkrétní prahy a převody závisí na použitém senzoru a jeho rozsahu.
+ * Časovou značku lze získat pomocí `millis()`.
+ *
+ * @note
+ * Stav hladiny určete podle zvolených mezí procentuální hodnoty.
+ *
  */
-void Exercise2_handleRootWaterLevelModule() {
-  String page = FPSTR(EXERCISE_2_WATERLEVEL_MODULE_HTML);
-  server_WaterLevel_Module.send(200, "text/html; charset=utf-8", page);
+void exercise_extendedJSON_handlerRoot_WaterLevelModule() {
+    String page = FPSTR(RES_EXERCISE_EXTENDEDJSON_WATERLEVEL_MODULE_HTML);
+    server_WaterLevel_Module.send(200, "text/html; charset=utf-8", page);
 }
 
-void Exercise2_handleDataWaterLevelModule() {
-  float actualLevel = analogRead(waterLevelSensorPin);
+void exercise_extendedJSON_handlerData_WaterLevelModule() {
+    int rawValue = analogRead(WATERLEVELPIN);
+    int percent = waterLevelModule_getPercent(rawValue);
+    String status = "low";
 
-  String json = "{";
-  json += "\"level\": " + String(actualLevel,1);
-  json += "}";
+    if (percent < 20) {
+        status = "low";
+    } else if (percent <= 60) {
+        status = "medium";
+    } else {
+        status = "high";
+    }
+    if (percent > 60) {
+        digitalWrite(LEDPIN, HIGH);
+    } else {
+        digitalWrite(LEDPIN, LOW);
+    }
 
-  server_WaterLevel_Module.send(200, "application/json", json);
+    String json = "{";
+    json += "\"raw\": " + String(rawValue) + ", ";
+    json += "\"percent\": " + String(percent) + ", ";
+    json += "\"status\": \"" + status + "\", ";
+    json += "\"timestamp\": " + String(millis());
+    json += "}";
+
+    server_WaterLevel_Module.send(200, "application/json", json);
 }
 
-void Exercise2_setupWaterLevelModule() {
-  Serial.begin(115200);
-  setupWifiWaterLevelModule("WiFi-name", "WiFi-password");
-  pinMode(waterLevelSensorPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+void exercise_extendedJSON_setup_WaterLevelModule() {
+    Serial.begin(115200);
+    setupWifi_WaterLevelModule("WiFi-name", "WiFi-password");
 
-  server_WaterLevel_Module.on("/", Exercise2_handleRootWaterLevelModule);
-  server_WaterLevel_Module.on("/data", Exercise2_handleDataWaterLevelModule);
-  server_WaterLevel_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    pinMode(WATERLEVELPIN, INPUT);
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
+
+    server_WaterLevel_Module.on("/", exercise_extendedJSON_handlerRoot_WaterLevelModule);
+    server_WaterLevel_Module.on("/data", exercise_extendedJSON_handlerData_WaterLevelModule);
+
+    server_WaterLevel_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }
-
 
 
 /**
- * @brief ÚKOL 3 – Alarmový režim hladiny vody s potvrzením události
+ * @brief Cvičení – Historie hodnot a jednoduchý sloupcový graf
  *
  * @details
- * Cílem tohoto úkolu je navrhnout jednoduchý alarmový režim modulu snímání
- * hladiny vody. Pokud hladina klesne pod zvolenou mez, musí se alarm aktivovat
- * a zůstat aktivní až do jeho ručního potvrzení uživatelem.
+ * Toto rozšíření webové stránky přidává ukládání posledních hodnot
+ * a jejich zobrazení jako jednoduchý graf.
  *
- * @task
- * 1. Navrhněte způsob, jak rozlišit:
- *    - běžný stav hladiny,
- *    - stav nízké hladiny,
- *    - stav aktivního alarmu.
- * 2. Upravte obsluhu URL `/data` tak, aby:
- *    - vyhodnocovala, zda je hladina pod zvolenou mezí,
- *    - umožňovala uchovat informaci o tom, že alarm byl aktivován.
- * 3. Zajistěte vizuální signalizaci alarmu (např. pomocí LED).
- * 4. Vytvořte nový endpoint `/ack`, který umožní uživateli alarm potvrdit
- *    a vrátit systém do běžného stavu.
- * 5. Rozšiřte JSON odpověď tak, aby klient mohl rozpoznat:
- *    - aktuální hladinu,
- *    - stav nízké hladiny,
- *    - stav alarmu.
+ * @todo
+ * 1. V JavaScriptu vytvořte pole pro ukládání posledních hodnot hladiny.
+ * 2. Po každém načtení dat přidejte novou hodnotu do pole.
+ * 3. Omezte počet uložených hodnot, například na posledních 10 měření.
+ * 4. Vykreslete jednotlivé hodnoty jako sloupce pomocí HTML prvků.
  *
- * @hint
- * Zamyslete se nad tím, zda je vhodné ukládat stav alarmu do proměnné,
- * která zůstává aktivní i poté, co se hladina opět zvýší.
+ * @note
+ * Pro jednoduchý graf není potřeba žádná externí knihovna.
+ * Každý sloupec může být vytvořen jako samostatný `<div>`.
  *
- * @example JSON
- * Ukázka struktury odpovědi serveru (hodnoty jsou pouze ilustrativní):
+ * @note
+ * Pokud bude pole příliš dlouhé, je vhodné nejstarší hodnotu odstranit.
+ * V JavaScriptu lze použít například:
  * @code
- * {
- *   "level": 180,
- *   "lowState": true,
- *   "alarm": true
+ * values.push(data.percent);
+ * if (values.length > 10) {
+ *   values.shift();
  * }
  * @endcode
  *
- * @result
- * Modul dokáže signalizovat nízkou hladinu vody a vyžaduje potvrzení
- * alarmu uživatelem prostřednictvím webového rozhraní.
  */
-
-void Exercise3_handleRootWaterLevelModule() {
-  String page = FPSTR(EXERCISE_3_WATERLEVEL_MODULE_HTML);
-  server_WaterLevel_Module.send(200, "text/html; charset=utf-8", page);
+void exercise_history_handlerRoot_WaterLevelModule() {
+    String page = FPSTR(RES_EXERCISE_HISTORY_WATERLEVEL_MODULE_HTML);
+    server_WaterLevel_Module.send(200, "text/html; charset=utf-8", page);
 }
 
-void Exercise3_handleDataWaterLevelModule() {
-  float actualLevel = analogRead(waterLevelSensorPin);
+void exercise_history_handlerData_WaterLevelModule() {
+    int rawValue = analogRead(WATERLEVELPIN);
+    int percent = waterLevelModule_getPercent(rawValue);
 
-  String json = "{";
-  json += "\"level\": " + String(actualLevel,1);
-  json += "}";
+    String json = "{";
+    json += "\"raw\": " + String(rawValue) + ", ";
+    json += "\"percent\": " + String(percent);
+    json += "}";
 
-  server_WaterLevel_Module.send(200, "application/json", json);
+    server_WaterLevel_Module.send(200, "application/json", json);
 }
 
-void Exercise3_handleAckWaterLevelModule() {
-// Vyplnit
-}
+void exercise_history_setup_WaterLevelModule() {
+    Serial.begin(115200);
+    setupWifi_WaterLevelModule("WiFi-name", "WiFi-password");
 
-void Exercise3_setupWaterLevelModule() {
-  Serial.begin(115200);
-  setupWifiWaterLevelModule("WiFi-name", "WiFi-password");
-  pinMode(waterLevelSensorPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+    pinMode(WATERLEVELPIN, INPUT);
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);
 
-  server_WaterLevel_Module.on("/", Exercise3_handleRootWaterLevelModule);
-  server_WaterLevel_Module.on("/data", Exercise3_handleDataWaterLevelModule);
-  server_WaterLevel_Module.begin();
-  Serial.println("HTTP server spuštěn");
+    server_WaterLevel_Module.on("/", exercise_history_handlerRoot_WaterLevelModule);
+    server_WaterLevel_Module.on("/data", exercise_history_handlerData_WaterLevelModule);
+
+    server_WaterLevel_Module.begin();
+    Serial.println("HTTP server spuštěn");
 }

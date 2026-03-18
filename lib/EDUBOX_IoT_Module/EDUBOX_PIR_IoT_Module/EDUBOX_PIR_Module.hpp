@@ -1,53 +1,51 @@
-#ifndef PIRMODULE_HPP
-#define PIRMODULE_HPP
+#ifndef PIR_MODULE_HPP
+#define PIR_MODULE_HPP
 
 #include <EDUBOX_PIR_IoT_Module/EDUBOX_WiFi_Setup_PIR_Module.hpp>
 
 /**
- * @brief Ukázka obsluhy kořenové URL pro PIR modul.
- * @details Tato funkce zobrazí HTML stránku.
- * 
+ * @brief Obsluha kořenové URL.
+ * @details Zobrazí HTML stránku se zobrazením stavu PIR senzoru.
  */
-void example_hadleRootPIRModule();
+void example_handlerRoot_PIRModule();
 
 /**
- * @brief Ukázka obsluhy URL pro získání dat ve formátu JSON pro PIR modul.
+ * @brief Obsluha pro získání dat ve formátu JSON pro PIR modul.
  * @details Tato funkce načte data z PIR senzoru a odešle je klientovi ve formátu JSON.
  * 
  */
-void example_handleDataPIRModule();
+void example_handlerData_PIRModule();
 
 /**
- * @brief Ukázka nastavení PIR modulu a WiFi připojení.
- * @details Tato funkce nastaví pin pro PIR senzor a inicializuje webový server s příslušnými obslužnými funkcemi.
- * 
+ * @brief Inicializace PIR modulu.
+ * @details Nastaví pin pro LED a samotný PIR senzor a inicializuje webový server s příslušnými obslužnými funkcemi.
  */
-void example_setupPIRModule();
+void example_setup_PIRModule();
 
 /**
  * @brief Ukázka hlavní smyčky pro PIR modul.
- * @details Tato funkce zpracovává příchozí HTTP požadavky PIR senzoru.
- * 
+ * @details Tato funkce zpracovává příchozí HTTP požadavky a obsluhuje odesílání dat z PIR senzoru ve formátu JSON.
  */
-void example_loopPIRModule();
+void example_loop_PIRModule();
 
 
 
-// Cvičení - 
-void exercise_counter_handleRootPIRModule();
-void exercise_counter_setupPIRModule();
+// Cvičení – Zobrazení PIR detekce + datum a čas poslední změny stavu
+void exercise_timeStamp_handlerRoot_PIRModule();
+void exercise_timeStamp_setup_PIRModule();
 
-// Cvičení - 
-void exercise_TEXT_handleRootPIRModule();
-void exercise_TEXT_handleDataPIRModule();
-void exercise_TEXT_setupPIRModule();
+// Cvičení – Rozšíření JSON odpovědi (/data) o status a timestamp 
+void exercise_extendedJSON_handlerRoot_PIRModule();
+void exercise_extendedJSON_handlerData_PIRModule();
+void exercise_extendedJSON_setup_PIRModule();
 
-// Cvičení - 
-void exercise_alarm_handleRootPIRModule();
-void exercise_alarm_handleDataPIRModule();
-void exercise_alarm_handleAckPIRModule();
-void exercise_alarm_handleArmPIRModule();
-void exercise_alarm_handleDisarmPIRModule();
-void exercise_alarm_setupPIRModule();
+// Cvičení – Alarm pomocí PIR + potvrzení alarmu přes web
+void exercise_alarm_handlerRoot_PIRModule();
+void exercise_alarm_handlerData_PIRModule();
+void exercise_alarm_handlerAck_PIRModule();
+void exercise_alarm_handlerArm_PIRModule();
+void exercise_alarm_handlerDisarm_PIRModule();
+void exercise_alarm_setup_PIRModule();
+void exercise_alarm_loop_PIRModule();
 
 #endif

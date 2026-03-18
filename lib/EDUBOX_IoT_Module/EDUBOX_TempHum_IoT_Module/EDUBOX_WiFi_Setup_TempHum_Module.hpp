@@ -6,6 +6,6 @@
  * @param ssid Název WiFi sítě.
  * @param password Heslo k WiFi síti.
  */
-void setupWifiTempHumModule(const char* ssid, const char* password);
+void setupWifi_TempHumModule(const char* ssid, const char* password);
 
 #endif

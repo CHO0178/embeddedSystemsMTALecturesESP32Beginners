@@ -72,7 +72,7 @@ void example_loop_LightModule() {
 
 
 /**
- * @brief Cvičeni – Zobrazení stavu LED a aktuálního data a času
+ * @brief Cvičení – Zobrazení stavu LED a aktuálního data a času
  *
  * @details
  * Toto rozšíření webové stránky modulu osvětlení přidává zobrazení aktuálního stavu LED a času poslední změny stavu.
@@ -120,7 +120,7 @@ void exercise_timeDate_setup_LightModule() {
 
 
 /**
- * @brief Cvičeni – Rozšíření API
+ * @brief Cvičení – Rozšíření API
  *
  * @details
  * Tyto nové endpointy umožní přepínat stav LED a nastavovat jej pomocí parametru v URL, přičemž je nutné uchovávat aktuální stav LED v globální proměnné.

@@ -6,6 +6,6 @@
  * @param ssid Název WiFi sítě.
  * @param password Heslo k WiFi síti.
  */
-void setupWifiPIRModule(const char* ssid, const char* password);
+void setupWifi_PIRModule(const char* ssid, const char* password);
 
 #endif

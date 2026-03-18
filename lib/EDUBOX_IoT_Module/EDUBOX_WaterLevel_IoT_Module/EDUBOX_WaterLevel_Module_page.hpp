@@ -5,18 +5,24 @@
 
 /**
  * @brief Ukázka HTML stránky s JavaScriptem pro WaterLevel modul.
- * @details Tato stránka zobrazuje aktuální hladinu vody načítanou z endpointu `/data` každou sekundu.
+ * @details Tato HTML stránka zobrazuje aktuální hodnotu senzoru a jednoduchou hladinu vody.
  */
-const char WATERLEVEL_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
+const char EXAMPLE_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hladina vody</title>
+  <title>Hladina vody ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul snímaní hladiny vody</h1>
-  <h2>Aktualní hladina vody: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>WaterLevel modul - Ukázka</h1>
+  <h2>Raw hodnota: <span id="rawValue">NAČÍTÁNÍ...</span></h2>
+
+  <div style="width:120px; height:220px; border:2px solid black; margin:20px auto; position:relative;">
+    <div id="water" style="position:absolute; bottom:0; width:100%; height:0%; background-color:deepskyblue;"></div>
+  </div>
+
+  <h2>Hladina: <span id="percentValue">0</span> %</h2>
 </body>
 
 <script>
@@ -24,31 +30,76 @@ const char WATERLEVEL_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.level;
+        document.getElementById('rawValue').innerText = data.raw;
+        document.getElementById('percentValue').innerText = data.percent;
+        document.getElementById('water').style.height = data.percent + '%';
       });
   }
   setInterval(fetchData, 1000);
-  window.onload = fetchData;
+  fetchData();
 </script>
+</html>
+)HTML";
 
+/**
+ * @brief Cvičení – Grafické zobrazení hladiny vody
+ * 
+ */
+const char EXERCISE_GRAPHIC_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hladina vody cvičení</title>
+</head>
+<body style="text-align:center; font-family:sans-serif;">
+  <h1>WaterLevel modul - Cvičení</h1>
+  <h2>Raw hodnota: <span id="rawValue">NAČÍTÁNÍ...</span></h2>
+  <h2>Hladina: <span id="percentValue">0</span> %</h2>
+
+  <!-- ZDE doplňte grafické zobrazení hladiny vody -->
+  <!-- Vytvořte vlastní podobu nádrže a vody, která se bude lišit od ukázky -->
+  <!-- Můžete změnit například barvu, velikost, tvar nebo zaoblení rohů -->
+
+</body>
+
+<script>
+  function fetchData() {
+    fetch('/data')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('rawValue').innerText = data.raw;
+        document.getElementById('percentValue').innerText = data.percent;
+
+        // ZDE doplňte změnu výšky vody podle data.percent
+      });
+  }
+
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
 
 
 /**
- * @brief ÚKOL 1: Prahová hláška na webu + datum/čas změny (Date())
+ * @brief Cvičení – Rozšíření JSON odpovědi
  * 
  */
-const char EXERCISE_1_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_EXTENDEDJSON_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hladina vody - Úkol 1</title>
+  <title>Hladina vody cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul snímaní hladiny vody</h1>
-  <h2>Aktualní hladina vody: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>WaterLevel modul - Cvičení</h1>
+  <h2>Raw: <span id="rawValue">NAČÍTÁNÍ...</span></h2>
+  <h2>Percent: <span id="percentValue">---</span></h2>
+
+  <!-- ZDE doplňte elementy pro zobrazení status a timestamp -->
+
 </body>
 
 <script>
@@ -56,77 +107,67 @@ const char EXERCISE_1_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.level;
+        document.getElementById('rawValue').innerText = data.raw;
+        document.getElementById('percentValue').innerText = data.percent;
+
+        // ZDE doplňte zobrazení polí status a timestamp
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
+
 
 /**
- * @brief ÚKOL 2: Rozšířený JSON (raw, percent, status, timestamp)
+ * @brief Cvičení – Historie hodnot a jednoduchý sloupcový graf
  * 
  */
-const char EXERCISE_2_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_HISTORY_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hladina vody - Úkol 2</title>
+  <title>Hladina vody cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul snímaní hladiny vody</h1>
-  <h2>Aktualní hladina vody: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>WaterLevel modul - Cvičení</h1>
+  <h2>Aktuální hladina: <span id="percentValue">0</span> %</h2>
+
+  <!-- ZDE doplňte kontejner pro jednoduchý graf -->
+  <div id="chart"></div>
+
 </body>
 
 <script>
+  let values = [];
+
+  function drawChart() {
+    const chart = document.getElementById('chart');
+    chart.innerHTML = '';
+
+    // ZDE doplňte vykreslení sloupců podle hodnot v poli values
+  }
+
   function fetchData() {
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.level;
+        document.getElementById('percentValue').innerText = data.percent;
+
+        // ZDE doplňte přidání nové hodnoty do pole
+        // ZDE doplňte omezení velikosti pole třeba na 10 hodnot
+
+        drawChart();
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
-
-/**
- * @brief ÚKOL 3: Alarm při překročení hladiny + potvrzení (ack)   
- * 
- */
-const char EXERCISE_3_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Hladina vody - Úkol 3</title>
-</head>
-<body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul snímaní hladiny vody</h1>
-  <h2>Aktualní hladina vody: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
-</body>
-
-<script>
-  function fetchData() {
-    fetch('/data')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('data').innerText = data.level;
-      });
-  }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
-
-</html>
-)HTML";
-
 
 #endif

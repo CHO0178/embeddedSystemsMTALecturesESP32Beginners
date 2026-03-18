@@ -33,7 +33,7 @@ void example_handlerRootHTMLBasics() {
  * @details Tato funkce inicializuje webový server společně s příslušnými obslužnými funkcemi.
  * 
  */
-void example_setupHTMLBasics() {
+void example_setup_HTMLBasics() {
     server_HTML.on("/", example_handlerRootHTMLBasics); // Vložení funkce pro obsluhu kořenové URL
     server_HTML.begin();
     Serial.println("HTTP server spuštěn");
@@ -44,7 +44,7 @@ void example_setupHTMLBasics() {
  * @details Tato funkce zpracovává příchozí HTTP požadavky.
  * 
  */
-void example_loopHTMLBasics() {
+void example_loop_HTMLBasics() {
     server_HTML.handleClient();
 }
 

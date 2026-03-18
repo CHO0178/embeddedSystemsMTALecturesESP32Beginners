@@ -2,62 +2,47 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení - Cvičení Blikání LED</title>
+  <title>Hladina vody cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení - Cvičení</h1>
-  <button type="button" style="font-size:20px;" onclick="startBlink()">
-    Začít blikat
-  </button>
-  <button type="button" style="font-size:20px;" onclick="stopBlink()">
-    Zastavit blikání
-  </button>
+  <h1>WaterLevel modul - Cvičení</h1>
+  <h2>Aktuální hladina: <span id="percentValue">0</span> %</h2>
 
-  <h2>Perioda blikání (100 - 5000 ms):</h2>
-  <input id="period" type="number" min="100" max="5000" value="500" style="font-size:20px; width:140px;">
-  <br><br>
-  <h2>Stav blikání: <span id="status">NAČÍTÁM...</span></h2>
-  <button type="button" style="font-size:20px;" onclick="refresh()">
-    Aktualizovat stav
-  </button>
-  <p id="error" style="color:red;"></p>
+  <div id="chart" style="width:90%; max-width:500px; height:220px; border:2px solid black; margin:20px auto; 
+                        display:flex; align-items:flex-end; gap:4px; padding:10px; box-sizing:border-box;"></div>
 </body>
 
 <script>
-  function setError(text) {
-    document.getElementById('error').innerText = text || '';
+  let values = [];
+  function drawChart() {
+    const chart = document.getElementById('chart');
+    chart.innerHTML = '';
+
+    for (let i = 0; i < values.length; i++) {
+      const bar = document.createElement('div');
+      bar.style.width = '30px';
+      bar.style.height = values[i] + '%';
+      bar.style.backgroundColor = 'deepskyblue';
+      chart.appendChild(bar);
+    }
   }
 
-  function startBlink() {
-    setError('');
-    const p = document.getElementById('period').value;
+  function fetchData() {
+    fetch('/data')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('percentValue').innerText = data.percent;
 
-    fetch('/blink/start?period=' + p)
-      .then(response => response.text().then(t => ({ ok: response.ok, text: t })))
-      .then(res => {
-        if (!res.ok) { setError(res.text); }
-        refresh();
+        values.push(data.percent);
+        if (values.length > 10) {
+          values.shift();
+        }
+
+        drawChart();
       });
   }
 
-  function stopBlink() {
-    setError('');
-    fetch('/blink/stop')
-      .then(response => response.text().then(t => ({ ok: response.ok, text: t })))
-      .then(res => {
-        if (!res.ok) { setError(res.text); }
-        refresh();
-      });
-  }
-
-  function refresh() {
-    fetch('/blink/status')
-      .then(r => r.text())
-      .then(t => {
-        document.getElementById('status').innerText = t;
-      });
-  } 
-  
-  refresh();
+  setInterval(fetchData, 1000);
+  fetchData();
 </script>
 </html>

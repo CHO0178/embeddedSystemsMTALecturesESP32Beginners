@@ -1,22 +1,29 @@
-#ifndef WATERLEVEL_MODULE_PAGE_HPP
-#define WATERLEVEL_MODULE_PAGE_HPP
+#ifndef WATERLEVEL_MODULE_PAGE_RES_HPP
+#define WATERLEVEL_MODULE_PAGE_RES_HPP
 
 #include <pgmspace.h>
 
 /**
  * @brief Ukázka HTML stránky s JavaScriptem pro WaterLevel modul.
- * @details Tato stránka zobrazuje aktuální hladinu vody načítanou z endpointu `/data` každou sekundu.
+ * @details Tato HTML stránka zobrazuje aktuální hodnotu senzoru a jednoduchou hladinu vody.
  */
-const char WATERLEVEL_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
+const char RES_EXAMPLE_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hladina vody</title>
+  <title>Hladina vody ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul snímaní hladiny vody</h1>
-  <h2>Aktualní hladina vody: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>WaterLevel modul - Ukázka</h1>
+  <h2>Raw hodnota: <span id="rawValue">NAČÍTÁNÍ...</span></h2>
+
+  <div style="width:120px; height:220px; border:2px solid black; margin:20px auto; position:relative;">
+    <div id="water" style="position:absolute; bottom:0; width:100%; height:0%; background-color:deepskyblue;"></div>
+  </div>
+
+  <h2>Hladina: <span id="percentValue">0</span> %</h2>
+
 </body>
 
 <script>
@@ -24,31 +31,38 @@ const char WATERLEVEL_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.level;
+        document.getElementById('rawValue').innerText = data.raw;
+        document.getElementById('percentValue').innerText = data.percent;
+        document.getElementById('water').style.height = data.percent + '%';
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
 
 
 /**
- * @brief ÚKOL 1: Prahová hláška na webu + datum/čas změny (Date())
+ * @brief Cvičení – Grafické zobrazení hladiny vody
  * 
  */
-const char EXERCISE_1_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
+const char RES_EXERCISE_GRAPHIC_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hladina vody - Úkol 1</title>
+  <title>Hladina vody cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul snímaní hladiny vody</h1>
-  <h2>Aktualní hladina vody: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>WaterLevel modul - Cvičení</h1>
+  <h2>Raw hodnota: <span id="rawValue">NAČÍTÁNÍ...</span></h2>
+  <h2>Hladina: <span id="percentValue">0</span> %</h2>
+
+  <div style="width:140px; height:240px; border:3px solid black; border-radius:20px; margin:20px auto; position:relative; overflow:hidden;">
+    <div id="water" style="position:absolute; bottom:0; width:100%; height:0%; background-color:royalblue;"></div>
+  </div>
 </body>
 
 <script>
@@ -56,30 +70,35 @@ const char EXERCISE_1_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.level;
+        document.getElementById('rawValue').innerText = data.raw;
+        document.getElementById('percentValue').innerText = data.percent;
+        document.getElementById('water').style.height = data.percent + '%';
       });
   }
   setInterval(fetchData, 1000);
-  window.onload = fetchData;
+  fetchData();
 </script>
-
 </html>
 )HTML";
+
 
 /**
- * @brief ÚKOL 2: Rozšířený JSON (raw, percent, status, timestamp)
+ * @brief Cvičení – Rozšíření JSON odpovědi
  * 
  */
-const char EXERCISE_2_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
+const char RES_EXERCISE_EXTENDEDJSON_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hladina vody - Úkol 2</title>
+  <title>Hladina vody cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul snímaní hladiny vody</h1>
-  <h2>Aktualní hladina vody: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>WaterLevel modul - Cvičení</h1>
+  <h2>Raw: <span id="rawValue">NAČÍTÁNÍ...</span></h2>
+  <h2>Percent: <span id="percentValue">---</span></h2>
+  <h2>Status: <span id="statusValue">---</span></h2>
+  <h2>Timestamp: <span id="timestampValue">---</span></h2>
 </body>
 
 <script>
@@ -87,46 +106,72 @@ const char EXERCISE_2_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.level;
+        document.getElementById('rawValue').innerText = data.raw;
+        document.getElementById('percentValue').innerText = data.percent;
+        document.getElementById('statusValue').innerText = data.status;
+        document.getElementById('timestampValue').innerText = data.timestamp;
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
+
 
 /**
- * @brief ÚKOL 3: Alarm při překročení hladiny + potvrzení (ack)   
+ * @brief Cvičení – Historie hodnot a jednoduchý sloupcový graf
  * 
  */
-const char EXERCISE_3_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
+const char RES_EXERCISE_HISTORY_WATERLEVEL_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hladina vody - Úkol 3</title>
+  <title>Hladina vody cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul snímaní hladiny vody</h1>
-  <h2>Aktualní hladina vody: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>WaterLevel modul - Cvičení</h1>
+  <h2>Aktuální hladina: <span id="percentValue">0</span> %</h2>
+
+  <div id="chart" style="width:90%; max-width:500px; height:220px; border:2px solid black; margin:20px auto; display:flex; align-items:flex-end; gap:4px; padding:10px; box-sizing:border-box;"></div>
 </body>
 
 <script>
+  let values = [];
+  function drawChart() {
+    const chart = document.getElementById('chart');
+    chart.innerHTML = '';
+
+    for (let i = 0; i < values.length; i++) {
+      const bar = document.createElement('div');
+      bar.style.width = '30px';
+      bar.style.height = values[i] + '%';
+      bar.style.backgroundColor = 'deepskyblue';
+      chart.appendChild(bar);
+    }
+  }
+
   function fetchData() {
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.level;
+        document.getElementById('percentValue').innerText = data.percent;
+
+        values.push(data.percent);
+        if (values.length > 10) {
+          values.shift();
+        }
+
+        drawChart();
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
-
 
 #endif

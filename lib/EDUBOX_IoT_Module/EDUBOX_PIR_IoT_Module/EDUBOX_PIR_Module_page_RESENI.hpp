@@ -1,22 +1,23 @@
-#ifndef PIR_MODULE_PAGE_HPP
-#define PIR_MODULE_PAGE_HPP
+#ifndef PIR_MODULE_PAGE_RES_HPP
+#define PIR_MODULE_PAGE_RES_HPP
 
 #include <pgmspace.h>
 
 /**
- * @brief Ukazka HTML stránky s JavaScriptem pro modul PIR.
- * @details Tato HTML stránka zobrazuje aktuální stav detekce PIR senzoru a aktualizuje jej každou sekundu pomocí JavaScriptu.
+ * @brief Ukázka HTML stránky s JavaScriptem pro PIR modul.
+ * @details Tato HTML stránka zobrazuje stav detekce pohybu a automaticky se obnovuje.
+ * 
  */
-const char PIR_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
+const char RES_EXAMPLE_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>PIR</title>
+  <title>PIR senzor - Ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>PIR modul</h1>
-  <h2>PIR detekce: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>PIR modul - Ukázka</h1>
+  <h2>Detekce pohybu: <span id="detection">NAČÍTÁNÍ...</span></h2>
 </body>
 
 <script>
@@ -24,61 +25,73 @@ const char PIR_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.detection;
+        document.getElementById('detection').innerText = data.detection ? 'POHYB DETEKOVÁN' : 'Klid';
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
 
 /**
- * @brief Úkol 1: Zobrazení PIR detekce + datum a čas poslední změny stavu
+ * @brief Cvičení – Zobrazení PIR detekce + datum a čas poslední změny stavu 
  * 
  */
-const char EXERCISE_1_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char RES_EXERCISE_TIMESTAMP_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>PIR - Úkol 1</title>
+  <title>PIR senzor cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>PIR modul</h1>
-  <h2>PIR detekce: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>PIR modul - Cvičení</h1>
+  <h2>Detekce pohybu: <span id="detection">NAČÍTÁNÍ...</span></h2>
+  <h3>Čas poslední změny stavu: <span id="lastChange">---</span></h3>
 </body>
 
 <script>
+  let lastState = null;
+
   function fetchData() {
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.detection;
+        const detected = data.detection;
+        document.getElementById('detection').innerText = detected ? 'POHYB DETEKOVÁN' : 'Klid';
+
+        if (lastState !== null && lastState !== detected) {
+          const now = new Date();
+          document.getElementById('lastChange').innerText = now.toLocaleString('cs-CZ');
+        }
+
+        lastState = detected;
       });
   }
   setInterval(fetchData, 1000);
-  window.onload = fetchData;
+  fetchData();
 </script>
-
 </html>
 )HTML";
 
 /**
- * @brief Úkol 2: Rozšíření JSON odpovědi o stav a timestamp
+ * @brief Cvičení – Rozšíření JSON odpovědi (/data) o status a timestamp
  * 
  */
-const char EXERCISE_2_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char RES_EXERCISE_EXTENDEDJSON_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>PIR - Úkol 2</title>
+  <title>PIR senzor cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>PIR modul</h1>
-  <h2>PIR detekce: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>PIR modul - Cvičení</h1>
+  <h2>Detekce pohybu: <span id="detection">NAČÍTÁNÍ...</span></h2>
+  <h3>Status: <span id="status">---</span></h3>
+  <h3>Timestamp (ms): <span id="timestamp">---</span></h3>
 </body>
 
 <script>
@@ -86,31 +99,38 @@ const char EXERCISE_2_PIR_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.detection;
+        document.getElementById('detection').innerText = data.detection ? 'POHYB DETEKOVÁN' : 'Klid';
+        document.getElementById('status').innerText = data.status;
+        document.getElementById('timestamp').innerText = data.timestamp;
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
-
 
 /**
- * @brief Úkol 3: Alarm režim PIR (latch) + potvrzení alarmu přes web
+ * @brief Cvičení – Alarm pomocí PIR + potvrzení alarmu přes web 
  * 
  */
-const char EXERCISE_3_PIR_MODULE_HTML[] PROGMEM = R"HTML(
+const char RES_EXERCISE_ALARM_PIR_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>PIR - Úkol 3</title>
+  <title>PIR senzor cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>PIR modul</h1>
-  <h2>PIR detekce: <span id="data">ČEKÁNÍ NA STAV...</span></h2>
+  <h1>PIR modul - Cvičení</h1>
+  <h2>Detekce pohybu: <span id="detection">NAČÍTÁNÍ...</span></h2>
+  <h3>Stav systému: <span id="armed">---</span></h3>
+  <h3>Alarm: <span id="alarm">---</span></h3>
+  <br>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('arm')">Aktivovat ochranu</button>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('disarm')">Deaktivovat ochranu</button>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('ack')">Potvrdit alarm</button>
 </body>
 
 <script>
@@ -118,16 +138,21 @@ const char EXERCISE_3_PIR_MODULE_HTML[] PROGMEM = R"HTML(
     fetch('/data')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('data').innerText = data.detection;
+        document.getElementById('detection').innerText = data.detection ? 'POHYB DETEKOVÁN' : 'Klid';
+        document.getElementById('armed').innerText = data.armed ? 'AKTIVNÍ' : 'Neaktivní';
+        document.getElementById('alarm').innerText = data.alarm ? 'ALARM!' : 'OK';
       });
   }
-  setInterval(fetchData, 1000);
-  window.onload = fetchData;
-</script>
 
+  function sendCommand(endpoint) {
+    fetch('/' + endpoint)
+      .then(() => fetchData());
+  }
+
+  setInterval(fetchData, 1000);
+  fetchData();
+</script>
 </html>
 )HTML";
-
-
 
 #endif

@@ -1,10 +1,10 @@
-#ifndef LIGHT_MODULE_PAGE_HPP
-#define LIGHT_MODULE_PAGE_HPP
+#ifndef LIGHT_MODULE_PAGE_RES_HPP
+#define LIGHT_MODULE_PAGE_RES_HPP
 
 #include <pgmspace.h>
 
 /**
- * @brief Příklad HTML stránky s JavaScriptem pro modul osvětlení.
+ * @brief Ukázka HTML stránky s JavaScriptem pro modul osvětlení.
  * @details Tato HTML stránka umožňuje uživateli ovládat LED osvětlení pomocí tlačítek pro zapnutí a vypnutí.
  * 
  */

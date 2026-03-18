@@ -1,66 +1,46 @@
-#ifndef TEMPHUMMODULE_HPP
-#define TEMPHUMMODULE_HPP
+#ifndef TEMPHUM_MODULE_HPP
+#define TEMPHUM_MODULE_HPP
 
 #include <EDUBOX_TempHum_IoT_Module/EDUBOX_WiFi_Setup_TempHum_Module.hpp>
 
 /**
- * @brief Ukazka obsluhy kořenové URL pro modul snímače teploty a vlhkosti.
- * @details Tato funkce zobrazí HTML stránku s aktuální teplotou a vlhkostí.
+ * @brief Obsluha kořenové URL.
+ * @details Zobrazí HTML stránku s aktuální teplotou a vlhkostí.
  * 
  */
-void handleRootTempHumModule();
+void example_handlerRoot_TempHumModule();
 
 /**
- * @brief Ukazka obsluhy URL pro získání dat ve formátu JSON pro modul snímače teploty a vlhkosti.
- * @details Tato funkce načte hodnoty teploty a vlhkosti ze senzoru DHT22 a odešle je klientovi ve formátu JSON.
+ * @brief Inicializace modulu snímače teploty a vlhkosti.
+ * @details Nastaví DHT22 senzor, LED a inicializuje webový server s příslušnými obslužnými funkcemi.
  * 
  */
-void handleDataTempHumModule(); 
+void example_setup_TempHumModule();
 
-/**
- * @brief Ukázka nastavení DHT22 senzoru a WiFi připojení.
- * @details Tato funkce inicializuje DHT22 senzor a nastaví webový server s příslušnými obslužnými funkcemi.
+/** 
+ * @brief Hlavní smyčka modulu snímače teploty a vlhkosti.
+ * @details Zpracovává příchozí HTTP požadavky.
  * 
  */
-void setupTempHumModule();
-
-/**
- * @brief Ukázka hlavní smyčky pro modul snímače teploty a vlhkosti.
- * @details Tato funkce zpracovává příchozí HTTP požadavky a obsluhuje odesílání aktuálních hodnot teploty a vlhkosti ve formátu JSON.
- * 
- */
-void loopTempHumModule();
+void example_loop_TempHumModule();
 
 
 
-/**
- * @brief Ukol 1 - Zobrazení času poslední aktualizace dat
- * 
- */
-void Exercise1_handleRootTempHumModule();
-void Exercise1_setupTempHumModule();
-
-/**
- * @brief Ukol 2 - Rozšíření JSON rozhraní modulu
- * 
- */
-void Exercise2_handleDataTempHumModule();
-void Exercise2_handleRootTempHumModule();
-void Exercise2_setupTempHumModule();
+// Cvičení – Stav senzoru
+void exercise_sensorState_handlerRoot_TempHumModule();
+void exercise_sensorState_setup_TempHumModule();
 
 
-/**
- * @brief Ukol 3 – Ovládání měření přes webové rozhraní (stav modulu + REST ovládání)
- * 
- */
-void Exercise3_setupTempHumModule();
-void Exercise3_handleRootTempHumModule();
-void Exercise3_handleDataTempHumModule();
-void Exercise3_handleEnableTempHumModule();
-void Exercise3_handleDisableTempHumModule();
-void Exercise3_handleStatusTempHumModule();
+// Cvičení – Vyhodnocení prostředí
+void exercise_environment_handlerRoot_TempHumModule();
+void exercise_environment_setup_TempHumModule();
 
 
+// Cvičení – Ovládání měření
+void exercise_measureControl_handlerRoot_TempHumModule();
+void exercise_measureControl_handlerEnable_TempHumModule();
+void exercise_measureControl_handlerDisable_TempHumModule();
+void exercise_measureControl_setup_TempHumModule();
 
 
 #endif

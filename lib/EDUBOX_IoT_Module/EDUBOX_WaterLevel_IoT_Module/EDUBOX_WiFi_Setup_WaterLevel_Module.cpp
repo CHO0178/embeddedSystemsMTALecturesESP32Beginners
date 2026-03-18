@@ -18,7 +18,7 @@
  * @param ssid Název WiFi sítě.
  * @param password Heslo k WiFi síti.
  */
-void setupWifiWaterLevelModule(const char* ssid, const char* password) {
+void setupWifi_WaterLevelModule(const char* ssid, const char* password) {
     Serial.print("Připojuji se k WiFi: ");
     Serial.println(ssid);
     delay(100);

@@ -4,7 +4,7 @@
 #include <pgmspace.h>
 
 /**
- * @brief Příklad HTML stránky s JavaScriptem pro modul osvětlení.
+ * @brief Ukázka HTML stránky s JavaScriptem pro modul osvětlení.
  * @details Tato HTML stránka umožňuje uživateli ovládat LED osvětlení pomocí tlačítek pro zapnutí a vypnutí.
  * 
  */
@@ -16,7 +16,7 @@ const char EXAMPLE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
   <title>Osvětlení ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení - Ukázka</h1>
+  <h1>Modul osvětlení - Cvičení</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
     Rozsvítit LED
   </button>
@@ -48,10 +48,10 @@ const char EXERCISE_TIMEDATE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení ukázka</title>
+  <title>Osvětlení cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení - Ukázka</h1>
+  <h1>Modul osvětlení - Cvičení</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
     Rozsvítit LED
   </button>
@@ -83,10 +83,10 @@ const char EXERCISE_EXTENDEDENDPOINTS_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení ukázka</title>
+  <title>Osvětlení cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení - Ukázka</h1>
+  <h1>Modul osvětlení - Cvičení</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
     Rozsvítit LED
   </button>
@@ -117,10 +117,10 @@ const char EXERCISE_BLINKING_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Osvětlení ukázka</title>
+  <title>Osvětlení cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení - Ukázka</h1>
+  <h1>Modul osvětlení - Cvičení</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
     Rozsvítit LED
   </button>

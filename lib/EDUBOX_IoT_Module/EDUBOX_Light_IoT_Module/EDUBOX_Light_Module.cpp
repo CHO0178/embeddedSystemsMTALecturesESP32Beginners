@@ -72,13 +72,13 @@ void example_loop_LightModule() {
 
 
 /**
- * @brief Cvičeni – Zobrazení stavu LED a aktuálního data a času
+ * @brief Cvičení – Zobrazení stavu LED a aktuálního data a času
  *
  * @details
  * Toto rozšíření webové stránky modulu osvětlení přidává zobrazení aktuálního stavu LED a času poslední změny stavu.
  *
  * @todo
- * 1. Do HTML stránky doplňte:
+ * 1. Do HTML stránky v "EDUBOX_Light_Module_page.hpp" doplňte:
  *    - prvek pro zobrazení stavu LED (např. <span id="ledState">...</span>)
  *    - prvek pro zobrazení data a času (např. <span id="lastChange">...</span>)
  * 2. Upravte JavaScript tak, aby po kliknutí na tlačítka ON/OFF:
@@ -121,7 +121,7 @@ void exercise_timeDate_setup_LightModule() {
 
 
 /**
- * @brief Cvičeni – Rozšíření API
+ * @brief Cvičení – Rozšíření API
  *
  * @details
  * Tyto nové endpointy umožní přepínat stav LED a nastavovat jej pomocí parametru
@@ -160,11 +160,11 @@ void exercise_extendedEndpoints_handlerToggle_LightModule() {
     // Doplnit řešení pro přepínání stavu LED
 }
 
-void exercise_extendedEndpoints_handlerSetLightModule() {
+void exercise_extendedEndpoints_handlerSet_LightModule() {
     // Doplnit řešení pro nastavení stavu LED podle parametru
 }
 
-void exercise_extendedEndpoints_handlerStatusLightModule() {
+void exercise_extendedEndpoints_handlerStatus_LightModule() {
     // Doplnit řešení pro vrácení aktuálního stavu LED klientovi
 }
 
