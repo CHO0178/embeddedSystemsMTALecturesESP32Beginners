@@ -1,45 +1,40 @@
-#ifndef HTMLBASICS_HPP
-#define HTMLBASICS_HPP
-
-
-/**
- * @brief Ukázka obsluhy kořenové URL.
- * @details Tato funkce zobrazí HTML stránku.
- * 
- */
-void example_handlerRootHTMLBasics();
+#ifndef HTML_BASICS_MODULE_HPP
+#define HTML_BASICS_MODULE_HPP
 
 /**
- * @brief Ukázka nastavení ESP32 a WiFi připojení.
- * @details Tato funkce inicializuje webový server společně s příslušnými obslužnými funkcemi.
- * 
+ * @brief Obsluha kořenové URL.
+ * @details Zobrazí HTML stránku s jednoduchou ukázkou základních HTML prvků.
  */
-void example_setupHTMLBasics();
+void example_handlerRoot_HTMLBasics();
 
 /**
- * @brief Ukázka hlavní smyčky.
- * @details Tato funkce zpracovává příchozí HTTP požadavky.
- * 
+ * @brief Inicializace modulu HTML basics.
+ * @details Inicializuje webový server s příslušnými obslužnými funkcemi.
  */
-void example_loopHTMLBasics();
+void example_setup_HTMLBasics();
+
+/**
+ * @brief Ukázka hlavní smyčky modulu HTML basics.
+ * @details Zpracovává příchozí HTTP požadavky.
+ */
+void example_loop_HTMLBasics();
 
 
-// Cvičení - 
-void exercise_TEXT_handlerRootHTMLBasics();
-void exercise_TEXT_setupHTMLBasics();
-void exercise_TEXT_loopHTMLBasics();
+// Cvičení – Základní text na stránce
+void exercise_text_handlerRoot_HTMLBasics();
+void exercise_text_setup_HTMLBasics();
+void exercise_text_loop_HTMLBasics();
 
 
-// Cvičení - 
-void exercise_TEXT_handlerRootHTMLBasics();
-void exercise_TEXT_setupHTMLBasics();
-void exercise_TEXT_loopHTMLBasics();
+// Cvičení – Stylování stránky pomocí CSS
+void exercise_style_handlerRoot_HTMLBasics();
+void exercise_style_setup_HTMLBasics();
+void exercise_style_loop_HTMLBasics();
 
 
-// Cvičení - 
-void exercise_TEXT_handlerRootHTMLBasics();
-void exercise_TEXT_setupHTMLBasics();
-void exercise_TEXT_loopHTMLBasics();
-
+// Cvičení – Reakce na tlačítko pomocí JavaScriptu
+void exercise_button_handlerRoot_HTMLBasics();
+void exercise_button_setup_HTMLBasics();
+void exercise_button_loop_HTMLBasics();
 
 #endif
