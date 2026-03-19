@@ -33,12 +33,12 @@ void example_handlerRoot_LightModule() {
  */
 void example_handlerLightOn_LightModule() {
     digitalWrite(LEDPIN, HIGH);
-    server_Light_Module.send(200, "application/text", "ON");
+    server_Light_Module.send(200, "text/plain", "ON");
 }
 
 /**
  * @brief Obsluha zhasnutí osvětlení.
- * @details Rozsvítí LED a odešle stav "OFF" klientovi.
+ * @details Zhasne LED a odešle stav "OFF" klientovi.
  */
 void example_handlerLightOff_LightModule() {
     digitalWrite(LEDPIN, LOW);
@@ -148,7 +148,7 @@ void exercise_extendedEndpoints_handlerRoot_LightModule() {
 
 void exercise_extendedEndpoints_handlerLightOn_LightModule() {
     digitalWrite(LEDPIN, HIGH);
-    server_Light_Module.send(200, "application/text", "ON");
+    server_Light_Module.send(200, "text/plain", "ON");
 }
 
 void exercise_extendedEndpoints_handlerLightOff_LightModule() {

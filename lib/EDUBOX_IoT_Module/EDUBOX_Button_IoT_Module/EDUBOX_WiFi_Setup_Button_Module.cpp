@@ -18,7 +18,7 @@
  * @param ssid Název WiFi sítě.
  * @param password Heslo k WiFi síti.
  */
-void setupWifiButtonModule(const char* ssid, const char* password) {
+void setupWifi_ButtonModule(const char* ssid, const char* password) {
     Serial.print("Připojuji se k WiFi: ");
     Serial.println(ssid);
     delay(100);

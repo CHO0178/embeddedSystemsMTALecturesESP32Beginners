@@ -16,7 +16,7 @@ const char EXAMPLE_LIGHT_MODULE_HTML[] PROGMEM = R"HTML(
   <title>Osvětlení ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul osvětlení - Cvičení</h1>
+  <h1>Modul osvětlení - Ukázka</h1>
   <button type="button" style="font-size:20px;" onclick="sendCommand('on')">
     Rozsvítit LED
   </button>

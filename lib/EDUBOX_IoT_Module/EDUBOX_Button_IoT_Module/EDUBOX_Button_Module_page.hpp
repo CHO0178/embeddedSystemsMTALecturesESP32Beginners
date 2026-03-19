@@ -4,210 +4,212 @@
 #include <pgmspace.h>
 
 /**
- * @brief Ukazka HTML stránky s JavaScriptem pro modul tlačítka s WebSocket komunikací.
- * @details Tato stránka umožňuje zobrazit stav tlačítka (zmáčknuto / puštěno)
- * 
+ * @brief Ukázka HTML stránky s JavaScriptem pro modul tlačítka.
+ * @details Tato HTML stránka zobrazuje stav tlačítka pomocí WebSocket komunikace.
  */
-const char BUTTON_MODULE_JAVASCRIPT_HTML[] PROGMEM = R"HTML(
+const char EXAMPLE_BUTTON_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tlačítka</title>
-  <style>
-    body { font-family:sans-serif; }
-    .badge { display:inline-block; padding:.5rem 1rem; border-radius:999px; border:1px solid #ccc; }
-    .ok { border-color: #0a0; }
-    .err { border-color: #a00; color:#a00; }
-    .pressed { background:#0a0; color:#fff; }
-  </style>
+  <meta charset="UTF-8">
+  <title>Tlačítko ukázka</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul ovládání tlačítek (WebSocket)</h1>
-  <p id="status" class="badge">…</p>
+  <h1>Modul tlačítka - Ukázka</h1>
+  <h2>Stav tlačítka: <span id="buttonState">NAČÍTÁNÍ...</span></h2>
 </body>
+
 <script>
-  const statusEl = document.getElementById('status');
-  function setStatus(pressed) {
-    statusEl.textContent = pressed ? "ZMÁČKNUTO" : "PUŠTĚNO";
-    statusEl.className = 'badge ' + (pressed ? 'pressed ok' : 'ok');
-  }
-  function setError(msg) {
-    statusEl.textContent = "Chyba: " + msg;
-    statusEl.className = 'badge err';
+  function setButtonState(pressed) {
+    document.getElementById('buttonState').innerText = pressed ? 'STISKNUTO' : 'UVOLNĚNO';
   }
 
-  // WebSocket připojení
   const ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
-  ws.onopen = () => { /* nic */ };
-  ws.onmessage = (e) => {
-    // server posílá "1" (stisk) nebo "0" (puštěno)
-    setStatus(e.data === "1");
+
+  ws.onmessage = (event) => {
+    setButtonState(event.data === "1");
   };
-  ws.onerror = (e) => setError("WebSocket");
-  ws.onclose = () => setError("Odpojeno");
 
-  // Pro jistotu načteme i počáteční stav RESTem (když ws přijde o fous později)
-  fetch('/state').then(r=>r.json()).then(j=>setStatus(!!j.pressed)).catch(()=>{});
+  fetch('/state')
+    .then(response => response.json())
+    .then(data => {
+      setButtonState(data.pressed);
+    });
 </script>
-
 </html>
 )HTML";
 
 /**
- * @brief Úkol 1: Zobrazení času připojení a počtu zpráv z WebSocketu
- * 
+ * @brief Cvičení – Zobrazení času poslední změny stavu
  */
-const char EXERCISE_1_BUTTON_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_TIMESTAMP_BUTTON_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tlačítka</title>
-  <style>
-    body { font-family:sans-serif; }
-    .badge { display:inline-block; padding:.5rem 1rem; border-radius:999px; border:1px solid #ccc; }
-    .ok { border-color: #0a0; }
-    .err { border-color: #a00; color:#a00; }
-    .pressed { background:#0a0; color:#fff; }
-  </style>
+  <meta charset="UTF-8">
+  <title>Tlačítko cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul ovládání tlačítek (WebSocket)</h1>
-  <p id="status" class="badge">…</p>
+  <h1>Modul tlačítka - Cvičení</h1>
+  <h2>Stav tlačítka: <span id="buttonState">NAČÍTÁNÍ...</span></h2>
+  <!-- ZDE doplňte zobrazení času poslední změny -->
 </body>
+
 <script>
-  const statusEl = document.getElementById('status');
-  function setStatus(pressed) {
-    statusEl.textContent = pressed ? "ZMÁČKNUTO" : "PUŠTĚNO";
-    statusEl.className = 'badge ' + (pressed ? 'pressed ok' : 'ok');
-  }
-  function setError(msg) {
-    statusEl.textContent = "Chyba: " + msg;
-    statusEl.className = 'badge err';
+  // ZDE doplňte proměnnou pro uložení předchozího stavu tlačítka
+
+  function setButtonState(pressed) {
+    document.getElementById('buttonState').innerText = pressed ? 'STISKNUTO' : 'UVOLNĚNO';
   }
 
-  // WebSocket připojení
   const ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
-  ws.onopen = () => { /* nic */ };
-  ws.onmessage = (e) => {
-    // server posílá "1" (stisk) nebo "0" (puštěno)
-    setStatus(e.data === "1");
+
+  ws.onmessage = (event) => {
+    const pressed = (event.data === "1");
+    setButtonState(pressed);
+
+    // ZDE doplňte porovnání stavu a uložení času změny pomocí new Date()
   };
-  ws.onerror = (e) => setError("WebSocket");
-  ws.onclose = () => setError("Odpojeno");
 
-  // Pro jistotu načteme i počáteční stav RESTem (když ws přijde o fous později)
-  fetch('/state').then(r=>r.json()).then(j=>setStatus(!!j.pressed)).catch(()=>{});
+  fetch('/state')
+    .then(response => response.json())
+    .then(data => {
+      setButtonState(data.pressed);
+
+      // ZDE doplňte inicializaci předchozího stavu
+    });
 </script>
-
 </html>
 )HTML";
 
 /**
- * @brief Úkol 2: Strukturované WebSocket zprávy ve formátu JSON
- * 
+ * @brief Cvičení – Dvě tlačítka, dvě LED a rozšířený JSON
  */
-const char EXERCISE_2_BUTTON_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_EXTENDEDJSON_BUTTON_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tlačítka</title>
-  <style>
-    body { font-family:sans-serif; }
-    .badge { display:inline-block; padding:.5rem 1rem; border-radius:999px; border:1px solid #ccc; }
-    .ok { border-color: #0a0; }
-    .err { border-color: #a00; color:#a00; }
-    .pressed { background:#0a0; color:#fff; }
-  </style>
+  <meta charset="UTF-8">
+  <title>Tlačítko cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul ovládání tlačítek (WebSocket)</h1>
-  <p id="status" class="badge">…</p>
+  <h1>Modul tlačítka - Cvičení</h1>
+
+  <h2>Tlačítko 1: <span id="button1">NAČÍTÁNÍ...</span></h2>
+  <h2>Tlačítko 2: <span id="button2">NAČÍTÁNÍ...</span></h2>
+
+  <!-- ZDE doplňte zobrazení LED 1 -->
+  <!-- ZDE doplňte zobrazení LED 2 -->
+  <!-- ZDE doplňte zobrazení timestamp -->
 </body>
+
 <script>
-  const statusEl = document.getElementById('status');
-  function setStatus(pressed) {
-    statusEl.textContent = pressed ? "ZMÁČKNUTO" : "PUŠTĚNO";
-    statusEl.className = 'badge ' + (pressed ? 'pressed ok' : 'ok');
-  }
-  function setError(msg) {
-    statusEl.textContent = "Chyba: " + msg;
-    statusEl.className = 'badge err';
+  function setState(id, value, textTrue, textFalse) {
+    document.getElementById(id).innerText = value ? textTrue : textFalse;
   }
 
-  // WebSocket připojení
   const ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
-  ws.onopen = () => { /* nic */ };
-  ws.onmessage = (e) => {
-    // server posílá "1" (stisk) nebo "0" (puštěno)
-    setStatus(e.data === "1");
+
+  ws.onmessage = (event) => {
+    // ZDE doplňte zpracování JSON zprávy
+    // Očekávaný tvar:
+    // {
+    //   "button1": true,
+    //   "button2": false,
+    //   "led1": true,
+    //   "led2": false,
+    //   "timestamp": 12345
+    // }
   };
-  ws.onerror = (e) => setError("WebSocket");
-  ws.onclose = () => setError("Odpojeno");
 
-  // Pro jistotu načteme i počáteční stav RESTem (když ws přijde o fous později)
-  fetch('/state').then(r=>r.json()).then(j=>setStatus(!!j.pressed)).catch(()=>{});
+  fetch('/state')
+    .then(response => response.json())
+    .then(data => {
+      setState('button1', data.button1, 'STISKNUTO', 'UVOLNĚNO');
+      setState('button2', data.button2, 'STISKNUTO', 'UVOLNĚNO');
+    });
 </script>
-
 </html>
 )HTML";
 
 /**
- * @brief Úkol 3: Obousměrná WebSocket komunikace (ovládání LED z webu)
- * 
+ * @brief Cvičení – Ovládání tří LED přes web a sledování tří tlačítek
  */
-const char EXERCISE_3_BUTTON_MODULE_HTML[] PROGMEM = R"HTML(
+const char EXERCISE_LEDCONTROL_BUTTON_MODULE_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tlačítka</title>
-  <style>
-    body { font-family:sans-serif; }
-    .badge { display:inline-block; padding:.5rem 1rem; border-radius:999px; border:1px solid #ccc; }
-    .ok { border-color: #0a0; }
-    .err { border-color: #a00; color:#a00; }
-    .pressed { background:#0a0; color:#fff; }
-  </style>
+  <meta charset="UTF-8">
+  <title>Tlačítko cvičení</title>
 </head>
 <body style="text-align:center; font-family:sans-serif;">
-  <h1>Modul ovládání tlačítek (WebSocket)</h1>
-  <p id="status" class="badge">…</p>
+  <h1>Modul tlačítka - Cvičení</h1>
+
+  <h2>Tlačítko 1: <span id="button1">NAČÍTÁNÍ...</span></h2>
+  <h2>Tlačítko 2: <span id="button2">NAČÍTÁNÍ...</span></h2>
+  <h2>Tlačítko 3: <span id="button3">NAČÍTÁNÍ...</span></h2>
+
+  <br>
+
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led1_on')">LED 1 ON</button>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led1_off')">LED 1 OFF</button>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led1_toggle')">LED 1 TOGGLE</button>
+
+  <br><br>
+
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led2_on')">LED 2 ON</button>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led2_off')">LED 2 OFF</button>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led2_toggle')">LED 2 TOGGLE</button>
+
+  <br><br>
+
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led3_on')">LED 3 ON</button>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led3_off')">LED 3 OFF</button>
+  <button type="button" style="font-size:18px;" onclick="sendCommand('led3_toggle')">LED 3 TOGGLE</button>
+
+  <br><br>
+
+  <h2>LED 1: <span id="led1">---</span></h2>
+  <h2>LED 2: <span id="led2">---</span></h2>
+  <h2>LED 3: <span id="led3">---</span></h2>
 </body>
+
 <script>
-  const statusEl = document.getElementById('status');
-  function setStatus(pressed) {
-    statusEl.textContent = pressed ? "ZMÁČKNUTO" : "PUŠTĚNO";
-    statusEl.className = 'badge ' + (pressed ? 'pressed ok' : 'ok');
-  }
-  function setError(msg) {
-    statusEl.textContent = "Chyba: " + msg;
-    statusEl.className = 'badge err';
+  function setButtonState(id, pressed) {
+    document.getElementById(id).innerText = pressed ? 'STISKNUTO' : 'UVOLNĚNO';
   }
 
-  // WebSocket připojení
+  function setLedState(id, state) {
+    document.getElementById(id).innerText = state ? 'ON' : 'OFF';
+  }
+
+  function sendCommand(command) {
+    // ZDE doplňte odeslání příkazu přes WebSocket
+  }
+
   const ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
-  ws.onopen = () => { /* nic */ };
-  ws.onmessage = (e) => {
-    // server posílá "1" (stisk) nebo "0" (puštěno)
-    setStatus(e.data === "1");
+
+  ws.onmessage = (event) => {
+    // ZDE doplňte zpracování JSON zpráv
+    // Může přijít:
+    // { "type": "buttons", "button1": ..., "button2": ..., "button3": ... }
+    // nebo
+    // { "type": "leds", "led1": ..., "led2": ..., "led3": ... }
   };
-  ws.onerror = (e) => setError("WebSocket");
-  ws.onclose = () => setError("Odpojeno");
 
-  // Pro jistotu načteme i počáteční stav RESTem (když ws přijde o fous později)
-  fetch('/state').then(r=>r.json()).then(j=>setStatus(!!j.pressed)).catch(()=>{});
+  fetch('/state')
+    .then(response => response.json())
+    .then(data => {
+      setButtonState('button1', data.button1);
+      setButtonState('button2', data.button2);
+      setButtonState('button3', data.button3);
+
+      setLedState('led1', data.led1);
+      setLedState('led2', data.led2);
+      setLedState('led3', data.led3);
+    });
 </script>
-
 </html>
 )HTML";
-
-
 
 #endif

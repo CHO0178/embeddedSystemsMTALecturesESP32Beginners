@@ -1,7 +1,7 @@
 /**
  * @file Button_Module.cpp
  * @author Bc. Dalibor Slíva
- * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu talačítek v projektu MTA-TP.
+ * @brief Tento soubor obsahuje implementaci funkcí pro ovládání modulu tlačítka v projektu MTA-TP.
  * @version 0.1
  * @date 2025-08-13
  * 
@@ -14,316 +14,446 @@
 #include "EDUBOX_Button_Module_page.hpp"
 #include "EDUBOX_Button_Module.hpp"
 
-const uint8_t buttonPin = 17;
-const uint8_t ledPin = 15;
+#define BUTTON1PIN 8
+#define BUTTON2PIN 9
+#define BUTTON3PIN 10
+
+#define LED1PIN 15
+#define LED2PIN 16
+#define LED3PIN 17
+
 const uint32_t DEBOUNCE_MS = 30;
 
+// Web server běžící na portu 80 - Tedy standardní HTTP port
 AsyncWebServer server_Button_Module(80);
 AsyncWebSocket ws("/ws");
 
-bool lastStablePressed = false;  // poslední stabilní stav (true = stisk)
-bool pendingChange = false;      // změna čeká na odeslání
-uint32_t lastChangeMs = 0;
+bool button1Pressed = false;
+bool button2Pressed = false;
+bool button3Pressed = false;
+
+bool led1State = false;
+bool led2State = false;
+bool led3State = false;
 
 /**
- * @brief Ukázka odeslání stavu tlačítka všem připojeným WebSocket klientům.
- * @details Tato funkce odešle všem připojeným WebSocket klientům informaci o stavu tlačítka.
- * 
- */ 
-void notifyAllButtonModule(bool pressed) {
-  ws.textAll(pressed ? "1" : "0");
-}
-
-/**
- * @brief Ukázka obslužné funkce pro události WebSocket modulu tlačítka.
- * @details Tato funkce zpracovává události WebSocket, jako je připojení klienta.
+ * @brief Obsluha kořenové URL.
+ * @details Zobrazí HTML stránku se stavem tlačítka.
  */
-void onWsEventButtonModule(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
-               void *arg, uint8_t *data, size_t len) {
-  if (type == WS_EVT_CONNECT) {
-    // Po připojení pošleme aktuální stav jen tomuto klientovi
-    client->text(lastStablePressed ? "1" : "0");
-  }
-}
-
-/**
- * @brief Ukázka nastavení modulu tlačítka a WiFi připojení.
- * @details Tato funkce nastaví pin pro tlačítko a inicializuje webový server s příslušnými obslužnými funkcemi.
- * 
- */
-void setupButtonModule() {
-  Serial.begin(115200);
-  setupWifiButtonModule("SSID", "PASSWORD");
-  pinMode(buttonPin, INPUT_PULLUP);
-
-  ws.onEvent(onWsEventButtonModule);
-  server_Button_Module.addHandler(&ws);
-
-  server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *req){
-    req->send_P(200, "text/html; charset=utf-8", BUTTON_MODULE_JAVASCRIPT_HTML);
-  });
-
-  server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *req){
-    String json = String("{\"pressed\":") + (lastStablePressed ? "true" : "false") + "}";
-    req->send(200, "application/json", json);
-  });
-
-  server_Button_Module.begin();
-  Serial.println("HTTP server spuštěn");
-}
-
-/**
- * @brief Ukázka smyčky pro čtení stavu tlačítka s debouncem.
- * @details Tato funkce čte stav tlačítka, aplikuje debounce
- * 
- */
-void loopButtonModule() {
-  static bool lastRaw = HIGH;
-  static bool stable = HIGH;
-  static uint32_t lastDebounceTime = 0;
-
-  bool reading = digitalRead(buttonPin);
-  uint32_t now = millis();
-
-  if (reading != lastRaw) {
-    lastDebounceTime = now;
-    lastRaw = reading;
-  }
-
-  // po debounce časem změníme stav
-  if ((now - lastDebounceTime) > DEBOUNCE_MS) {
-    if (reading != stable) {
-      stable = reading;
-
-      // HIGH = puštěno, LOW = stisk
-      lastStablePressed = (stable == LOW);
-
-      notifyAllButtonModule(lastStablePressed);
-
-      Serial.printf("Button: %s\n",
-                    lastStablePressed ? "PRESSED" : "RELEASED");
+void example_handlerRoot_ButtonModule() {
+    AsyncWebServerRequest *request = nullptr;
+    String page = FPSTR(EXAMPLE_BUTTON_MODULE_HTML);
+    if (request != nullptr) {
+        request->send(200, "text/html; charset=utf-8", page);
     }
-  }
-
-  delay(5);  // preventivně odlehčení CPU
-}
-
-
-/**
- * @brief ÚKOL 1 – Zobrazení času připojení a počtu zpráv z WebSocketu
- *
- * @details
- * Cílem tohoto úkolu je rozšířit webové rozhraní modulu tlačítka tak,
- * aby uživatel viděl základní informace o stavu WebSocket komunikace
- * mezi ESP32 a webovým prohlížečem.
- *
- * @todo
- * 1. Upravte HTML stránku tak, aby zobrazovala:
- *    - stav WebSocket spojení (připojeno / odpojeno),
- *    - čas navázání spojení.
- * 2. Do JavaScriptu přidejte počítadlo přijatých WebSocket zpráv.
- * 3. Zajistěte, aby se informace aktualizovaly při změně stavu spojení
- *    nebo při přijetí nové zprávy.
- *
- * @note
- * Čas navázání spojení je získáván na straně klienta pomocí JavaScriptu,
- * nikoliv z ESP32.
- *
- * @note
- * Pro získání aktuálního času v JavaScriptu lze použít:
- * @code
- * const now = new Date();
- * now.toLocaleTimeString();
- * @endcode
- *
- * @return
- * Webová stránka zobrazuje stav WebSocket spojení, čas připojení
- * a počet přijatých zpráv.
- */
-void Exercise1_setupButtonModule() {
-  Serial.begin(115200);
-  setupWifiButtonModule("SSID", "PASSWORD");
-  pinMode(buttonPin, INPUT_PULLUP);
-
-  ws.onEvent(onWsEventButtonModule);
-  server_Button_Module.addHandler(&ws);
-
-  server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *req){
-    req->send_P(200, "text/html; charset=utf-8", EXERCISE_1_BUTTON_MODULE_HTML);
-  });
-
-  server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *req){
-    String json = String("{\"pressed\":") + (lastStablePressed ? "true" : "false") + "}";
-    req->send(200, "application/json", json);
-  });
-
-  server_Button_Module.begin();
-  Serial.println("HTTP server spuštěn");
 }
 
 /**
- * @brief ÚKOL 2 – Strukturované WebSocket zprávy ve formátu JSON
- *
- * @details
- * Cílem tohoto úkolu je upravit komunikaci přes WebSocket tak,
- * aby informace o stavu tlačítka nebyla přenášena pouze jako jednoduchá hodnota,
- * ale jako strukturovaná JSON zpráva.
- *
- * @todo
- * 1. Upravte odesílání zpráv z ESP32 tak, aby byly ve formátu JSON.
- * 2. Zajistěte, aby zpráva obsahovala:
- *    - informaci o stisku tlačítka,
- *    - časovou značku události.
- * 3. Upravte JavaScript na webové stránce tak, aby:
- *    - přijatou zprávu parsoval,
- *    - zobrazil aktuální stav tlačítka,
- *    - zobrazil čas poslední události.
- *
- * @note
- * Časová značka může být generována na straně ESP32
- * (např. čas od spuštění zařízení).
- *
- * @note
- * Pro zpracování JSON zprávy v JavaScriptu lze použít:
- * @code
- * const obj = JSON.parse(message);
- * @endcode
- *
- * @return
- * Webová stránka zobrazuje stav tlačítka a čas poslední změny
- * na základě strukturované WebSocket zprávy.
+ * @brief Obsluha endpointu /state.
+ * @details Vrátí aktuální stav prvního tlačítka ve formátu JSON.
+ * 
+ * @param request Ukazatel na HTTP požadavek.
  */
+void example_handlerState_ButtonModule(AsyncWebServerRequest *request) {
+    String json = "{";
+    json += "\"pressed\": " + String(button1Pressed ? "true" : "false");
+    json += "}";
 
-void Exercise2_notifyAllButtonModule(bool pressed) {
-  //Je třeba přidat časovou značku do JSON zprávy
-  ws.textAll(pressed ? "1" : "0");
+    request->send(200, "application/json", json);
 }
 
-void Exercise2_onWsEventButtonModule(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
-               void *arg, uint8_t *data, size_t len) {
-  if (type == WS_EVT_CONNECT) {
-    //Je třeba přidat časovou značku do JSON zprávy
-    client->text(lastStablePressed ? "1" : "0");
-  }
+/**
+ * @brief Odešle aktuální stav tlačítka všem připojeným klientům.
+ * @details Odesílá jednoduchou zprávu "1" pro stisk a "0" pro uvolnění tlačítka.
+ * 
+ * @param pressed Aktuální stav tlačítka.
+ */
+void example_notifyAll_ButtonModule(bool pressed) {
+    ws.textAll(pressed ? "1" : "0");
 }
 
-void Exercise2_setupButtonModule() {
-  Serial.begin(115200);
-  setupWifiButtonModule("SSID", "PASSWORD");
-  pinMode(buttonPin, INPUT_PULLUP);
-
-  ws.onEvent(onWsEventButtonModule);
-  server_Button_Module.addHandler(&ws);
-
-  server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *req){
-    req->send_P(200, "text/html; charset=utf-8", EXERCISE_2_BUTTON_MODULE_HTML);
-  });
-
-  server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *req){
-    String json = String("{\"pressed\":") + (lastStablePressed ? "true" : "false") + "}";
-    req->send(200, "application/json", json);
-  });
-
-  server_Button_Module.begin();
-  Serial.println("HTTP server spuštěn");
-}
-
-void Exercise2_loopButtonModule() {
-  static bool lastRaw = HIGH;
-  static bool stable = HIGH;
-  static uint32_t lastDebounceTime = 0;
-
-  bool reading = digitalRead(buttonPin);
-  uint32_t now = millis();
-
-  if (reading != lastRaw) {
-    lastDebounceTime = now;
-    lastRaw = reading;
-  }
-
-  // po debounce časem změníme stav
-  if ((now - lastDebounceTime) > DEBOUNCE_MS) {
-    if (reading != stable) {
-      stable = reading;
-      lastStablePressed = (stable == LOW);
-
-      Exercise2_notifyAllButtonModule(lastStablePressed);
-
-      Serial.printf("Button: %s\n",
-                    lastStablePressed ? "PRESSED" : "RELEASED");
+/**
+ * @brief Obsluha WebSocket událostí.
+ * @details Při připojení nového klienta odešle aktuální stav tlačítka.
+ * 
+ * @param server Ukazatel na WebSocket server.
+ * @param client Ukazatel na připojeného klienta.
+ * @param type Typ WebSocket události.
+ * @param arg Doplňkový argument události.
+ * @param data Přijatá data.
+ * @param len Délka přijatých dat.
+ */
+void example_onWsEvent_ButtonModule(AsyncWebSocket *server, AsyncWebSocketClient *client,
+                                    AwsEventType type, void *arg, uint8_t *data, size_t len) {
+    if (type == WS_EVT_CONNECT) {
+        client->text(button1Pressed ? "1" : "0");
     }
-  }
+}
 
-  delay(5);
+/**
+ * @brief Inicializace modulu tlačítka.
+ * @details Nastaví piny, inicializuje WiFi, WebSocket a HTTP server.
+ */
+void example_setup_ButtonModule() {
+    Serial.begin(115200);
+    setupWifi_ButtonModule("SSID", "PASSWORD");
+
+    pinMode(BUTTON1PIN, INPUT_PULLUP);
+    pinMode(LED1PIN, OUTPUT);
+    digitalWrite(LED1PIN, LOW);
+
+    ws.onEvent(example_onWsEvent_ButtonModule);
+    server_Button_Module.addHandler(&ws);
+
+    server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        String page = FPSTR(EXAMPLE_BUTTON_MODULE_HTML);
+        request->send(200, "text/html; charset=utf-8", page);
+    });
+
+    server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *request) {
+        example_handlerState_ButtonModule(request);
+    });
+
+    server_Button_Module.begin();
+    Serial.println("HTTP server spuštěn");
+}
+
+/**
+ * @brief Hlavní smyčka modulu tlačítka.
+ * @details Sleduje stav tlačítka s jednoduchým debouncingem.
+ */
+void example_loop_ButtonModule() {
+    static bool lastRaw = HIGH;
+    static bool stable = HIGH;
+    static uint32_t lastDebounce = 0;
+
+    bool reading = digitalRead(BUTTON1PIN);
+    uint32_t now = millis();
+
+    if (reading != lastRaw) {
+        lastDebounce = now;
+        lastRaw = reading;
+    }
+
+    if ((now - lastDebounce) > DEBOUNCE_MS && reading != stable) {
+        stable = reading;
+        button1Pressed = (stable == LOW);
+
+        digitalWrite(LED1PIN, button1Pressed ? HIGH : LOW);
+        example_notifyAll_ButtonModule(button1Pressed);
+
+        Serial.printf("Button 1: %s\n", button1Pressed ? "PRESSED" : "RELEASED");
+    }
+
+    ws.cleanupClients();
+    delay(5);
 }
 
 
 /**
- * @brief ÚKOL 3 – Obousměrná WebSocket komunikace (ovládání LED z webu)
+ * @brief Cvičení – Zobrazení času poslední změny stavu
  *
  * @details
- * Cílem tohoto úkolu je rozšířit modul tlačítka o obousměrnou WebSocket komunikaci,
- * kde webový prohlížeč bude umět posílat příkazy do ESP32 a ESP32 na ně bude reagovat.
- * Jako praktická ukázka se přidá ovládání LED (zapnout / vypnout) přímo z webu.
+ * Toto rozšíření webové stránky modulu tlačítka přidává zobrazení času
+ * poslední změny stavu tlačítka.
  *
  * @todo
- * 1. Přidejte do projektu LED (nebo využijte vestavěnou LED) a připravte její ovládání v kódu ESP32.
- * 2. Upravte webovou stránku tak, aby obsahovala ovládací prvky pro LED
- *    (např. tlačítko „LED ON“ a „LED OFF“).
- * 3. Navrhněte formát zprávy, kterou klient odešle přes WebSocket do ESP32
- *    (doporučeně ve formátu JSON).
- * 4. Na straně ESP32 implementujte zpracování přijatých WebSocket zpráv tak,
- *    aby na základě přijatého příkazu změnil stav LED.
- * 5. Upravte webovou stránku tak, aby zobrazovala aktuální stav LED
- *    (např. „LED: ON/OFF“).
+ * 1. Doplňte do HTML stránky element pro zobrazení času poslední změny.
+ * 2. V JavaScriptu si uložte předchozí stav tlačítka.
+ * 3. Pokud dojde ke změně stavu, zobrazte aktuální čas pomocí `new Date()`.
  *
  * @note
- * Příchozí WebSocket zprávy ze strany klienta je nutné zpracovat
- * v obsluze událostí WebSocket serveru (událost přijetí dat).
- *
- * @note
- * Příklad formátu zprávy od klienta (hodnoty jsou ilustrativní):
- * @code
- * { "cmd": "led", "value": true }
- * @endcode
- *
- * @note
- * V JavaScriptu lze zprávu odeslat přes:
- * @code
- * ws.send(JSON.stringify(obj));
- * @endcode
- *
- * @note
- * Je vhodné ošetřit situaci, kdy WebSocket není připojen (např. zobrazit hlášku
- * nebo dočasně zakázat ovládací tlačítka).
- *
- * @note
- * BONUS
- * Implementujte potvrzení (ACK) ze strany ESP32, které klientovi oznámí,
- * že příkaz byl přijat a proveden. Potvrzení může být ve formátu textu nebo JSON.
- *
- * @return
- * Webové rozhraní umožňuje ovládat LED přes WebSocket a zobrazuje aktuální stav LED.
- * Bonusově je možné doplnit potvrzovací odpověď (ACK) z ESP32.
+ * Čas je získáván na straně klienta, nikoliv z ESP32.
  */
-void Exercise3_setupButtonModule() {
-  Serial.begin(115200);
-  setupWifiButtonModule("SSID", "PASSWORD");
-  pinMode(buttonPin, INPUT_PULLUP);
-
-  ws.onEvent(onWsEventButtonModule);
-  server_Button_Module.addHandler(&ws);
-
-  server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *req){
-    req->send_P(200, "text/html; charset=utf-8", EXERCISE_1_BUTTON_MODULE_HTML);
-  });
-
-  server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *req){
-    String json = String("{\"pressed\":") + (lastStablePressed ? "true" : "false") + "}";
-    req->send(200, "application/json", json);
-  });
-
-  server_Button_Module.begin();
-  Serial.println("HTTP server spuštěn");
+void exercise_timeStamp_handlerRoot_ButtonModule() {
+    String page = FPSTR(EXERCISE_TIMESTAMP_BUTTON_MODULE_HTML);
+    // ZDE doplňte odeslání HTML stránky klientovi
 }
 
+void exercise_timeStamp_setup_ButtonModule() {
+    Serial.begin(115200);
+    setupWifi_ButtonModule("SSID", "PASSWORD");
+
+    pinMode(BUTTON1PIN, INPUT_PULLUP);
+    pinMode(LED1PIN, OUTPUT);
+    digitalWrite(LED1PIN, LOW);
+
+    ws.onEvent(example_onWsEvent_ButtonModule);
+    server_Button_Module.addHandler(&ws);
+
+    server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // ZDE zavolejte handler pro kořenovou URL
+    });
+
+    server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *request) {
+        example_handlerState_ButtonModule(request);
+    });
+
+    server_Button_Module.begin();
+    Serial.println("HTTP server spuštěn");
+}
+
+void exercise_timeStamp_loop_ButtonModule() {
+    example_loop_ButtonModule();
+}
+
+
+/**
+ * @brief Cvičení – Dvě tlačítka, dvě LED a rozšířený JSON
+ *
+ * @details
+ * Toto rozšíření modulu tlačítka upravuje komunikaci do formátu JSON
+ * a přidává druhé tlačítko i druhou LED.
+ *
+ * @todo
+ * 1. Doplňte do JSON zprávy stav obou tlačítek.
+ * 2. Doplňte do JSON zprávy stav obou LED.
+ * 3. Doplňte položku `timestamp` s hodnotou `millis()`.
+ * 4. Upravte HTML stránku tak, aby všechny hodnoty zobrazila.
+ * 5. Rozsviťte LED1 podle tlačítka 1 a LED2 podle tlačítka 2.
+ */
+void exercise_extendedJSON_handlerRoot_ButtonModule() {
+    String page = FPSTR(EXERCISE_EXTENDEDJSON_BUTTON_MODULE_HTML);
+    // ZDE doplňte odeslání HTML stránky klientovi
+}
+
+void exercise_extendedJSON_handlerState_ButtonModule(AsyncWebServerRequest *request) {
+    // ZDE doplňte vytvoření JSON odpovědi ve tvaru:
+    // {
+    //   "button1": true,
+    //   "button2": false,
+    //   "led1": true,
+    //   "led2": false,
+    //   "timestamp": 12345
+    // }
+}
+
+void exercise_extendedJSON_notifyAll_ButtonModule() {
+    // ZDE doplňte vytvoření a odeslání JSON zprávy všem klientům
+}
+
+void exercise_extendedJSON_onWsEvent_ButtonModule(AsyncWebSocket *server, AsyncWebSocketClient *client,
+                                                  AwsEventType type, void *arg, uint8_t *data, size_t len) {
+    if (type == WS_EVT_CONNECT) {
+        // ZDE doplňte odeslání aktuální JSON zprávy novému klientovi
+    }
+}
+
+void exercise_extendedJSON_setup_ButtonModule() {
+    Serial.begin(115200);
+    setupWifi_ButtonModule("SSID", "PASSWORD");
+
+    pinMode(BUTTON1PIN, INPUT_PULLUP);
+    pinMode(BUTTON2PIN, INPUT_PULLUP);
+
+    pinMode(LED1PIN, OUTPUT);
+    pinMode(LED2PIN, OUTPUT);
+
+    digitalWrite(LED1PIN, LOW);
+    digitalWrite(LED2PIN, LOW);
+
+    ws.onEvent(exercise_extendedJSON_onWsEvent_ButtonModule);
+    server_Button_Module.addHandler(&ws);
+
+    server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // ZDE zavolejte handler pro kořenovou URL
+    });
+
+    server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // ZDE zavolejte handler pro endpoint /state
+    });
+
+    server_Button_Module.begin();
+    Serial.println("HTTP server spuštěn");
+}
+
+void exercise_extendedJSON_loop_ButtonModule() {
+    static bool lastRaw1 = HIGH;
+    static bool stable1 = HIGH;
+    static uint32_t lastDebounce1 = 0;
+
+    static bool lastRaw2 = HIGH;
+    static bool stable2 = HIGH;
+    static uint32_t lastDebounce2 = 0;
+
+    bool changed = false;
+    uint32_t now = millis();
+
+    bool reading1 = digitalRead(BUTTON1PIN);
+    if (reading1 != lastRaw1) {
+        lastDebounce1 = now;
+        lastRaw1 = reading1;
+    }
+
+    if ((now - lastDebounce1) > DEBOUNCE_MS && reading1 != stable1) {
+        stable1 = reading1;
+        button1Pressed = (stable1 == LOW);
+
+        // ZDE doplňte ovládání LED1
+        changed = true;
+    }
+
+    bool reading2 = digitalRead(BUTTON2PIN);
+    if (reading2 != lastRaw2) {
+        lastDebounce2 = now;
+        lastRaw2 = reading2;
+    }
+
+    if ((now - lastDebounce2) > DEBOUNCE_MS && reading2 != stable2) {
+        stable2 = reading2;
+        button2Pressed = (stable2 == LOW);
+
+        // ZDE doplňte ovládání LED2
+        changed = true;
+    }
+
+    if (changed) {
+        // ZDE doplňte odeslání JSON zprávy všem klientům
+    }
+
+    ws.cleanupClients();
+    delay(5);
+}
+
+
+/**
+ * @brief Cvičení – Ovládání tří LED přes web a sledování tří tlačítek
+ *
+ * @details
+ * Toto rozšíření modulu tlačítka přidává obousměrnou WebSocket komunikaci
+ * pro ovládání tří LED připojených k ESP32 a současně sleduje stav tří tlačítek.
+ *
+ * @todo
+ * 1. V JavaScriptu odešlete přes WebSocket příkazy pro jednotlivé LED.
+ * 2. V ESP32 zpracujte přijatou WebSocket zprávu.
+ * 3. Podle přijatého příkazu zapněte, vypněte nebo přepněte příslušnou LED.
+ * 4. Po zpracování odešlete klientům nový stav LED.
+ * 5. Na stránce zobrazte aktuální stav všech tří tlačítek i LED.
+ *
+ * @note
+ * Příklady příkazů:
+ * `led1_on`, `led1_off`, `led1_toggle`
+ * `led2_on`, `led2_off`, `led2_toggle`
+ * `led3_on`, `led3_off`, `led3_toggle`
+ */
+void exercise_ledControl_handlerRoot_ButtonModule() {
+    String page = FPSTR(EXERCISE_LEDCONTROL_BUTTON_MODULE_HTML);
+    // ZDE doplňte odeslání HTML stránky klientovi
+}
+
+void exercise_ledControl_handlerState_ButtonModule(AsyncWebServerRequest *request) {
+    // ZDE doplňte vytvoření JSON odpovědi se stavy tlačítek i LED
+}
+
+void exercise_ledControl_notifyAllButtons_ButtonModule() {
+    // ZDE doplňte odeslání JSON zprávy se stavy tlačítek
+}
+
+void exercise_ledControl_notifyAllLeds_ButtonModule() {
+    // ZDE doplňte odeslání JSON zprávy se stavy LED
+}
+
+void exercise_ledControl_onWsEvent_ButtonModule(AsyncWebSocket *server, AsyncWebSocketClient *client,
+                                                AwsEventType type, void *arg, uint8_t *data, size_t len) {
+    if (type == WS_EVT_CONNECT) {
+        // ZDE doplňte odeslání stavů tlačítek a LED novému klientovi
+    }
+
+    if (type == WS_EVT_DATA) {
+        String msg;
+        for (size_t i = 0; i < len; i++) {
+            msg += (char)data[i];
+        }
+
+        // ZDE doplňte zpracování příkazů led1_on, led1_off, led1_toggle...
+        // a následné nastavení výstupních pinů
+    }
+}
+
+void exercise_ledControl_setup_ButtonModule() {
+    Serial.begin(115200);
+    setupWifi_ButtonModule("SSID", "PASSWORD");
+
+    pinMode(BUTTON1PIN, INPUT_PULLUP);
+    pinMode(BUTTON2PIN, INPUT_PULLUP);
+    pinMode(BUTTON3PIN, INPUT_PULLUP);
+
+    pinMode(LED1PIN, OUTPUT);
+    pinMode(LED2PIN, OUTPUT);
+    pinMode(LED3PIN, OUTPUT);
+
+    digitalWrite(LED1PIN, LOW);
+    digitalWrite(LED2PIN, LOW);
+    digitalWrite(LED3PIN, LOW);
+
+    ws.onEvent(exercise_ledControl_onWsEvent_ButtonModule);
+    server_Button_Module.addHandler(&ws);
+
+    server_Button_Module.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // ZDE zavolejte handler pro kořenovou URL
+    });
+
+    server_Button_Module.on("/state", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // ZDE zavolejte handler pro endpoint /state
+    });
+
+    server_Button_Module.begin();
+    Serial.println("HTTP server spuštěn");
+}
+
+void exercise_ledControl_loop_ButtonModule() {
+    static bool lastRaw1 = HIGH;
+    static bool stable1 = HIGH;
+    static uint32_t lastDebounce1 = 0;
+
+    static bool lastRaw2 = HIGH;
+    static bool stable2 = HIGH;
+    static uint32_t lastDebounce2 = 0;
+
+    static bool lastRaw3 = HIGH;
+    static bool stable3 = HIGH;
+    static uint32_t lastDebounce3 = 0;
+
+    bool changed = false;
+    uint32_t now = millis();
+
+    bool reading1 = digitalRead(BUTTON1PIN);
+    if (reading1 != lastRaw1) {
+        lastDebounce1 = now;
+        lastRaw1 = reading1;
+    }
+    if ((now - lastDebounce1) > DEBOUNCE_MS && reading1 != stable1) {
+        stable1 = reading1;
+        button1Pressed = (stable1 == LOW);
+        changed = true;
+    }
+
+    bool reading2 = digitalRead(BUTTON2PIN);
+    if (reading2 != lastRaw2) {
+        lastDebounce2 = now;
+        lastRaw2 = reading2;
+    }
+    if ((now - lastDebounce2) > DEBOUNCE_MS && reading2 != stable2) {
+        stable2 = reading2;
+        button2Pressed = (stable2 == LOW);
+        changed = true;
+    }
+
+    bool reading3 = digitalRead(BUTTON3PIN);
+    if (reading3 != lastRaw3) {
+        lastDebounce3 = now;
+        lastRaw3 = reading3;
+    }
+    if ((now - lastDebounce3) > DEBOUNCE_MS && reading3 != stable3) {
+        stable3 = reading3;
+        button3Pressed = (stable3 == LOW);
+        changed = true;
+    }
+
+    if (changed) {
+        // ZDE doplňte odeslání nového stavu tlačítek klientům
+    }
+
+    ws.cleanupClients();
+    delay(5);
+}
