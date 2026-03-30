@@ -5,7 +5,7 @@
  * cílem těchto cvičení je seznámit studenty s programováním v jazyce C++ a s vývojem pro 
  * mikrokontrolery na úrovni bare metal a poskytnout jednoduchou ukázku pro otetování vývojového prostředí
  * 
- * @version 1.0
+ * @version 0.1
  * @date 2025-01-31
  * 
  * @copyright Copyright (c) 2025
@@ -29,12 +29,11 @@ void stopProgram(unsigned long time);
 
 
 
-
 /**
  * @brief pokud spustíte svůj kód poprvé uvidíte blikání první diodou změňte kód tak aby blikala druhá dioda
  *
  */
-void blinkingDiode()
+void practice_blinkingDiode()
 {
     initSemaphoreWithButton();
 
@@ -52,17 +51,16 @@ void blinkingDiode()
  * rozsvítily všechny diody semaforu a po uvolnění tlačítka se všechny diody zhasly
  * 
  */
-void blinkingSemaphore()
+void practice_blinkingSemaphore()
 {
     initSemaphoreWithButton();
 
-    
+    while(!isButtonPressed()){} // čeká na stisknutí tlačítka
 
     while(true)
     {
         setSemaphoreLights(1,1,1);
         stopProgram(500);
-        while(!isButtonPressed()){} // čeká na stisknutí tlačítka
     }
 }
 
@@ -70,7 +68,7 @@ void blinkingSemaphore()
  * @brief napište kód tak aby po stisku tlačítka začali blikat diody jako na semaforu tak aby zůstali blikat i po uvolnění tlačítka
  * 
  */
-void completeCode()
+void practice_completeCode()
 {
 
 }
@@ -82,7 +80,7 @@ void completeCode()
  * program není dokonalý protože čeká na dokončení ciklu, než zareaguje na zmáčknutí tlačítka
  * aby byl kód jednoduchý
  */
-void semaphore_example()
+void exampleSemaphore()
 {
     initSemaphoreWithButton();
 
